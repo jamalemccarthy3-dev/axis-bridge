@@ -67,6 +67,10 @@ A **team**, **pod** or **company** workspace has a mission, a **task board** (to
 
 **Honest limits:** a workspace has one member, you: inviting teammates needs the network, which does not exist yet. Live team rooms, team chat and a **company phone line** are shown as **Not available yet** with the reason (a real phone line needs a telephony provider account, a number, identity checks and legal registration, which NEXXUS cannot provide or fake). Storefront connections and team-specific automation bots are not built; the Academy's storefront track teaches the path and NEXXUS's own engines are the automation layer you can see live.
 
+## The Marketplace
+
+A **Marketplace** tab holds a buyer storefront and a seller portal, with a **Commercial** tier (paid products that pass a strict vetting gauntlet and a partnership agreement) and a **Free & Open** tier (open-source code that passes automatic safety checks and an administrator's approval, and can be read and downloaded by anyone). Thumbnails show price or FREE badges, star ratings and review counts. See [MARKETPLACE.md](MARKETPLACE.md) for the gauntlet, why NEXXUS never runs submitted code, verified ratings, SEO and the static storefront export, and the honest limits around payments.
+
 ## Private conversations stay private
 
 Direct messages, group chats and live rooms are **private**. They are never collected, never scraped, never shown on the public wall, never sent to GitHub and never counted toward ranks. This is enforced in code, not just promised: `privacy.py` defines the two classes of data, every public path (public wall, GitHub sync, ranking) accepts only items that pass `require_public()`, private stores live in `nexxus_data/private/` (gitignored, never read by any public module), and `test_privacy.py` fails if a public module ever references a private store or the telemetry schema gains a content field. The platform has no direct messages or group chats yet; this is the rule they must follow when they are built.

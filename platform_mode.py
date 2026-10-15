@@ -25,6 +25,9 @@ import uuid
 import academy
 import entitlements
 import github_sync
+import market_social
+import marketplace
+import marketplace_export
 import privacy
 import ranks
 import teams
@@ -647,10 +650,11 @@ def state():
 
 
 # ---------------------------------------------------------------- routes
-def register_routes(app, is_viewer, respond):
+def register_routes(app, is_viewer, respond, is_admin=None):
     """is_viewer() -> True when this request may use Platform (the dashboard's own page, or a device the dashboard's network rules already admit; writes from other devices need the admin token,
     which the server's peer guard enforces). respond(payload, status=200) -> a Flask response with the server's usual CORS headers."""
     from flask import Response, request, send_file
+    is_admin = is_admin or (lambda: False)           # no administrator unless the server says so: marketplace approvals fail closed
 
     def guard(need_license=True):
         if not is_viewer():
@@ -939,6 +943,362 @@ def register_routes(app, is_viewer, respond):
             return g
         publish({"type": "academy"})
         return respond({"status": "success", "welcomed": academy.mark_welcomed()})
+
+    # ---------------- Marketplace: the storefront (buyers) and the vetting pipeline (creators and the administrator)
+    def _admin_only():
+        if not is_admin():
+            return respond({"status": "error", "message": "This needs the administrator: unlock the admin token with the lock button in the header."}, 403)
+        return None
+
+    def _mk(fn, *args, **kw):
+        try:
+            res = fn(*args, **kw)
+        except marketplace.MarketError as e:
+            return respond({"status": "error", "message": str(e)}, 404 if "No such" in str(e) else 400)
+        publish({"type": "market"})
+        return res
+
+    def _own_company_ids():
+        return {t["id"] for t in teams.list_teams() if t["kind"] == "company"} | {"free"}           # "free" holds the free submissions made from this NEXXUS
+
+    @app.route("/api/platform/marketplace/me", methods=["GET", "OPTIONS"], endpoint="platform_market_me")
+    def market_me_route():
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        return respond({"status": "success", "admin": bool(is_admin()), "companies": [{"id": t["id"], "name": t["name"]} for t in teams.list_teams() if t["kind"] == "company"], "tiers": list(marketplace.TIERS), "foss_licenses": list(marketplace.FOSS_LICENSES),
+                        "categories": list(marketplace.CATEGORIES), "kinds": list(marketplace.KINDS), "permissions": list(marketplace.PERMISSIONS), "licenses": list(marketplace.LICENSES),
+                        "revenue_share_percent": marketplace.REVENUE_SHARE_PERCENT, "limits": {"zip_mb": marketplace.MAX_ZIP // 1048576, "files": marketplace.MAX_ENTRIES}})
+
+    @app.route("/api/platform/marketplace/catalog", methods=["GET", "OPTIONS"], endpoint="platform_market_catalog")
+    def market_catalog_route():
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        return respond({"status": "success", **marketplace.public_catalog(request.args.get("q", ""), request.args.get("category", ""), request.args.get("sort", "new"), None, request.args.get("tier", "all"))})
+
+    @app.route("/api/platform/marketplace/product/<sid>", methods=["GET", "OPTIONS"], endpoint="platform_market_product")
+    def market_product_route(sid):
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        try:
+            return respond({"status": "success", "product": marketplace.public_product(sid)})
+        except marketplace.MarketError as e:
+            return respond({"status": "error", "message": str(e)}, 404)
+
+    @app.route("/api/platform/marketplace/report", methods=["POST", "OPTIONS"], endpoint="platform_market_report")
+    def market_report_route():
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        d = request.get_json(silent=True) or {}
+        res = _mk(marketplace.report_listing, str(d.get("id", "")), d.get("reason", ""), get_profile().get("name") or "visitor")
+        return res if res is not None else respond({"status": "success"})
+
+    @app.route("/api/platform/marketplace/mine", methods=["GET", "OPTIONS"], endpoint="platform_market_mine")
+    def market_mine_route():
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        return respond({"status": "success", "submissions": marketplace.list_submissions(_own_company_ids())})
+
+    @app.route("/api/platform/marketplace/submission", methods=["POST", "OPTIONS"], endpoint="platform_market_create")
+    def market_create_route():
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        d = request.get_json(silent=True) or {}
+        res = _mk(marketplace.create_submission, str(d.get("team_id", "")), d.get("listing"), get_profile().get("name") or "you", str(d.get("tier", "commercial")))
+        return res if not isinstance(res, dict) else respond({"status": "success", "submission": marketplace.creator_view(res)})
+
+    @app.route("/api/platform/marketplace/submission/<sid>", methods=["GET", "OPTIONS"], endpoint="platform_market_get")
+    def market_get_route(sid):
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        try:
+            sub = marketplace.get_submission(sid)
+        except marketplace.MarketError as e:
+            return respond({"status": "error", "message": str(e)}, 404)
+        if sub["team_id"] not in _own_company_ids() and not is_admin():
+            return respond({"status": "error", "message": "No such submission."}, 404)
+        return respond({"status": "success", "submission": sub})
+
+    @app.route("/api/platform/marketplace/submission/<sid>/upload", methods=["POST", "OPTIONS"], endpoint="platform_market_upload")
+    def market_upload_route(sid):
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        try:
+            sub = next((s for s in marketplace.list_submissions() if s["id"] == sid), None)
+            if not sub or (sub["team_id"] not in _own_company_ids() and not is_admin()):
+                return respond({"status": "error", "message": "No such submission."}, 404)
+            if (request.content_length or 0) > marketplace.MAX_ZIP + 200_000:
+                return respond({"status": "error", "message": "The bundle is larger than %d MB." % (marketplace.MAX_ZIP // 1048576)}, 413)
+            f = request.files.get("bundle")
+            if not f:
+                return respond({"status": "error", "message": "Choose a .zip bundle."}, 400)
+            data = f.read(marketplace.MAX_ZIP + 1)
+            marketplace.upload_version(sid, data, f.filename or "")
+        except marketplace.MarketError as e:
+            return respond({"status": "error", "message": str(e)}, 400)
+        publish({"type": "market"})
+        return respond({"status": "success", "submission": marketplace.get_submission(sid)})
+
+    @app.route("/api/platform/marketplace/submission/<sid>/agreement", methods=["POST", "OPTIONS"], endpoint="platform_market_agreement")
+    def market_agreement_route(sid):
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        d = request.get_json(silent=True) or {}
+        res = _mk(marketplace.sign_agreement, sid, d.get("legal_name", ""), d.get("acks"))
+        return res if not isinstance(res, dict) else respond({"status": "success", "submission": marketplace.creator_view(res)})
+
+    @app.route("/api/platform/marketplace/submission/<sid>/declaration", methods=["POST", "OPTIONS"], endpoint="platform_market_declaration")
+    def market_declaration_route(sid):
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        d = request.get_json(silent=True) or {}
+        res = _mk(marketplace.sign_declaration, sid, d.get("legal_name", ""), d.get("acks"))
+        return res if not isinstance(res, dict) else respond({"status": "success", "submission": marketplace.creator_view(res)})
+
+    def _who():
+        return get_profile().get("name") or "you"
+
+    @app.route("/api/platform/marketplace/product/<sid>/page", methods=["GET", "OPTIONS"], endpoint="platform_market_page")
+    def market_page_route(sid):
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        try:
+            page = marketplace.product_page(sid)
+            soc = {"rating": market_social.summary(sid), "reviews": market_social.reviews(sid), "comments": market_social.comment_tree(sid)}
+            ok, why = market_social.can_review(sid, _who(), page["tier"], page["owner"])
+            soc["can_review"] = {"ok": ok, "reason": why}
+            return respond({"status": "success", **page, "social": soc, "me": _who()})
+        except marketplace.MarketError as e:
+            return respond({"status": "error", "message": str(e)}, 404)
+
+    @app.route("/api/platform/marketplace/product/<sid>/review", methods=["POST", "OPTIONS"], endpoint="platform_market_review_post")
+    def market_review_post_route(sid):
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        d = request.get_json(silent=True) or {}
+        try:
+            res = market_social.add_review(sid, _who(), d.get("stars"), d.get("text", ""), marketplace.tier_of(sid), marketplace.owner_of(sid))
+        except (market_social.SocialError, marketplace.MarketError) as e:
+            return respond({"status": "error", "message": str(e)}, 400)
+        publish({"type": "market"})
+        return respond({"status": "success", "rating": res})
+
+    @app.route("/api/platform/marketplace/product/<sid>/comment", methods=["POST", "OPTIONS"], endpoint="platform_market_comment_post")
+    def market_comment_post_route(sid):
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        d = request.get_json(silent=True) or {}
+        try:
+            marketplace.public_product(sid)
+            c = market_social.add_comment(sid, _who(), d.get("text", ""), d.get("parent") or None)
+        except (market_social.SocialError, marketplace.MarketError) as e:
+            return respond({"status": "error", "message": str(e)}, 400)
+        publish({"type": "market"})
+        return respond({"status": "success", "comment": c})
+
+    @app.route("/api/platform/marketplace/comment/<cid>", methods=["DELETE", "OPTIONS"], endpoint="platform_market_comment_delete")
+    def market_comment_delete_route(cid):
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        try:
+            owner_of_product = False
+            for pid, rows in market_social._load(market_social.COMMENTS_PATH, {}).items():
+                if any(r["id"] == cid for r in rows):
+                    owner_of_product = marketplace.owner_of(pid) == _who()
+            market_social.remove_comment(cid, _who(), bool(is_admin()), owner_of_product)
+        except (market_social.SocialError, marketplace.MarketError) as e:
+            return respond({"status": "error", "message": str(e)}, 403 if "Only" in str(e) else 404)
+        publish({"type": "market"})
+        return respond({"status": "success"})
+
+    @app.route("/api/platform/marketplace/product/<sid>/verify-purchase", methods=["POST", "OPTIONS"], endpoint="platform_market_verify_purchase")
+    def market_verify_purchase_route(sid):
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard() or _admin_only()
+        if g:
+            return g
+        who = str((request.get_json(silent=True) or {}).get("reviewer", "")).strip()
+        try:
+            marketplace.public_product(sid)
+            market_social.record_interaction(sid, who, "purchase")
+        except (market_social.SocialError, marketplace.MarketError) as e:
+            return respond({"status": "error", "message": str(e)}, 400)
+        return respond({"status": "success"})
+
+    @app.route("/api/platform/marketplace/export", methods=["POST", "OPTIONS"], endpoint="platform_market_export")
+    def market_export_route():
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard() or _admin_only()
+        if g:
+            return g
+        base = str((request.get_json(silent=True) or {}).get("base_url", ""))
+        try:
+            files = marketplace_export.build_site(os.path.join(marketplace.DATA_DIR, "site"), base)
+        except marketplace.MarketError as e:
+            return respond({"status": "error", "message": str(e)}, 400)
+        return respond({"status": "success", "folder": os.path.join("nexxus_data", "marketplace", "site"), "files": files, "note": "Publish this folder yourself (for example to GitHub Pages). Nothing was uploaded."})
+
+    @app.route("/api/platform/marketplace/free/<sid>/files", methods=["GET", "OPTIONS"], endpoint="platform_market_free_files")
+    def market_free_files_route(sid):
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        try:
+            return respond({"status": "success", **marketplace.free_files(sid)})
+        except marketplace.MarketError as e:
+            return respond({"status": "error", "message": str(e)}, 404)
+
+    @app.route("/api/platform/marketplace/free/<sid>/file", methods=["GET", "OPTIONS"], endpoint="platform_market_free_file")
+    def market_free_file_route(sid):
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        try:
+            return respond({"status": "success", **marketplace.free_read(sid, request.args.get("name", ""))})
+        except marketplace.MarketError as e:
+            return respond({"status": "error", "message": str(e)}, 404)
+
+    @app.route("/api/platform/marketplace/free/<sid>/download", methods=["GET"], endpoint="platform_market_free_download")
+    def market_free_download_route(sid):
+        g = guard()
+        if g:
+            return g
+        try:
+            data, filename, sha = marketplace.free_download(sid)
+        except marketplace.MarketError as e:
+            return respond({"status": "error", "message": str(e)}, 404)
+        try:
+            market_social.record_interaction(sid, _who(), "download")
+        except market_social.SocialError:
+            pass
+        r = Response(data, mimetype="application/zip")
+        r.headers["Content-Disposition"] = 'attachment; filename="%s"' % filename
+        r.headers["X-Content-Type-Options"] = "nosniff"
+        r.headers["X-Bundle-SHA256"] = sha
+        r.headers["Cache-Control"] = "no-store"
+        return r
+
+    @app.route("/api/platform/marketplace/submission/<sid>/approve", methods=["POST", "OPTIONS"], endpoint="platform_market_approve")
+    def market_approve_route(sid):
+        if request.method == "OPTIONS":
+            return respond({})
+        d = request.get_json(silent=True) or {}
+        return _admin_action(marketplace.approve_free, sid, d.get("admin", "admin"), d.get("note", ""))
+
+    @app.route("/api/platform/marketplace/submission/<sid>/withdraw", methods=["POST", "OPTIONS"], endpoint="platform_market_withdraw")
+    def market_withdraw_route(sid):
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        res = _mk(marketplace.withdraw, sid, get_profile().get("name") or "you")
+        return res if not isinstance(res, dict) else respond({"status": "success"})
+
+    @app.route("/api/platform/marketplace/admin/queue", methods=["GET", "OPTIONS"], endpoint="platform_market_queue")
+    def market_queue_route():
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard() or _admin_only()
+        if g:
+            return g
+        return respond({"status": "success", "submissions": marketplace.list_submissions(), "reports": marketplace.reports(), "audit": marketplace.audit(100)})
+
+    def _admin_action(fn, *args):
+        g = guard() or _admin_only()
+        if g:
+            return g
+        res = _mk(fn, *args)
+        return res if not isinstance(res, dict) else respond({"status": "success", "submission": marketplace.creator_view(res)})
+
+    @app.route("/api/platform/marketplace/submission/<sid>/attest", methods=["POST", "OPTIONS"], endpoint="platform_market_attest")
+    def market_attest_route(sid):
+        if request.method == "OPTIONS":
+            return respond({})
+        d = request.get_json(silent=True) or {}
+        return _admin_action(marketplace.attest_tests, sid, d.get("reviewer", ""), d.get("report", ""), d.get("environment", ""), d.get("passed", 0), d.get("failed", 0))
+
+    @app.route("/api/platform/marketplace/submission/<sid>/review", methods=["POST", "OPTIONS"], endpoint="platform_market_review")
+    def market_review_route(sid):
+        if request.method == "OPTIONS":
+            return respond({})
+        d = request.get_json(silent=True) or {}
+        return _admin_action(marketplace.review_signoff, sid, d.get("reviewer", ""), d.get("checklist"), d.get("notes", ""), d.get("approve") is True)
+
+    @app.route("/api/platform/marketplace/submission/<sid>/greenlight", methods=["POST", "OPTIONS"], endpoint="platform_market_greenlight")
+    def market_greenlight_route(sid):
+        if request.method == "OPTIONS":
+            return respond({})
+        d = request.get_json(silent=True) or {}
+        return _admin_action(marketplace.greenlight, sid, d.get("admin", "admin"), d.get("checkout_url", ""), d.get("discount"))
+
+    @app.route("/api/platform/marketplace/submission/<sid>/checkout", methods=["POST", "OPTIONS"], endpoint="platform_market_checkout")
+    def market_checkout_route(sid):
+        if request.method == "OPTIONS":
+            return respond({})
+        d = request.get_json(silent=True) or {}
+        return _admin_action(marketplace.set_checkout, sid, d.get("admin", "admin"), d.get("checkout_url", ""), d.get("discount"))
+
+    @app.route("/api/platform/marketplace/submission/<sid>/reject", methods=["POST", "OPTIONS"], endpoint="platform_market_reject")
+    def market_reject_route(sid):
+        if request.method == "OPTIONS":
+            return respond({})
+        d = request.get_json(silent=True) or {}
+        return _admin_action(marketplace.reject, sid, d.get("admin", "admin"), d.get("reason", ""))
+
+    @app.route("/api/platform/marketplace/submission/<sid>/unpublish", methods=["POST", "OPTIONS"], endpoint="platform_market_unpublish")
+    def market_unpublish_route(sid):
+        if request.method == "OPTIONS":
+            return respond({})
+        d = request.get_json(silent=True) or {}
+        return _admin_action(marketplace.unpublish, sid, d.get("admin", "admin"), d.get("reason", ""))
 
     @app.route("/api/platform/profile/public", methods=["GET", "OPTIONS"], endpoint="platform_profile_public")
     def profile_public_route():

@@ -1343,6 +1343,24 @@ body.pl-on #axisDock { display:none !important; }          /* the desktop contro
 .tm-pill { display:inline-block; padding:1px 9px; border-radius:999px; font-size:.7rem; border:1px solid; } .tm-pill.empty, .tm-pill.not { color:#94a3b8; border-color:#64748b; } .tm-pill.moving { color:#86efac; border-color:#34d399; } .tm-pill.behind { color:#fda4af; border-color:#fb7185; }
 .tm-eng { display:flex; flex-wrap:wrap; gap:4px; } .tm-led { font-size:.65rem; padding:1px 6px; border-radius:6px; border:1px solid rgba(148,163,184,0.4); } .tm-led.ok { border-color:#34d399; color:#86efac; } .tm-led.part { border-color:#fbbf24; color:#fde68a; } .tm-led.off { border-color:#fb7185; color:#fda4af; }
 .tm-stack { display:grid; gap:6px; } .tm-stack .it { border:1px solid rgba(148,163,184,0.3); border-radius:8px; padding:6px 10px; font-size:.82rem; } .tm-stack .it.unavailable { color:#94a3b8; border-style:dashed; } .tm-log { max-height:180px; overflow-y:auto; font-size:.8rem; }
+.mk-bar { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin:8px 0; } .mk-bar input[type=search], .mk-bar select { background:#05080f; color:#e2e8f0; border:1px solid rgba(148,163,184,0.45); border-radius:999px; padding:6px 12px; font:inherit; font-size:.85rem; }
+.mk-chip { background:none; border:1px solid rgba(148,163,184,0.4); color:#94a3b8; border-radius:999px; padding:2px 11px; font:inherit; font-size:.78rem; cursor:pointer; } .mk-chip.on { background:rgba(56,189,248,0.2); border-color:#38bdf8; color:#fff; }
+.mk-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:10px; } .mk-card { background:rgba(15,23,42,0.75); border:1px solid rgba(148,163,184,0.3); border-radius:12px; padding:12px; display:flex; flex-direction:column; gap:6px; overflow-wrap:anywhere; } .mk-card h4 { margin:0; color:#f1f5f9; font-size:1rem; } .mk-card .by { color:#94a3b8; font-size:.75rem; }
+.mk-tags { display:flex; flex-wrap:wrap; gap:4px; } .mk-tag { font-size:.66rem; border:1px solid rgba(148,163,184,0.4); color:#94a3b8; border-radius:999px; padding:0 7px; } .mk-vet { font-size:.72rem; color:#86efac; } .mk-vet.person { color:#bae6fd; } .mk-perm { font-size:.72rem; color:#fde68a; }
+.mk-price { display:flex; align-items:baseline; gap:8px; margin-top:auto; } .mk-price b { font-size:1.25rem; color:#f1f5f9; } .mk-price s { color:#94a3b8; font-size:.85rem; } .mk-sale { font-size:.68rem; background:rgba(251,191,36,0.2); border:1px solid rgba(251,191,36,0.6); color:#fde68a; border-radius:999px; padding:0 8px; }
+.mk-acts { display:flex; gap:8px; align-items:center; } .mk-acts .pl-btn { flex:1; } .mk-acts button.rep { background:none; border:0; color:#94a3b8; cursor:pointer; font:inherit; font-size:.72rem; }
+.mk-stage { border:1px solid rgba(148,163,184,0.3); border-radius:10px; padding:8px 10px; margin-bottom:6px; } .mk-stage .hd { display:flex; gap:8px; align-items:center; } .mk-stage .st { width:20px; height:20px; border-radius:50%; display:inline-flex; align-items:center; justify-content:center; font-size:.7rem; border:2px solid #64748b; flex:0 0 auto; } .mk-stage.pass .st { background:#22c55e; border-color:#22c55e; color:#052e1b; } .mk-stage.fail .st { background:#fb7185; border-color:#fb7185; color:#2a0610; } .mk-stage.waiting .st { border-color:#fbbf24; } .mk-stage.locked { opacity:.55; }
+.mk-stage .kind { margin-left:auto; font-size:.66rem; color:#94a3b8; border:1px solid rgba(148,163,184,0.4); border-radius:999px; padding:0 8px; } .mk-find { font-size:.8rem; padding:2px 0 2px 28px; } .mk-find.block { color:#fda4af; } .mk-find.warn { color:#fde68a; } .mk-find.info { color:#94a3b8; }
+.mk-status { font-size:.7rem; border:1px solid; border-radius:999px; padding:1px 9px; } .mk-status.published { color:#86efac; border-color:#34d399; } .mk-status.changes_requested, .mk-status.rejected { color:#fda4af; border-color:#fb7185; } .mk-status.draft, .mk-status.withdrawn { color:#94a3b8; border-color:#64748b; } .mk-status.awaiting_tests, .mk-status.awaiting_review, .mk-status.awaiting_agreement, .mk-status.awaiting_greenlight, .mk-status.in_review { color:#fde68a; border-color:#fbbf24; }
+.mk-note { border-left:3px solid #38bdf8; background:rgba(56,189,248,0.08); padding:6px 10px; border-radius:0 8px 8px 0; font-size:.82rem; margin:8px 0; } .mk-agree { max-height:220px; overflow-y:auto; white-space:pre-wrap; background:#05080f; border:1px solid rgba(148,163,184,0.35); border-radius:8px; padding:8px 10px; font:12px/1.5 ui-monospace,Consolas,monospace; }
+.mk-seg { display:inline-flex; border:1px solid rgba(148,163,184,0.45); border-radius:999px; overflow:hidden; } .mk-seg button { background:none; border:0; color:#94a3b8; padding:5px 13px; font:inherit; font-size:.82rem; cursor:pointer; } .mk-seg button.on { background:#38bdf8; color:#04121c; font-weight:700; } .mk-seg button:hover:not(.on) { color:#fff; }
+.mk-thumb { display:flex; gap:6px; align-items:center; flex-wrap:wrap; } .mk-badge-free { background:rgba(52,211,153,0.18); border:1px solid #34d399; color:#86efac; border-radius:999px; padding:1px 10px; font-size:.72rem; font-weight:700; } .mk-badge-paid { background:rgba(251,191,36,0.15); border:1px solid #fbbf24; color:#fde68a; border-radius:999px; padding:1px 10px; font-size:.72rem; font-weight:700; }
+.mk-stars { color:#fbbf24; font-size:.85rem; letter-spacing:1px; } .mk-stars .off { color:#475569; } .mk-meta { color:#94a3b8; font-size:.72rem; } .mk-card.click { cursor:pointer; } .mk-card.click:hover { border-color:#38bdf8; }
+.mk-files { display:grid; grid-template-columns:minmax(120px,1fr) 2fr; gap:8px; } @media (max-width:640px) { .mk-files { grid-template-columns:1fr; } } .mk-flist button { display:block; width:100%; text-align:left; background:none; border:0; color:#bae6fd; padding:3px 6px; font:inherit; font-size:.8rem; cursor:pointer; border-radius:6px; } .mk-flist button.on { background:rgba(56,189,248,0.2); } .mk-code { white-space:pre; overflow:auto; max-height:320px; background:#05080f; border:1px solid rgba(148,163,184,0.35); border-radius:8px; padding:8px 10px; font:12px/1.45 ui-monospace,Consolas,monospace; }
+.mk-dist { display:grid; grid-template-columns:auto 1fr auto; gap:6px; align-items:center; font-size:.78rem; color:#94a3b8; } .mk-dist i { display:block; height:6px; border-radius:999px; background:#fbbf24; } .mk-dist span.bar { background:rgba(148,163,184,0.25); border-radius:999px; overflow:hidden; display:block; }
+.mk-rev { border-left:2px solid #fbbf24; padding:4px 10px; margin:6px 0; font-size:.85rem; } .mk-ver { font-size:.65rem; border:1px solid rgba(134,239,172,0.6); color:#86efac; border-radius:999px; padding:0 6px; margin-left:6px; }
+.mk-cm { border-left:2px solid rgba(56,189,248,0.5); padding:4px 0 4px 10px; margin:6px 0; font-size:.85rem; } .mk-cm .who { color:#bae6fd; font-weight:600; } .mk-cm.rm { color:#64748b; font-style:italic; } .mk-cm button { background:none; border:0; color:#7dd3fc; cursor:pointer; font:inherit; font-size:.72rem; padding:0 6px 0 0; }
+.mk-seo { font-size:.8rem; color:#94a3b8; } .mk-seo b { color:#e2e8f0; } .mk-md h2, .mk-md h3, .mk-md h4 { margin:12px 0 4px; color:#e0f2fe; } .mk-md p { margin:6px 0; } .mk-md code { background:rgba(255,255,255,0.08); border-radius:4px; padding:0 4px; } .mk-md pre { background:#05080f; border:1px solid rgba(148,163,184,0.35); border-radius:8px; padding:8px; overflow:auto; }
 .pl-chip { display:none; align-items:center; gap:8px; padding:6px 12px; border-top:1px solid rgba(56,189,248,0.25); background:rgba(2,6,14,0.7); font-size:.8rem; color:#bae6fd; } .pl-chip.on { display:flex; } .pl-chip img { height:44px; width:44px; object-fit:cover; border-radius:8px; } .pl-chip button { margin-left:auto; background:none; border:0; color:#fda4af; cursor:pointer; font:inherit; }
 .pl-feed.drop { outline:2px dashed #38bdf8; outline-offset:-6px; }
 #plLightbox { position:absolute; inset:0; z-index:5; display:none; align-items:center; justify-content:center; background:rgba(2,6,14,0.92); cursor:zoom-out; padding:20px; } #plLightbox.open { display:flex; } #plLightbox img { max-width:100%; max-height:100%; border-radius:10px; }
@@ -11341,9 +11359,10 @@ async function skBuild() {
 <div class="pl-stage" id="plStage" data-tab="floor">
 <aside class="pl-wall left" id="plLeft" aria-label="Your profile"></aside>
 <main class="pl-floor" aria-label="The floor">
-<div class="pl-views" id="plViews" role="tablist" aria-label="Floor views"><button type="button" role="tab" data-v="academy" class="on">Academy</button><button type="button" role="tab" data-v="teams">Teams</button><button type="button" role="tab" data-v="floor">Floor</button><button type="button" role="tab" data-v="wall">Profile wall</button><button type="button" role="tab" data-v="public">Public wall</button><button type="button" role="tab" data-v="vault">Image vault</button></div>
+<div class="pl-views" id="plViews" role="tablist" aria-label="Floor views"><button type="button" role="tab" data-v="academy" class="on">Academy</button><button type="button" role="tab" data-v="teams">Teams</button><button type="button" role="tab" data-v="market">Marketplace</button><button type="button" role="tab" data-v="floor">Floor</button><button type="button" role="tab" data-v="wall">Profile wall</button><button type="button" role="tab" data-v="public">Public wall</button><button type="button" role="tab" data-v="vault">Image vault</button></div>
 <div class="pl-view" id="plAcademyView" aria-label="The Academy"></div>
 <div class="pl-view" id="plTeamsView" hidden aria-label="Team workspaces"></div>
+<div class="pl-view" id="plMarketView" hidden aria-label="Marketplace"></div>
 <div class="pl-view" id="plTalkView" hidden aria-label="Talk to NEXXUS"></div>
 <div class="pl-feed" id="plFeed" aria-live="polite" hidden></div>
 <div class="pl-view" id="plWallView" hidden aria-label="Your profile wall"></div>
@@ -11505,6 +11524,7 @@ async function skBuild() {
     else if (ev.type === 'github') { const p = find(ev.post_id); if (p) { p.gh = ev.gh; upsertPost(p); } if (PL.view === 'public') loadPublic(); }
     else if (ev.type === 'academy') { if (PL.view === 'academy' && PL.acView.mode === 'home') loadAcademy(); else loadAcademy(); }
     else if (ev.type === 'team') { if (PL.view === 'teams') loadTeams(); }
+    else if (ev.type === 'market') { if (PL.view === 'market') loadMarket(); }
     else if (ev.type === 'viewers') { PL.viewers = ev.viewers; liveLabel(true); }
   }
   function liveLabel(on) { const l = $('plLive'); if (!l) return; l.classList.toggle('on', !!on); l.textContent = on ? 'Live · ' + (PL.viewers || 1) + (PL.viewers === 1 ? ' viewport' : ' viewports') : 'reconnecting'; }
@@ -11526,14 +11546,14 @@ async function skBuild() {
 
   // ---------- views: Floor | Profile wall | Image vault ----------
   PL.view = 'floor'; PL.wallEdit = null; PL.asVisitor = false; PL.vault = [];
-  const VIEWS = { academy: 'plAcademyView', teams: 'plTeamsView', talk: 'plTalkView', floor: 'plFeed', wall: 'plWallView', public: 'plPublicView', vault: 'plVaultView' };
+  const VIEWS = { academy: 'plAcademyView', teams: 'plTeamsView', market: 'plMarketView', talk: 'plTalkView', floor: 'plFeed', wall: 'plWallView', public: 'plPublicView', vault: 'plVaultView' };
   function setView(v) {
     if (v !== 'talk') PL.lastView = v;
     PL.view = v; if (v !== 'wall') { PL.wallEdit = null; PL.asVisitor = false; }
     Object.keys(VIEWS).forEach(k => { $(VIEWS[k]).hidden = k !== v; });
     document.querySelectorAll('#plViews button').forEach(b => { const on = b.dataset.v === v; b.classList.toggle('on', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); });
     if (v !== 'talk' && PL.cmd && PL.cmd.mode === 'talk') setComposer('post', PL.cmd.audience, true);          // leaving the talk view puts the command bar back to posting, so the cue is always true
-    if (v === 'academy') loadAcademy(); else if (v === 'teams') loadTeams(); else if (v === 'talk') renderTalk(); else if (v === 'wall') renderWall(); else if (v === 'vault') loadVault(); else if (v === 'public') loadPublic(); else { const f = $('plFeed'); f.scrollTop = f.scrollHeight; }
+    if (v === 'academy') loadAcademy(); else if (v === 'teams') loadTeams(); else if (v === 'market') loadMarket(); else if (v === 'talk') renderTalk(); else if (v === 'wall') renderWall(); else if (v === 'vault') loadVault(); else if (v === 'public') loadPublic(); else { const f = $('plFeed'); f.scrollTop = f.scrollHeight; }
   }
   $('plViews').addEventListener('click', e => { const b = e.target.closest('button[data-v]'); if (b) setView(b.dataset.v); });
 
@@ -11980,6 +12000,211 @@ async function skBuild() {
   document.querySelectorAll('#plMode .seg.sub button').forEach(b => b.addEventListener('click', () => setComposer('post', b.dataset.a)));
   $('plInput').addEventListener('input', saveDrafts);
   setComposer('post', 'private', true); $('plInput').blur();
+
+  // ---------- the Marketplace: a storefront for buyers, free and open code for everyone, a vetting portal for creators ----------
+  PL.mk = { me: null, view: null, choice: null, tier: 'all', cat: '', q: '', sort: 'new', catalog: null, mine: [], sel: null, detail: null, queue: null, adminOpen: false, page: null, pageData: null, file: null, fileData: null, reply: null };
+  const money = c => '$' + (c / 100).toFixed(c % 100 ? 2 : 0);
+  async function loadMarket() {
+    const m = PL.mk, me = await api('marketplace/me', null, 'GET'); if (!me || me.status !== 'success') { $('plMarketView').replaceChildren(el('div', 'pl-empty', 'The Marketplace could not be loaded.')); return; }
+    m.me = me; m.view = m.choice === 'creator' ? 'creator' : (m.choice === 'buyer' ? 'buyer' : (me.companies.length ? 'creator' : 'buyer'));
+    const qs = '?q=' + encodeURIComponent(m.q) + '&category=' + encodeURIComponent(m.cat) + '&sort=' + m.sort + '&tier=' + m.tier; const c = await api('marketplace/catalog' + qs, null, 'GET'); m.catalog = c && c.status === 'success' ? c : { products: [], categories: me.categories, total: 0, on_sale: 0, counts: { commercial: 0, free: 0 } };
+    if (m.page) { const d = await api('marketplace/product/' + m.page + '/page', null, 'GET'); m.pageData = d && d.status === 'success' ? d : null; if (!m.pageData) m.page = null; }
+    if (m.view === 'creator') { const mine = await api('marketplace/mine', null, 'GET'); m.mine = mine && mine.status === 'success' ? mine.submissions : []; if (m.sel) { const d = await api('marketplace/submission/' + m.sel, null, 'GET'); m.detail = d && d.status === 'success' ? d.submission : null; if (!m.detail) m.sel = null; } }
+    if (m.me.admin && m.adminOpen) { const q = await api('marketplace/admin/queue', null, 'GET'); m.queue = q && q.status === 'success' ? q : null; }
+    if (PL.view === 'market') renderMarket();
+  }
+  function starRow(avg, n) { const s = el('span', 'mk-stars'); const full = Math.round(avg); for (let i = 1; i <= 5; i++) s.append(el('span', i <= full ? '' : 'off', '★')); s.setAttribute('aria-label', n ? avg + ' of 5 stars' : 'No ratings yet'); return s; }
+  function vetLine(v, free) {
+    const d = el('div'); d.append(el('div', 'mk-vet', '✓ Automatic safety checks passed: ' + v.automatic.join(', ')));
+    if (free) d.append(el('div', 'mk-vet person', (v.human_reviewed ? '✓' : '○') + ' Approved by the administrator  ·  open source: read the code before you run it'));
+    else d.append(el('div', 'mk-vet person', (v.tests_attested_by_person ? '✓' : '○') + ' Tested by a person in isolation  ·  ' + (v.human_reviewed ? '✓' : '○') + ' Reviewed by a person  ·  ' + (v.agreement_signed ? '✓' : '○') + ' Seller agreement signed'));
+    d.append(el('div', 'mk-perm', v.permissions.length ? 'Declared permissions: ' + v.permissions.join(', ') : 'Asks for no special permissions (no network, files, commands or environment).')); return d;
+  }
+  function thumbBadges(p) {
+    const b = el('div', 'mk-thumb');
+    b.append(el('span', p.free ? 'mk-badge-free' : 'mk-badge-paid', p.free ? 'FREE / Open source' : (p.final_cents ? money(p.final_cents) : 'Free')));
+    if (!p.free && p.discount) b.append(el('s', 'mk-meta', money(p.price_cents)), el('span', 'mk-sale', p.discount.percent + '% off'));
+    const r = p.rating || { avg: 0, count: 0 }; b.append(starRow(r.avg, r.count), el('span', 'mk-meta', r.count ? r.avg + ' (' + r.count + ' review' + (r.count === 1 ? '' : 's') + ')' : 'No reviews yet'));
+    if (p.comments) b.append(el('span', 'mk-meta', '· ' + p.comments + ' comment' + (p.comments === 1 ? '' : 's'))); return b;
+  }
+  function productCard(p) {
+    const c = el('div', 'mk-card click'); c.setAttribute('role', 'button'); c.tabIndex = 0; c.append(thumbBadges(p), el('h4', '', p.title), el('div', 'by', 'by ' + p.seller + '  ·  v' + (p.version || '?')), el('div', '', p.summary));
+    const tags = el('div', 'mk-tags'); [p.category, p.kind, p.license].filter(Boolean).forEach(x => tags.append(el('span', 'mk-tag', x))); c.append(tags, vetLine(p.vetting, p.free));
+    const go = () => { PL.mk.page = p.id; PL.mk.file = null; PL.mk.fileData = null; PL.mk.reply = null; loadMarket(); }; c.addEventListener('click', go); c.addEventListener('keydown', e => { if (e.key === 'Enter') go(); }); return c;
+  }
+  function buyDialog(p) {
+    dialog(box => { box.append(el('h3', '', 'Continue to checkout?'), el('p', '', 'You are leaving NEXXUS to pay on the checkout page for "' + p.title + '". NEXXUS never sees your payment details.'), el('pre', '', p.buy_url));
+      const row = el('div'); row.style.cssText = 'display:flex;gap:8px;justify-content:flex-end'; const go = el('button', 'pl-btn', 'Go to checkout'); go.type = 'button'; go.addEventListener('click', () => { window.open(p.buy_url, '_blank', 'noopener,noreferrer'); dialogClose(); }); row.append(closeBtn('Cancel'), go); box.append(row); });
+  }
+  function reportDialog(p) {
+    dialog(box => { box.append(el('h3', '', 'Report "' + p.title + '"'), el('p', 'pw-sub', 'Tell the administrator what is wrong (a security problem, copied work, misleading claims).')); const ta = el('textarea'); ta.rows = 4; ta.maxLength = 500; ta.style.cssText = 'width:100%;background:#05080f;color:#e2e8f0;border:1px solid rgba(148,163,184,0.45);border-radius:8px;padding:8px;font:inherit'; ta.setAttribute('aria-label', 'What is wrong'); const msg = el('div', 'pw-hint'); const go = el('button', 'pl-btn', 'Send report'); go.type = 'button';
+      go.addEventListener('click', async () => { const d = await api('marketplace/report', { id: p.id, reason: ta.value }); if (d && d.status === 'success') dialogClose(); else { msg.textContent = (d && d.message) || 'Could not send.'; msg.style.color = '#fda4af'; } }); const row = el('div'); row.style.cssText = 'display:flex;gap:8px;justify-content:flex-end;margin-top:8px'; row.append(closeBtn('Cancel'), go); box.append(ta, msg, row); });
+  }
+  function renderStorefront(host) {
+    const m = PL.mk, cat = m.catalog;
+    const hero = el('div', 'ac-hero'); hero.append(el('h3', '', 'Marketplace'), el('div', '', 'Community-built software, scripts and assets. Paid products pass a full vetting gauntlet; free and open-source code passes automatic safety checks and is open for anyone to read and download.')); host.append(hero);
+    const seg = el('div', 'mk-seg'); seg.setAttribute('role', 'tablist'); [['all', 'All'], ['commercial', 'Commercial'], ['free', 'Free & Open']].forEach(([k, n]) => { const b = el('button', m.tier === k ? 'on' : '', n + (k === 'all' ? '' : ' · ' + (cat.counts ? cat.counts[k] : 0))); b.type = 'button'; b.addEventListener('click', () => { m.tier = k; loadMarket(); }); seg.append(b); }); host.append(seg);
+    if (cat.on_sale) host.append(el('div', 'ac-toast', cat.on_sale + (cat.on_sale === 1 ? ' product is' : ' products are') + ' on sale right now.'));
+    const bar = el('div', 'mk-bar'); const q = el('input'); q.type = 'search'; q.placeholder = 'Search products'; q.value = m.q; q.setAttribute('aria-label', 'Search products'); let tm; q.addEventListener('input', () => { clearTimeout(tm); tm = setTimeout(() => { m.q = q.value; loadMarket(); }, 300); });
+    const sort = el('select'); [['new', 'Newest'], ['price_low', 'Price: low to high'], ['price_high', 'Price: high to low'], ['name', 'Name']].forEach(([v, n]) => { const o = el('option', '', n); o.value = v; if (v === m.sort) o.selected = true; sort.append(o); }); sort.setAttribute('aria-label', 'Sort'); sort.addEventListener('change', () => { m.sort = sort.value; loadMarket(); });
+    bar.append(q, sort); host.append(bar); const chips = el('div', 'mk-bar'); [''].concat(cat.categories).forEach(c => { const b = el('button', 'mk-chip' + (m.cat === c ? ' on' : ''), c || 'All categories'); b.type = 'button'; b.addEventListener('click', () => { m.cat = c; loadMarket(); }); chips.append(b); }); host.append(chips);
+    if (!cat.products.length) host.append(el('div', 'pl-empty', m.q || m.cat ? 'Nothing matches that. Try another search or category.' : (m.tier === 'free' ? 'No free or open-source packages yet. Be the first: share yours from the seller portal.' : 'No products yet. Nothing is faked: products appear here only after they have passed vetting and the administrator has published them.')));
+    else { const g = el('div', 'mk-grid'); cat.products.forEach(p => g.append(productCard(p))); host.append(g); }
+  }
+  // a small, safe markdown renderer: everything is built with textContent, so nothing in a README can become markup
+  function mdBlock(text) {
+    const root = el('div', 'mk-md'); let list = null, code = null;
+    String(text || '').replace(/\r\n/g, '\n').split('\n').forEach(line => {
+      if (/^\s*```/.test(line)) { if (code) { root.append(code); code = null; } else code = el('pre'); return; }
+      if (code) { code.textContent += (code.textContent ? '\n' : '') + line; return; }
+      const h = line.match(/^(#{1,3})\s+(.*)/); if (h) { list = null; root.append(el('h' + (h[1].length + 1), '', h[2])); return; }
+      const li = line.match(/^\s*[-*]\s+(.*)/); if (li) { if (!list) { list = el('ul'); root.append(list); } list.append(inlineMd(li[1], 'li')); return; }
+      list = null; if (line.trim()) root.append(inlineMd(line, 'p'));
+    }); if (code) root.append(code); return root;
+  }
+  function inlineMd(s, tag) {
+    const n = el(tag); const rx = /`([^`]+)`|\*\*([^*]+)\*\*|\[([^\]]+)\]\((https:\/\/[^\s)]+)\)/g; let last = 0, m;
+    while ((m = rx.exec(s))) { if (m.index > last) n.append(document.createTextNode(s.slice(last, m.index))); if (m[1]) n.append(el('code', '', m[1])); else if (m[2]) n.append(el('strong', '', m[2])); else { n.append(link(m[4], m[3])); } last = rx.lastIndex; }
+    if (last < s.length) n.append(document.createTextNode(s.slice(last))); return n;
+  }
+  function commentNode(c, pid, depth) {
+    const m = PL.mk, w = el('div', 'mk-cm' + (c.removed ? ' rm' : '')); if (c.removed) { w.append(document.createTextNode('[removed]')); } else { const h = el('div'); h.append(el('span', 'who', c.who), el('span', 'mk-meta', '  ' + new Date(c.t * 1000).toLocaleDateString())); w.append(h, el('div', '', c.text));
+      const act = el('div'); if (depth < 3) { const r = el('button', '', 'Reply'); r.type = 'button'; r.addEventListener('click', () => { m.reply = m.reply === c.id ? null : c.id; renderMarket(); }); act.append(r); }
+      if (c.who === m.pageData.me || m.me.admin || m.pageData.owner === m.pageData.me) { const d = el('button', '', 'Remove'); d.type = 'button'; d.addEventListener('click', async () => { await api('marketplace/comment/' + c.id, null, 'DELETE'); loadMarket(); }); act.append(d); } w.append(act); }
+    if (m.reply === c.id) w.append(commentForm(pid, c.id)); (c.replies || []).forEach(r => w.append(commentNode(r, pid, depth + 1))); return w;
+  }
+  function commentForm(pid, parent) {
+    const f = el('form'); f.style.cssText = 'display:flex;gap:6px;margin:6px 0'; const i = el('input'); i.maxLength = 500; i.placeholder = parent ? 'Write a reply (keep it PG-13)' : 'Ask a question or share feedback (keep it PG-13)'; i.setAttribute('aria-label', 'Comment'); i.style.cssText = 'flex:1;background:#05080f;color:#e2e8f0;border:1px solid rgba(148,163,184,0.45);border-radius:999px;padding:6px 12px;font:inherit'; const b = el('button', 'pl-btn', 'Post'); b.type = 'submit'; const msg = el('div', 'pw-hint'); f.append(i, b);
+    f.addEventListener('submit', async e => { e.preventDefault(); if (!i.value.trim()) return; const d = await api('marketplace/product/' + pid + '/comment', { text: i.value, parent }); if (d && d.status === 'success') { PL.mk.reply = null; loadMarket(); } else { i.placeholder = (d && d.message) || 'Could not post'; i.value = ''; } });
+    return f;
+  }
+  function renderProduct(host) {
+    const m = PL.mk, pd = m.pageData, p = pd.product, soc = pd.social, rt = soc.rating;
+    const back = el('button', 'ac-crumb', '← Back to the storefront'); back.type = 'button'; back.addEventListener('click', () => { m.page = null; m.pageData = null; loadMarket(); }); host.append(back);
+    const hero = el('div', 'ac-hero'); hero.append(thumbBadges(p), el('h3', '', p.title), el('div', 'pw-sub', 'by ' + p.seller + '  ·  v' + (p.version || '?') + '  ·  ' + p.category + '  ·  ' + (p.license || ''))); host.append(hero);
+    host.append(el('p', '', p.summary), vetLine(p.vetting, p.free));
+    const acts = el('div', 'mk-acts'); acts.style.margin = '10px 0';
+    if (p.free) { const dl = el('a', 'pl-btn', 'Download the package'); dl.href = BASE + '/api/platform/marketplace/free/' + p.id + '/download'; dl.style.cssText = 'text-align:center;text-decoration:none'; dl.addEventListener('click', () => setTimeout(loadMarket, 800)); acts.append(dl); if (p.repo_url) { const gh = link(p.repo_url, 'Collaborate on the repository'); gh.className = 'pl-btn ghost'; gh.style.cssText = 'text-align:center;text-decoration:none'; acts.append(gh); } }
+    else { const buy = el('button', 'pl-btn', p.buy_url ? 'Buy ' + (p.final_cents ? money(p.final_cents) : '') : 'Checkout not set up yet'); buy.type = 'button'; buy.disabled = !p.buy_url; if (p.buy_url) buy.addEventListener('click', () => buyDialog(p)); acts.append(buy); }
+    const rep = el('button', 'rep', 'Report'); rep.type = 'button'; rep.addEventListener('click', () => reportDialog(p)); acts.append(rep); host.append(acts);
+    if (p.free) host.append(el('div', 'mk-note', 'SHA-256 of the vetted package: ' + p.sha256 + '. Compare it with the file you download. Automatic checks and an administrator\'s approval are not a guarantee: read the code before you run it.'));
+    const about = el('section', 'pw-sec'); about.append(Object.assign(el('div', 'pw-sh'), {})); about.firstChild.append(el('h4', '', 'About this product')); about.append(pd.readme ? mdBlock(pd.readme) : el('div', 'pw-hint', 'No description provided.')); host.append(about);
+    if (p.free) { const cs = el('section', 'pw-sec'); cs.append(Object.assign(el('div', 'pw-sh'), {})); cs.firstChild.append(el('h4', '', 'Read the code')); const wrap = el('div', 'mk-files'); const list = el('div', 'mk-flist'), view = el('div'); wrap.append(list, view); cs.append(wrap); host.append(cs); loadFiles(p.id, list, view); }
+    // ratings
+    const rs = el('section', 'pw-sec'); rs.append(Object.assign(el('div', 'pw-sh'), {})); rs.firstChild.append(el('h4', '', 'Ratings and reviews'));
+    const top = el('div'); top.style.cssText = 'display:flex;gap:12px;align-items:center;margin-bottom:8px'; top.append(el('b', '', rt.count ? rt.avg + ' / 5' : 'No ratings yet'), starRow(rt.avg, rt.count), el('span', 'mk-meta', rt.count + ' verified review' + (rt.count === 1 ? '' : 's'))); rs.append(top);
+    if (rt.count) { const dist = el('div', 'mk-dist'); ['5', '4', '3', '2', '1'].forEach(k => { const pct = Math.round(100 * rt.dist[k] / rt.count); const bar = el('span', 'bar'), i = el('i'); i.style.width = pct + '%'; bar.append(i); dist.append(el('span', '', k + ' ★'), bar, el('span', '', String(rt.dist[k]))); }); rs.append(dist); }
+    rs.append(el('div', 'pw-hint', p.free ? 'Only people who downloaded this package can review it.' : 'Only people whose purchase the administrator has verified can review a paid product.'));
+    if (soc.can_review.ok) { const f = el('form', 'pw-form'); const sel = el('select'); [5, 4, 3, 2, 1].forEach(n => { const o = el('option', '', n + ' star' + (n > 1 ? 's' : '')); o.value = n; sel.append(o); }); sel.style.cssText = 'background:#05080f;color:#e2e8f0;border:1px solid rgba(148,163,184,0.45);border-radius:8px;padding:6px 10px;font:inherit'; sel.setAttribute('aria-label', 'Stars'); const tx = el('textarea'); tx.rows = 3; tx.maxLength = 500; tx.placeholder = 'What worked and what did not? (optional)'; tx.setAttribute('aria-label', 'Your review'); tx.style.cssText = 'width:100%;background:#05080f;color:#e2e8f0;border:1px solid rgba(148,163,184,0.45);border-radius:8px;padding:8px;font:inherit'; const go = el('button', 'pl-btn', 'Post review'); go.type = 'submit'; const err = el('div', 'pw-hint'); f.append(sel, tx, go, err);
+      f.addEventListener('submit', async e => { e.preventDefault(); const d = await api('marketplace/product/' + p.id + '/review', { stars: sel.value, text: tx.value }); if (d && d.status === 'success') loadMarket(); else { err.textContent = (d && d.message) || 'Could not post.'; err.style.color = '#fda4af'; } }); rs.append(f); }
+    else rs.append(el('div', 'mk-note', soc.can_review.reason));
+    soc.reviews.forEach(r => { const d = el('div', 'mk-rev'); const h = el('div'); h.append(starRow(r.stars, 1), el('b', '', '  ' + r.who), el('span', 'mk-ver', r.verified === 'download' ? 'verified download' : 'verified purchase')); d.append(h); if (r.text) d.append(el('div', '', r.text)); rs.append(d); }); host.append(rs);
+    // comments
+    const cs2 = el('section', 'pw-sec'); cs2.append(Object.assign(el('div', 'pw-sh'), {})); cs2.firstChild.append(el('h4', '', 'Comments')); cs2.append(commentForm(p.id, null));
+    if (!soc.comments.length) cs2.append(el('div', 'pw-hint', 'No comments yet. Ask a question, discuss how it runs, or suggest an improvement.')); soc.comments.forEach(c => cs2.append(commentNode(c, p.id, 1))); host.append(cs2);
+    // how it appears in search
+    const sr = pd.seo || {}; if (sr.meta_title) { const sec = el('section', 'pw-sec'); sec.append(Object.assign(el('div', 'pw-sh'), {})); sec.firstChild.append(el('h4', '', 'How this listing appears in search'));
+      const d = el('div', 'mk-seo'); d.append(el('div', '', ''), el('div', '', 'Title: '), el('div', '', 'Description: '), el('div', '', 'Keywords: '), el('div', '', 'Page address: ')); const rows = [sr.meta_title, sr.meta_description, sr.keywords.join(', '), sr.path]; [...d.children].slice(1).forEach((r, i) => r.append(el('b', '', rows[i]))); d.firstChild.remove(); d.append(el('div', '', 'About the code: ' + sr.code_summary)); sec.append(d, el('div', 'pw-hint', 'Generated automatically from the listing, the README and the bundle. The administrator can export the storefront as a static site (clean addresses, a sitemap and structured data) to publish.')); host.append(sec); }
+  }
+  async function loadFiles(pid, list, view) {
+    const d = await api('marketplace/free/' + pid + '/files', null, 'GET'); if (!d || d.status !== 'success') { list.append(el('div', 'pw-hint', 'The package could not be read.')); return; }
+    d.files.forEach(f => { const b = el('button', '', f.name + '  (' + f.bytes + ' B)'); b.type = 'button'; b.addEventListener('click', async () => { [...list.children].forEach(x => x.classList.remove('on')); b.classList.add('on'); const r = await api('marketplace/free/' + pid + '/file?name=' + encodeURIComponent(f.name), null, 'GET'); view.replaceChildren(); if (r && r.status === 'success') { if (r.text === null) view.append(el('div', 'pw-hint', r.note)); else { const pre = el('div', 'mk-code'); pre.textContent = r.text; view.append(pre); if (r.truncated) view.append(el('div', 'pw-hint', 'Only the first part is shown. Download the package for the whole file.')); } } else view.append(el('div', 'pw-hint', (r && r.message) || 'Could not read that file.')); }); list.append(b); });
+    view.append(el('div', 'pw-hint', 'Choose a file to read it. ' + d.files.length + ' files, ' + d.bytes + ' bytes.'));
+    const first = d.files.find(f => /^readme/i.test(f.name)); if (first) { [...list.children].find(b => b.textContent.startsWith(first.name)).click(); }
+  }
+  function stageBlock(s) {
+    const b = el('div', 'mk-stage ' + s.state); const hd = el('div', 'hd'); hd.append(el('span', 'st', s.state === 'pass' ? '✓' : (s.state === 'fail' ? '✗' : (s.state === 'locked' ? '•' : '…'))), el('b', '', s.title), el('span', 'kind', ({ auto: 'Automatic', reviewer: 'Person, isolated', admin: 'Administrator', creator: 'You' })[s.kind])); b.append(hd);
+    if (s.note) b.append(el('div', 'mk-find info', s.note + (s.by ? '  (' + s.by + ')' : ''))); (s.findings || []).forEach(f => b.append(el('div', 'mk-find ' + f.severity, (f.severity === 'block' ? 'Blocked' : (f.severity === 'warn' ? 'Check' : 'Note')) + (f.file ? ' · ' + f.file + (f.line ? ':' + f.line : '') : '') + ': ' + f.text)));
+    return b;
+  }
+  function field(name, ph, val, max, type) { const i = inp(name, ph, val, max || 200); if (type) i.type = type; i.style.cssText = 'width:100%'; return i; }
+  function adminForms(box, sub) {
+    const run = async (path, body) => { const e0 = box.querySelector('.mk-err'); if (e0) e0.textContent = ''; const d = await api('marketplace/submission/' + sub.id + '/' + path, body); if (d && d.status === 'success') loadMarket(); else { const e = box.querySelector('.mk-err') || box.appendChild(el('div', 'mk-err pw-hint')); e.textContent = (d && d.message) || 'Could not reach NEXXUS.'; e.style.color = '#fda4af'; } };
+    const st = Object.fromEntries(sub.stages.map(s => [s.id, s.state])); box.append(el('div', 'ac-h', 'Administrator'));
+    const autoOk = ['intake', 'hygiene', 'security', 'listing'].every(k => st[k] === 'pass');
+    if (sub.tier === 'free') {
+      if (sub.status === 'awaiting_approval') { const f = el('form', 'pw-form'); const note = field('note', 'Note (what you checked)', '', 300); const go = el('button', 'pl-btn', 'Approve for Free & Open'); go.type = 'submit'; f.append(el('div', 'pw-hint', 'Read the automatic report above, then approve. The package is then listed, readable and downloadable by anyone.'), note, go); f.addEventListener('submit', e => { e.preventDefault(); run('approve', { note: note.value, admin: 'admin' }); }); box.append(f); }
+    } else {
+      if (st.functional !== 'pass' && autoOk) {
+        const f = el('form', 'pw-form'); const who = field('reviewer', 'Your name', '', 40), env = field('env', 'Isolated environment used (e.g. disposable VM, no network)', '', 200), pa = field('passed', 'Tests passed', '', 5, 'number'), fa = field('failed', 'Tests failed', '0', 5, 'number'), rep = el('textarea'); rep.rows = 4; rep.placeholder = 'What you ran: clean install, repeated runs, bad and huge inputs, resource use (at least 100 characters)'; rep.style.cssText = 'width:100%;background:#05080f;color:#e2e8f0;border:1px solid rgba(148,163,184,0.45);border-radius:8px;padding:7px 10px;font:inherit'; rep.setAttribute('aria-label', 'Test report'); const go = el('button', 'pl-btn', 'Attest test results'); go.type = 'submit'; f.append(el('div', 'pw-hint', 'You run the functional and stress tests yourself in an isolated environment, then attest the result. NEXXUS never runs a creator\'s code.'), who, env, pa, fa, rep, go);
+        f.addEventListener('submit', e => { e.preventDefault(); run('attest', { reviewer: who.value, environment: env.value, passed: pa.value, failed: fa.value, report: rep.value }); }); box.append(f);
+      }
+      if (st.functional === 'pass' && st.review !== 'pass') {
+        const f = el('form', 'pw-form'); const who = field('reviewer', 'Your name', '', 40), notes = field('notes', 'Notes for the creator', '', 300); const checks = {};
+        f.append(el('div', 'pw-hint', 'Reviewer checklist: every item must be ticked to approve.'));
+        sub.review_checklist.forEach(k => { const l = el('label', 'pw-hint'), c = el('input'); c.type = 'checkbox'; c.style.cssText = 'width:auto;margin-right:8px'; checks[k] = c; l.append(c, document.createTextNode(k.replace(/_/g, ' '))); f.append(l); });
+        const ok = el('button', 'pl-btn', 'Approve'), no = el('button', 'pl-btn ghost', 'Request changes'); ok.type = 'submit'; no.type = 'button'; const row = el('div'); row.style.cssText = 'display:flex;gap:8px'; row.append(ok, no); f.append(who, notes, row);
+        const body = approve => ({ reviewer: who.value, notes: notes.value, approve, checklist: Object.fromEntries(Object.entries(checks).map(([k, c]) => [k, c.checked])) }); f.addEventListener('submit', e => { e.preventDefault(); run('review', body(true)); }); no.addEventListener('click', () => run('review', body(false))); box.append(f);
+      }
+      if (sub.status === 'awaiting_greenlight' || sub.published) {
+        const f = el('form', 'pw-form'); const url = field('checkout_url', 'https:// checkout link for buyers (a payment provider\'s hosted checkout)', '', 400), pc = field('percent', 'Discount % (1-90, optional)', '', 2, 'number'), until = field('until', 'Discount ends (optional)', '', 10, 'date'), lab = field('label', 'Sale label (optional)', '', 40);
+        const go = el('button', 'pl-btn', sub.published ? 'Update checkout and discount' : 'Greenlight and publish'); go.type = 'submit'; f.append(el('div', 'pw-hint', 'NEXXUS does not process payments. Add the hosted checkout link buyers will use; without one the Buy button stays off.'), url, pc, until, lab, go);
+        f.addEventListener('submit', e => { e.preventDefault(); const disc = pc.value ? { percent: pc.value, until: until.value, label: lab.value } : null; run(sub.published ? 'checkout' : 'greenlight', { checkout_url: url.value, discount: disc, admin: 'admin' }); }); box.append(f);
+      }
+    }
+    const row = el('div'); row.style.cssText = 'display:flex;gap:8px;margin-top:8px';
+    if (sub.published) { const b = el('button', 'pl-btn ghost', 'Take down'); b.type = 'button'; b.addEventListener('click', () => { const r = prompt('Reason for the takedown (shown in the audit trail):'); if (r) run('unpublish', { reason: r }); }); row.append(b); }
+    if (!['rejected', 'withdrawn', 'published'].includes(sub.status)) { const b = el('button', 'pl-btn ghost', 'Reject'); b.type = 'button'; b.addEventListener('click', () => { const r = prompt('Reason for rejecting (the creator will see it):'); if (r) run('reject', { reason: r }); }); row.append(b); }
+    box.append(row);
+  }
+  function renderSubmission(host, sub) {
+    const m = PL.mk, free = sub.tier === 'free', back = el('button', 'ac-crumb', '← Your products'); back.type = 'button'; back.addEventListener('click', () => { m.sel = null; m.detail = null; renderMarket(); }); host.append(back);
+    const hero = el('div', 'ac-hero'); const h = el('h3', '', sub.listing.title + '  '); h.append(el('span', 'mk-status ' + sub.status, sub.status.replace(/_/g, ' ')), el('span', free ? 'mk-badge-free' : 'mk-badge-paid', free ? ' FREE / Open source' : ' Commercial')); hero.append(h, el('div', 'pw-sub', sub.team_name + '  ·  ' + sub.listing.category + '  ·  ' + (free ? 'free' : money(sub.listing.price_cents)) + '  ·  ' + (sub.version ? 'version ' + sub.version.manifest.version + ' (upload ' + sub.version.n + ')' : 'no bundle uploaded yet'))); host.append(hero);
+    if (sub.rejected) host.append(el('div', 'pw-visitor', 'Closed: ' + sub.rejected.reason));
+    host.append(el('div', 'mk-note', free ? 'Free and Open tier: the same automatic safety checks as paid products, then your contribution declaration and an administrator\'s approval. No payments and no revenue share. Anyone will be able to read and download your code. NEXXUS never runs it.' : 'Why testing is not fully automatic: NEXXUS never runs a creator\'s code on this computer. The four automatic stages only read your bundle; the functional and stress tests are run by a person in an isolated environment and attested with a report. Revenue share: ' + sub.revenue_share_percent + '% of net sales, set out in the agreement. NEXXUS does not process payments.'));
+    const up = el('section', 'pw-sec'); up.append(Object.assign(el('div', 'pw-sh'), {})); up.firstChild.append(el('h4', '', 'Upload a bundle'));
+    up.append(el('div', 'pw-hint', 'A .zip (up to ' + m.me.limits.zip_mb + ' MB, ' + m.me.limits.files + ' files) with a marketplace.json manifest at the top: name, version (1.0.0), description (40-600 characters), kind, license, entry, and permissions (network, files, subprocess, env) for everything the code does. Include a README of at least 200 characters.' + (free ? ' Free packages need an open-source license (' + m.me.foss_licenses.join(', ') + ') and a LICENSE file with the full text.' : '') + ' No executables or secrets.'));
+    const fi = el('input'); fi.type = 'file'; fi.accept = '.zip,application/zip'; fi.setAttribute('aria-label', 'Product bundle (.zip)'); const msg = el('div', 'pw-hint'); const go = el('button', 'pl-btn', sub.version ? 'Upload a new version' : 'Upload and run the checks'); go.type = 'button'; go.style.marginTop = '8px';
+    go.addEventListener('click', async () => { if (!fi.files[0]) { msg.textContent = 'Choose a .zip first.'; return; } go.disabled = true; msg.textContent = 'Reading and checking the bundle...'; const fd = new FormData(); fd.append('bundle', fi.files[0]); let d = null; try { d = await (await fetch(BASE + '/api/platform/marketplace/submission/' + sub.id + '/upload', { method: 'POST', headers: authHeaders(), body: fd, cache: 'no-store' })).json(); } catch (_) { d = null; }
+      go.disabled = false; if (d && d.status === 'success') loadMarket(); else { msg.textContent = (d && d.message) || 'Could not reach NEXXUS.'; msg.style.color = '#fda4af'; } }); up.append(fi, go, msg); host.append(up);
+    host.append(el('div', 'ac-h', 'The gauntlet')); sub.stages.forEach(s => host.append(stageBlock(s)));
+    const signPanel = (title, text, ackList, route, button, doneNote) => {
+      const s = el('section', 'pw-sec'); s.append(Object.assign(el('div', 'pw-sh'), {})); s.firstChild.append(el('h4', '', title)); s.append(el('div', 'mk-agree', text)); const nm = field('legal_name', 'Type your full name to sign', '', 80); const acks = {}; const box = el('div');
+      ackList.forEach(([k, t2]) => { const l = el('label', 'pw-hint'), c = el('input'); c.type = 'checkbox'; c.style.cssText = 'width:auto;margin-right:8px'; acks[k] = c; l.append(c, document.createTextNode(t2)); box.append(l); });
+      const err = el('div', 'pw-hint'); const sg = el('button', 'pl-btn', button); sg.type = 'button'; sg.addEventListener('click', async () => { err.textContent = ''; const d = await api('marketplace/submission/' + sub.id + '/' + route, { legal_name: nm.value, acks: Object.fromEntries(Object.entries(acks).map(([k, c]) => [k, c.checked])) }); if (d && d.status === 'success') loadMarket(); else { err.textContent = (d && d.message) || 'Could not reach NEXXUS.'; err.style.color = '#fda4af'; } });
+      s.append(nm, box, err, sg); return s;
+    };
+    if (free && sub.status === 'awaiting_declaration') host.append(signPanel('Contribution declaration', sub.declaration_text, [['licence_right', 'The code is mine to share under the license in my bundle.'], ['no_malware', 'It contains no malware, hidden behaviour or credentials.'], ['conduct', 'I agree to the NEXXUS Code of Conduct.']], 'declaration', 'Sign the declaration'));
+    else if (!free && sub.status === 'awaiting_agreement') host.append(signPanel('Partnership agreement (' + sub.revenue_share_percent + '% platform revenue share)', sub.agreement_text, [['read', 'I have read the whole agreement.'], ['revenue_share', 'I understand the platform keeps ' + sub.revenue_share_percent + '% of net revenue from each sale.'], ['originality', 'The product is mine to sell and does what the listing says.']], 'agreement', 'Sign the agreement'));
+    else if (sub.agreement) host.append(el('div', 'mk-note', 'Agreement signed by ' + sub.agreement.name + ' on ' + new Date(sub.agreement.t * 1000).toLocaleDateString() + ' (version ' + sub.agreement.version + ', ' + sub.agreement.revenue_share_percent + '% share).'));
+    else if (sub.declaration) host.append(el('div', 'mk-note', 'Declaration signed by ' + sub.declaration.name + ' on ' + new Date(sub.declaration.t * 1000).toLocaleDateString() + '.'));
+    if (m.me.admin) { const box = el('section', 'pw-sec'); adminForms(box, sub); host.append(box); }
+    if (!['rejected', 'withdrawn'].includes(sub.status)) { const w = el('button', 'pw-edit', 'Withdraw this product'); w.type = 'button'; w.style.cssText = 'margin-top:12px;color:#fda4af'; let armed = false; w.addEventListener('click', async () => { if (!armed) { armed = true; w.textContent = 'Sure? Press again'; setTimeout(() => { armed = false; w.textContent = 'Withdraw this product'; }, 3000); return; } await api('marketplace/submission/' + sub.id + '/withdraw', {}); m.sel = null; loadMarket(); }); host.append(w); }
+  }
+  function submitForm(tier) {
+    const m = PL.mk, me = m.me, free = tier === 'free'; const f = el('form', 'pw-form'); let co = null;
+    if (!free) { co = el('select'); me.companies.forEach(c => { const o = el('option', '', c.name); o.value = c.id; co.append(o); }); co.style.cssText = 'background:#05080f;color:#e2e8f0;border:1px solid rgba(148,163,184,0.45);border-radius:8px;padding:7px 10px;font:inherit'; co.setAttribute('aria-label', 'Company'); f.append(co); }
+    const ti = field('title', free ? 'Package title' : 'Product title', '', 60), su = field('summary', 'One-sentence summary (at least 20 characters)', '', 240), ct = el('select'); me.categories.forEach(c => { const o = el('option', '', c); o.value = c; ct.append(o); }); ct.style.cssText = 'background:#05080f;color:#e2e8f0;border:1px solid rgba(148,163,184,0.45);border-radius:8px;padding:7px 10px;font:inherit'; ct.setAttribute('aria-label', 'Category');
+    const pr = free ? null : field('price', 'Price in US dollars (0 for free)', '', 8, 'number'); if (pr) { pr.step = '0.01'; pr.min = '0'; } const repo = free ? field('repo_url', 'Repository link, e.g. https://github.com/you/project (optional, for collaboration)', '', 200) : null;
+    const go = el('button', 'pl-btn', free ? 'Start a free submission' : 'Create submission'); go.type = 'submit'; const err = el('div', 'pw-hint'); f.append(ti, su, ct); if (pr) f.append(pr); if (repo) f.append(repo); f.append(go, err);
+    f.addEventListener('submit', async e => { e.preventDefault(); const d = await api('marketplace/submission', { tier, team_id: co ? co.value : '', listing: { title: ti.value, summary: su.value, category: ct.value, price: pr ? (pr.value || 0) : 0, repo_url: repo ? repo.value : '' } }); if (d && d.status === 'success') { m.sel = d.submission.id; loadMarket(); } else { err.textContent = (d && d.message) || 'Could not reach NEXXUS.'; err.style.color = '#fda4af'; } });
+    return f;
+  }
+  function renderCreator(host) {
+    const m = PL.mk, me = m.me;
+    const hero = el('div', 'ac-hero'); hero.append(el('h3', '', 'Seller portal'), el('div', '', 'Share free and open-source code with anyone, or sell a product from your micro-company. Paid products must pass the whole gauntlet; free packages need clean, safe, openly licensed code and an administrator\'s approval.')); host.append(hero);
+    const tools = el('div', 'pw-tools'); const vb = el('button', 'pl-btn ghost', 'View the storefront as a buyer'); vb.type = 'button'; vb.addEventListener('click', () => { m.choice = 'buyer'; m.view = 'buyer'; renderMarket(); }); tools.append(vb);
+    if (me.admin) { const ab = el('button', 'pl-btn ghost', m.adminOpen ? 'Hide admin queue' : 'Admin queue'); ab.type = 'button'; ab.addEventListener('click', () => { m.adminOpen = !m.adminOpen; loadMarket(); }); tools.append(ab); } host.append(tools);
+    if (me.admin && m.adminOpen && m.queue) { const s = el('section', 'pw-sec'); s.append(Object.assign(el('div', 'pw-sh'), {})); s.firstChild.append(el('h4', '', 'Admin queue · ' + m.queue.submissions.length + ' submissions · ' + m.queue.reports.length + ' reports'));
+      m.queue.submissions.forEach(x => { const r = el('div', 'ac-step'); r.append(el('span', 'mk-status ' + x.status, x.status.replace(/_/g, ' ')), document.createTextNode(x.listing.title + ' · ' + x.team_name + ' · ' + x.tier)); r.addEventListener('click', () => { m.sel = x.id; loadMarket(); }); s.append(r); });
+      if (m.queue.reports.length) { s.append(el('div', 'ac-h', 'Reports')); m.queue.reports.slice(0, 10).forEach(r => s.append(el('div', 'pw-sub', new Date(r.t * 1000).toLocaleDateString() + '  ·  ' + r.title + ': ' + r.reason))); }
+      const ex = el('form', 'pw-form'); const base = field('base_url', 'Public address of your site, e.g. https://you.github.io/market (https only)', '', 200); const eb = el('button', 'pl-btn ghost', 'Export the storefront as a static site'); eb.type = 'submit'; const em = el('div', 'pw-hint'); ex.append(el('div', 'ac-h', 'Search-friendly storefront'), base, eb, em);
+      ex.addEventListener('submit', async e => { e.preventDefault(); const d = await api('marketplace/export', { base_url: base.value }); em.textContent = d && d.status === 'success' ? 'Wrote ' + d.files.length + ' files to ' + d.folder + '. ' + d.note : ((d && d.message) || 'Could not reach NEXXUS.'); em.style.color = d && d.status === 'success' ? '#86efac' : '#fda4af'; }); s.append(ex);
+      s.append(el('div', 'ac-h', 'Audit trail')); m.queue.audit.slice(0, 12).forEach(a => s.append(el('div', 'pw-sub', new Date(a.t * 1000).toLocaleString() + '  ·  ' + a.actor + '  ·  ' + a.action + (a.detail ? ': ' + a.detail : '')))); host.append(s); }
+    if (m.sel && m.detail) { renderSubmission(host, m.detail); return; }
+    const sf = el('section', 'pw-sec'); sf.append(Object.assign(el('div', 'pw-sh'), {})); sf.firstChild.append(el('h4', '', 'Share free & open-source code')); sf.append(el('div', 'pw-hint', 'No payment and no revenue share. Scripts, trinkets, tools and templates under an open-source license. You will pass automatic safety checks, sign a short declaration, and an administrator approves it.'), submitForm('free')); host.append(sf);
+    const s1 = el('section', 'pw-sec'); s1.append(Object.assign(el('div', 'pw-sh'), {})); s1.firstChild.append(el('h4', '', 'Sell a product'));
+    if (me.companies.length) s1.append(submitForm('commercial')); else s1.append(el('div', 'pw-hint', 'Paid products are submitted by a micro-company. Create a company workspace in the Teams tab to sell here.')); host.append(s1);
+    const s2 = el('section', 'pw-sec'); s2.append(Object.assign(el('div', 'pw-sh'), {})); s2.firstChild.append(el('h4', '', 'Your submissions · ' + m.mine.length)); if (!m.mine.length) s2.append(el('div', 'pl-empty', 'Nothing submitted yet.'));
+    m.mine.forEach(x => { const r = el('div', 'ac-step'); r.setAttribute('role', 'button'); r.tabIndex = 0; r.append(el('span', 'mk-status ' + x.status, x.status.replace(/_/g, ' ')), document.createTextNode(x.listing.title + '  ·  ' + (x.tier === 'free' ? 'free' : money(x.listing.price_cents)))); const go2 = () => { m.sel = x.id; loadMarket(); }; r.addEventListener('click', go2); r.addEventListener('keydown', e => { if (e.key === 'Enter') go2(); }); s2.append(r); }); host.append(s2);
+  }
+  function renderMarket() {
+    const host = $('plMarketView'), m = PL.mk; host.replaceChildren(); if (!m.me || !m.catalog) return;
+    if (m.view === 'creator') { renderCreator(host); return; }
+    const tools = el('div', 'pw-tools'); const sb = el('button', 'pl-btn ghost', m.me.companies.length ? 'Back to my seller portal' : 'Share or sell something'); sb.type = 'button'; sb.addEventListener('click', () => { m.choice = 'creator'; m.view = 'creator'; renderMarket(); loadMarket(); }); tools.append(sb); host.append(tools);
+    if (m.page && m.pageData) { renderProduct(host); return; }
+    renderStorefront(host);
+  }
 
   async function load() { const d = await api('state', null, 'GET'); if (d && d.status === 'success') { PL.state = d; PL.rank = d.rank; PL.viewers = d.viewers; renderLeft(); renderRight(); renderFeed(); } else if (d && d.status === 'locked') { await setOperatingMode('conversation'); window.plGateOpen(); } }
   // ---------- the command bar: text, links and photos ----------

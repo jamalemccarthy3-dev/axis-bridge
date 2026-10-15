@@ -60,6 +60,14 @@ class Base(unittest.TestCase):
         _ranks.LEDGER_PATH = os.path.join(pm.DATA_DIR, "ranks.jsonl")
         import academy as _academy
         import teams as _teams
+        import marketplace as _market
+        _market.DATA_DIR = os.path.join(pm.DATA_DIR, "market")
+        _market.SUBS_PATH, _market.BLOB_DIR = os.path.join(_market.DATA_DIR, "submissions.json"), os.path.join(_market.DATA_DIR, "quarantine")
+        _market.AUDIT_PATH, _market.REPORTS_PATH = os.path.join(_market.DATA_DIR, "audit.jsonl"), os.path.join(_market.DATA_DIR, "reports.jsonl")
+        import market_social as _social
+        _social.DATA_DIR = _market.DATA_DIR
+        _social.REVIEWS_PATH, _social.COMMENTS_PATH, _social.INTERACTIONS_PATH = os.path.join(_market.DATA_DIR, "reviews.json"), os.path.join(_market.DATA_DIR, "comments.json"), os.path.join(_market.DATA_DIR, "interactions.jsonl")
+        _social._recent.clear()
         _teams.TEAMS_PATH = os.path.join(pm.DATA_DIR, "teams.json")
         _academy.PROGRESS_PATH, _academy.BADGES_PATH = os.path.join(pm.DATA_DIR, "academy.json"), os.path.join(pm.DATA_DIR, "badges.jsonl")
         os.environ.pop("NEXXUS_GITHUB_TOKEN", None)
@@ -67,6 +75,7 @@ class Base(unittest.TestCase):
         for name in ("PROFILE_PATH", "POSTS_PATH", "MEDIA_DIR", "VAULT_PATH"):         # every store must live under the temp folder, never the real one
             self.assertTrue(getattr(pm, name).startswith(pm.DATA_DIR), name + " is not redirected to the temp folder")
         self.assertTrue(_ranks.LEDGER_PATH.startswith(pm.DATA_DIR), "the rank ledger is not redirected to the temp folder")
+        self.assertTrue(all(p.startswith(pm.DATA_DIR) for p in (_market.SUBS_PATH, _market.BLOB_DIR, _market.AUDIT_PATH, _market.REPORTS_PATH, _social.REVIEWS_PATH, _social.COMMENTS_PATH, _social.INTERACTIONS_PATH)), "the marketplace files are not redirected to the temp folder")
         self.assertTrue(_teams.TEAMS_PATH.startswith(pm.DATA_DIR), "the team store is not redirected to the temp folder")
         self.assertTrue(_academy.PROGRESS_PATH.startswith(pm.DATA_DIR) and _academy.BADGES_PATH.startswith(pm.DATA_DIR), "the academy files are not redirected to the temp folder")
         FakeModes.MODES = {"conversation": {}}

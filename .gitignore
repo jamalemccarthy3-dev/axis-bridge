@@ -163,3 +163,6 @@ nexxus_data/platform/
 
 # ---- private conversations (DMs, group chats, rooms): never committed, never read by any public module ----
 nexxus_data/private/
+
+# ---- marketplace: submissions, quarantined bundles, reviews, comments and the exported site ----
+nexxus_data/marketplace/

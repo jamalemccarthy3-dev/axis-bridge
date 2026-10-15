@@ -7,7 +7,7 @@ import privacy
 import telemetry_hub
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-PUBLIC_MODULES = ("github_sync.py", "ranks.py", "platform_mode.py", "telemetry_hub.py", "watchers.py", "site_server.py", "teams.py", "academy.py")
+PUBLIC_MODULES = ("github_sync.py", "ranks.py", "platform_mode.py", "telemetry_hub.py", "watchers.py", "site_server.py", "teams.py", "academy.py", "marketplace.py", "market_social.py", "seo.py", "marketplace_export.py")
 PRIVATE_WORDS = ("direct_message", "group_chat", "room_session", "room_signal", "nexxus_talk", "nexxus_data/private", "nexxus_data\\private", "PRIVATE_DIR", "PRIVATE_KINDS")
 
 
