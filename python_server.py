@@ -621,6 +621,40 @@ def capture_action(action):
         return make_response(jsonify({"status": "error", "message": str(e)}), 400)
     return handle_action_response({"status": "success", "result": out})
 
+import telemetry_hub as _tele
+
+@app.route("/api/sandbox-telemetry/summary", methods=["GET", "OPTIONS"])
+def sandbox_telemetry_summary():
+    """Aggregate numbers from opt-in sandbox sessions (counts only; install ids and raw events are never returned). Local machine only."""
+    if request.method == "OPTIONS":
+        return handle_action_response()
+    if not _is_local():
+        return make_response(jsonify({"status": "error", "message": "local machine only"}), 403)
+    try:
+        days = max(1, min(int(request.args.get("days", 7)), 90))
+    except ValueError:
+        days = 7
+    return handle_action_response({"status": "success", **_tele.summary(days)})
+
+@app.route("/api/sandbox-telemetry/pull", methods=["POST", "OPTIONS"])
+def sandbox_telemetry_pull():
+    """Collect queued events from the relay now (the desktop calls out; nothing connects in). Local machine only."""
+    if request.method == "OPTIONS":
+        return handle_action_response()
+    if not _is_local():
+        return make_response(jsonify({"status": "error", "message": "local machine only"}), 403)
+    try:
+        return handle_action_response({"status": "success", **_tele.pull_once()})
+    except RuntimeError as e:
+        return make_response(jsonify({"status": "error", "message": str(e)}), 400)
+    except Exception as e:
+        return make_response(jsonify({"status": "error", "message": "relay not reachable: " + type(e).__name__}), 502)
+
+try:
+    _tele.start_poller()          # only starts when NEXXUS_RELAY_URL and NEXXUS_RELAY_KEY are set
+except Exception:
+    pass
+
 import operator_scope as _op_scope
 
 @app.route("/api/operator/grants", methods=["GET", "POST", "DELETE", "OPTIONS"])

@@ -1,0 +1,12 @@
+name = "nexxus-telemetry-relay"
+main = "worker.js"
+compatibility_date = "2026-01-01"
+
+[vars]
+ALLOWED_ORIGIN = "https://jamalemccarthy3-dev.github.io"
+
+# Create the namespace once with:  npx wrangler kv namespace create EVENTS_KV
+# then paste the id it prints here.
+[[kv_namespaces]]
+binding = "EVENTS_KV"
+id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"

@@ -154,6 +154,10 @@ A repository can be a folder of code, or it can be a workbench. I treat this one
 - **Tests leave nothing behind.** They run on temp folders and prove it with before-and-after snapshots.
 - **Honest credit.** Humans and AI are named for what each actually did.
 
+## Privacy and telemetry
+
+The NEXXUS app on your computer sends nothing about you. The public sandbox page (the installable web app) can send a small, anonymous usage signal to the maker, but **only if you tick a box that is off by default**, and you can turn it off and delete its random ID at any time. It never collects text you type, names or browser details. Details, the exact fields and how to set up the relay are in [docs/MULTI_TIER.md](docs/MULTI_TIER.md).
+
 ## Special thanks: GitHub, the bridge
 
 NEXXUS is a local-first system. It lives on one computer, behind loopback, with its own keys and its own rules. That is the point of it, and it is also the problem: a sandbox on a single

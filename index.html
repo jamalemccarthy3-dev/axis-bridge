@@ -185,6 +185,15 @@ input,textarea{width:100%;background:var(--bg);color:var(--text);border:1px soli
     <li><b>Bluetooth</b><div class="mute">Pending hardware with a radio.</div></li>
   </ul>
 </section>
+<section id="privacy" hidden>
+  <h2>Privacy</h2>
+  <div class="card">
+    <label><input type="checkbox" id="telOptIn" style="width:auto"> <b>Share anonymous usage with the NEXXUS maker</b> <span class="mute">(off by default)</span></label>
+    <p class="mute" style="margin:8px 0 0">If you turn this on, this page sends only: which of a few fixed actions happened (page opened, install tapped, app installed, feedback opened, review link tapped, an error type), a random ID created on this device, the app version, whether it runs as an installed app, and a coarse screen size (small, medium or large).
+    It never sends your name, text you type, IP address stored by us, or browser details. Turn it off at any time and the ID is deleted.</p>
+    <p class="row" style="margin:8px 0 0"><button class="btn ghost" type="button" id="telReset">Delete my ID and turn off</button><span id="telState" class="mute"></span></p>
+  </div>
+</section>
 </main>
 
 <!-- in-app feedback: small, closed by default, never auto-opens -->
@@ -198,6 +207,7 @@ input,textarea{width:100%;background:var(--bg);color:var(--text);border:1px soli
   </form>
 </div>
 
+<script src="config.js"></script>
 <script>
 (function(){
   var $ = function(id){return document.getElementById(id)};
@@ -287,6 +297,42 @@ input,textarea{width:100%;background:var(--bg);color:var(--text);border:1px soli
       s.textContent='Thanks, logged.';$('fbText').value='';setTimeout(function(){toggle(false);s.textContent=''},1200);
     }).catch(function(){s.textContent='';var a=document.createElement('a');a.href=GH+'bug-report.yml';a.target='_blank';a.rel='noopener';a.textContent='Report it on GitHub instead';s.appendChild(a)});
   });
+  /* ---- opt-in anonymous telemetry: off unless a relay is configured AND the visitor turns it on ---- */
+  var TEL_EVENTS = ['page_view', 'install_clicked', 'app_installed', 'section_opened', 'feedback_opened', 'review_link_clicked', 'error'];
+  var TEL_URL = (window.NEXXUS_RELAY_URL || '').replace(/\/+$/, ''), TEL_VER = '1.0.1', telQueue = [];
+  function telOn(){ return store('nx_tel') === 1 && /^https:\/\//.test(TEL_URL); }
+  function telId(){
+    var id = store('nx_tel_id');
+    if (typeof id !== 'string' || !/^[0-9a-f]{32}$/.test(id)) {
+      var a = new Uint8Array(16); (window.crypto || {getRandomValues: function(x){ for (var i = 0; i < x.length; i++) x[i] = Math.floor(Math.random() * 256); }}).getRandomValues(a);
+      id = [].map.call(a, function(b){ return ('0' + b.toString(16)).slice(-2); }).join(''); store('nx_tel_id', id);
+    }
+    return id;
+  }
+  function telTrack(name, tag){
+    if (!telOn() || TEL_EVENTS.indexOf(name) < 0) return;
+    var ev = {e: name, t: Math.floor(Date.now() / 1000), i: telId(), v: TEL_VER, s: standalone ? 1 : 0, w: innerWidth < 600 ? 's' : (innerWidth < 1000 ? 'm' : 'l')};
+    if (tag && /^[a-z0-9_-]{1,32}$/.test(tag)) ev.x = tag;
+    telQueue.push(ev);
+  }
+  function telFlush(){
+    if (!telQueue.length || !telOn()) { telQueue = []; return; }
+    var body = JSON.stringify({events: telQueue.splice(0, 20)});
+    try { fetch(TEL_URL + '/e', {method: 'POST', headers: {'Content-Type': 'application/json'}, body: body, keepalive: true, credentials: 'omit', referrerPolicy: 'no-referrer'}).catch(function(){}); } catch (e) {}
+  }
+  var telBox = $('telOptIn'), telSec = $('privacy');
+  function telPaint(){ if (telBox) telBox.checked = telOn(); if ($('telState')) $('telState').textContent = telOn() ? 'Sharing is ON.' : 'Sharing is off.'; }
+  if (telSec && /^https:\/\//.test(TEL_URL)) {          // no relay configured: the card stays hidden and nothing can ever be sent
+    telSec.hidden = false; telPaint();
+    telBox.addEventListener('change', function(){ store('nx_tel', telBox.checked ? 1 : 0); if (!telBox.checked) { try { localStorage.removeItem('nx_tel_id'); } catch (e) {} telQueue = []; } telPaint(); if (telBox.checked) { telTrack('page_view'); telFlush(); } });
+    $('telReset').addEventListener('click', function(){ store('nx_tel', 0); try { localStorage.removeItem('nx_tel_id'); } catch (e) {} telQueue = []; telPaint(); });
+    $('installBtn').addEventListener('click', function(){ telTrack('install_clicked'); telFlush(); });
+    window.addEventListener('appinstalled', function(){ telTrack('app_installed'); telFlush(); });
+    $('fbTrigger').addEventListener('click', function(){ telTrack('feedback_opened'); telFlush(); });
+    document.addEventListener('click', function(e){ var a = e.target.closest && e.target.closest('#comments a'); if (a) { telTrack('review_link_clicked'); telFlush(); } });
+    window.addEventListener('error', function(){ telTrack('error', 'js-error'); telFlush(); });
+    telTrack('page_view'); telFlush();
+  }
 })();
 </script>
 </body>

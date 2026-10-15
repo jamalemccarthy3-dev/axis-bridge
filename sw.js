@@ -1,5 +1,5 @@
 const CACHE = 'nexxus-v2';
-const SHELL = ['./', './index.html', './manifest.json', './icon-192.png', './icon-512.png', './docs/images/dashboard.png'];
+const SHELL = ['./', './index.html', './config.js', './manifest.json', './icon-192.png', './icon-512.png', './docs/images/dashboard.png'];
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((cache) => cache.addAll(SHELL)).then(() => self.skipWaiting()));

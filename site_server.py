@@ -26,6 +26,7 @@ STATIC = {
     "/manifest.json": ("manifest.json", "application/manifest+json"),
     "/sw.js": ("sw.js", "text/javascript"),
     "/icon-192.png": ("icon-192.png", "image/png"),
+    "/config.js": ("config.js", "text/javascript"),
     "/icon-512.png": ("icon-512.png", "image/png"),
     "/docs/images/dashboard.png": ("docs/images/dashboard.png", "image/png"),
 }

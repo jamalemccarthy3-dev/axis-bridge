@@ -152,3 +152,8 @@ nexxus_data/captures/
 nexxus_data/community.json
 logs/capture_audit.jsonl
 logs/operator_audit.jsonl
+
+# ---- sandbox telemetry store and relay secrets ----
+nexxus_data/telemetry/
+relay/.dev.vars
+relay/.wrangler/
