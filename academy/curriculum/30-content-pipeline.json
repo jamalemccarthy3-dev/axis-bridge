@@ -1,0 +1,86 @@
+{
+  "id": "content-pipeline",
+  "title": "Run a content pipeline",
+  "badge": "Pipeline Builder",
+  "summary": "Turn making content from a scramble into a repeatable pipeline: capture ideas, batch the work, check quality, repurpose and review. Process, not promises.",
+  "audience": "Anyone who wants to publish regularly without burning out.",
+  "disclaimer": "Education only. Keep what you publish accurate, credit your sources and respect copyright and platform rules.",
+  "modules": [
+    {
+      "id": "cp-capture",
+      "title": "Capture and plan",
+      "badge": "Idea Engine",
+      "goal": "Never start from a blank page.",
+      "steps": [
+        {
+          "id": "idea-bank",
+          "title": "Start an idea bank",
+          "why": "Ideas arrive at random times. A single place to catch them means you pick from a list instead of staring at a blank screen.",
+          "do": ["Choose one place (a note, a document) as your only idea inbox.", "Add ten ideas today, each as a one-line headline with who it is for."],
+          "prompts": [{"label": "Fill the bank", "text": "My topic is <topic> and my audience is <audience>. Give me 20 specific content ideas as one-line headlines, grouped by: teach, show, answer a question, tell a story. Remove anything generic."}],
+          "commands": [],
+          "tips": ["Capture first, judge later.", "Keep the ones that make you curious."],
+          "video": null,
+          "check": "Your idea bank has at least ten entries.",
+          "proof": "note"
+        },
+        {
+          "id": "calendar",
+          "title": "Plan a month on one page",
+          "why": "A visible plan turns 'what do I make today' into 'what is next on the list'.",
+          "do": ["Pick a realistic cadence you can keep (less than you think).", "Place ideas on a month calendar, mixing easy and hard."],
+          "prompts": [{"label": "Draft a calendar", "text": "Plan a four-week content calendar publishing <cadence>, using these ideas: <ideas>. Alternate easy and effortful pieces and leave one slot a week free."}],
+          "commands": [],
+          "tips": ["A slower schedule you keep beats a fast one you drop.", "Leave a free slot for what happens in the world."],
+          "video": null,
+          "check": "A four-week plan exists.",
+          "proof": "note"
+        }
+      ]
+    },
+    {
+      "id": "cp-make",
+      "title": "Make, check, reuse",
+      "badge": "Repeatable",
+      "goal": "A pipeline with quality checks and reuse built in.",
+      "steps": [
+        {
+          "id": "batch",
+          "title": "Batch the work",
+          "why": "Doing the same kind of task together (all scripts, then all recording) saves setup time and keeps quality even.",
+          "do": ["Pick a batch day.", "Make three pieces in one sitting by stage: outline, draft, polish."],
+          "prompts": [{"label": "Outline in bulk", "text": "Turn each of these three ideas into a structured outline (hook, three key points, one example, call to action): <ideas>. Keep each to ten lines."}],
+          "commands": [],
+          "tips": ["Stop each stage while it is still easy to start again."],
+          "video": null,
+          "check": "You produced three outlines or drafts in one session.",
+          "proof": "note"
+        },
+        {
+          "id": "quality-check",
+          "title": "Add a checklist before anything goes out",
+          "why": "A short checklist catches the mistakes you only see after publishing: facts, names, links, tone and permissions.",
+          "do": ["Write a ten-line checklist for your work.", "Run your next piece through it before publishing."],
+          "prompts": [{"label": "Draft the checklist", "text": "Write a pre-publish checklist (ten items) for <type of content>: facts and sources checked, names spelled right, links work, nothing private shown, permissions for images and music, claims I can back up, tone matches my audience."}],
+          "commands": [],
+          "tips": ["Credit sources and people.", "If you are unsure of a fact, leave it out or say you are unsure."],
+          "video": null,
+          "check": "Your checklist exists and you used it once.",
+          "proof": "note"
+        },
+        {
+          "id": "repurpose",
+          "title": "Repurpose one piece four ways",
+          "why": "One good piece can become several honest, smaller ones, each suited to where it is read or watched.",
+          "do": ["Take one finished piece.", "Make a short summary, three quotes or tips, a question for your audience, and a next-step link."],
+          "prompts": [{"label": "Repurpose", "text": "Here is my finished piece: <text>. Make: a 50-word summary, three short tips, one question to ask my audience, and a one-line description. Keep my meaning, do not add claims."}],
+          "commands": [],
+          "tips": ["Say where it came from; do not pretend each is brand new."],
+          "video": null,
+          "check": "One piece became at least four smaller ones.",
+          "proof": "note"
+        }
+      ]
+    }
+  ]
+}

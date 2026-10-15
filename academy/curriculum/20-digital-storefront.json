@@ -1,0 +1,86 @@
+{
+  "id": "digital-storefront",
+  "title": "Open a digital storefront",
+  "badge": "Storefront Builder",
+  "summary": "Go from an idea to a small, honest online shop for a digital product: validate it, write the page, set up payment and delivery, and write the policies. A learning path, not a promise of sales.",
+  "audience": "Anyone who wants to sell something digital, such as a guide, a template or a tool.",
+  "disclaimer": "Education only, not legal, tax or financial advice. Rules about sales tax, refunds and privacy depend on where you and your customers live: check them before you take money.",
+  "modules": [
+    {
+      "id": "sf-validate",
+      "title": "Is there demand?",
+      "badge": "Validated",
+      "goal": "Know that someone wants it before you build it.",
+      "steps": [
+        {
+          "id": "problem",
+          "title": "Name the problem and the person",
+          "why": "A product is an answer. Start with a specific person who has a specific problem and is already trying to solve it.",
+          "do": ["Describe the person in three lines: who they are, what they are stuck on, what they have tried.", "Write the problem in their words, not yours."],
+          "prompts": [{"label": "Sharpen the problem", "text": "My idea: <idea>. Ask me questions to define the exact person and the exact problem. Then write the problem in one sentence the way that person would say it."}],
+          "commands": [],
+          "tips": ["If you cannot find ten people with this problem, narrow or change the idea."],
+          "video": null,
+          "check": "You have a person, a problem and the words they use for it.",
+          "proof": "note"
+        },
+        {
+          "id": "test-demand",
+          "title": "Test demand cheaply",
+          "why": "Before building, find out if people care enough to act: reply, join a list, or pre-order.",
+          "do": ["Write a one-paragraph description and a simple way to respond.", "Show it to at least ten real people in your target group and record what they say."],
+          "prompts": [{"label": "Honest test message", "text": "Write a short, honest message (under 80 words) describing a <product> that helps <person> with <problem>, asking if they would want it and what they would expect to pay. No pressure, no fake urgency."}],
+          "commands": [],
+          "tips": ["Never invent testimonials or scarcity.", "Interest is not a sale: ask for a small real commitment."],
+          "video": null,
+          "check": "You asked ten people and wrote down their answers.",
+          "proof": "note"
+        }
+      ]
+    },
+    {
+      "id": "sf-build",
+      "title": "Build the shop",
+      "badge": "Open for Business",
+      "goal": "A page, a price, a way to pay and a way to deliver.",
+      "steps": [
+        {
+          "id": "product-page",
+          "title": "Write the product page",
+          "why": "The page must answer: what is it, who is it for, what do I get, what does it cost, what if it is not for me.",
+          "do": ["Write the headline, three benefits, what is included, the price and the refund line.", "Add real screenshots or samples of exactly what is delivered."],
+          "prompts": [{"label": "Draft the page", "text": "Write a product page for <product> for <person>. Sections: headline, the problem, what you get (a plain list), who it is not for, price, refund policy, three honest FAQs. No hype and no claims of results you cannot prove."}],
+          "commands": [{"label": "Make a product image", "text": "Make a clean product cover image: title '<name>', subtitle '<one line>', simple shapes, two colours.", "where": "NEXXUS command bar, in Creation mode"}],
+          "tips": ["Describe what the buyer gets, not what you hope happens to them.", "Show the price clearly."],
+          "video": null,
+          "check": "A complete product page draft exists.",
+          "proof": "note"
+        },
+        {
+          "id": "pay-deliver",
+          "title": "Choose payment and delivery",
+          "why": "Use an established payment provider so card details never touch your own system, and deliver the product reliably.",
+          "do": ["Pick a payment provider that supports your country and digital goods.", "Decide how the buyer receives the product and how they get help."],
+          "prompts": [{"label": "Compare options", "text": "I want to sell a <product> as a digital download from <country>. List the questions I must answer when choosing a payment provider (fees, taxes handled or not, payouts, refunds, digital goods rules), without recommending one."}],
+          "commands": [],
+          "tips": ["Never store card numbers yourself.", "Test a purchase end to end before announcing anything."],
+          "video": null,
+          "check": "You know how a buyer pays, receives the product and gets help.",
+          "proof": "note"
+        },
+        {
+          "id": "policies",
+          "title": "Write refund, privacy and contact policies",
+          "why": "Clear policies protect you and build trust. They are also often a legal requirement.",
+          "do": ["Write a plain refund policy, a privacy note saying what you collect and why, and a contact address.", "Check the rules for your location before you launch."],
+          "prompts": [{"label": "Plain-language drafts", "text": "Draft a plain-language refund policy and a short privacy note for a small digital-download shop that collects only an email address and payment through a third-party provider. I will have them checked against my local rules."}],
+          "commands": [],
+          "tips": ["A policy you cannot honour is worse than none.", "This is a draft to check, not legal advice."],
+          "video": null,
+          "check": "Your three policies are written.",
+          "proof": "note"
+        }
+      ]
+    }
+  ]
+}

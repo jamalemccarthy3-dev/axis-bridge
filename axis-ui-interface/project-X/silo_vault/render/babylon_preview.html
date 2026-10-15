@@ -1316,6 +1316,15 @@ body.pl-on #axisDock { display:none !important; }          /* the desktop contro
 .pd-box { width:min(620px,100%); max-height:90vh; overflow-y:auto; background:rgba(8,12,20,0.99); border:1px solid rgba(56,189,248,0.5); border-radius:14px; padding:18px; color:#cbd5e1; font:14px/1.5 system-ui,-apple-system,Segoe UI,sans-serif; } .pd-box h3 { margin:0 0 8px; color:#e0f2fe; }
 .pd-box pre { white-space:pre-wrap; overflow-wrap:anywhere; background:#05080f; border:1px solid rgba(148,163,184,0.35); border-radius:8px; padding:8px 10px; max-height:200px; overflow-y:auto; font:12px ui-monospace,Consolas,monospace; } .pd-warn { border-left:3px solid #fbbf24; background:rgba(251,191,36,0.08); padding:6px 10px; margin:8px 0; font-size:.85rem; }
 .pd-box table { width:100%; border-collapse:collapse; font-size:.82rem; margin:6px 0; } .pd-box th, .pd-box td { text-align:left; padding:4px 6px; border-bottom:1px solid rgba(255,255,255,0.1); vertical-align:top; } .pd-box .na { color:#94a3b8; }
+.ac-hero { background:linear-gradient(120deg,rgba(14,165,233,0.2),rgba(124,58,237,0.2)); border:1px solid rgba(56,189,248,0.4); border-radius:12px; padding:12px 14px; margin-bottom:10px; } .ac-hero h3 { margin:0 0 4px; font-size:1.05rem; color:#e0f2fe; text-transform:none; letter-spacing:0; }
+.ac-quest { display:flex; gap:8px; align-items:flex-start; padding:5px 0; font-size:.88rem; } .ac-quest .mk { flex:0 0 auto; width:18px; height:18px; border-radius:50%; border:2px solid #64748b; display:inline-flex; align-items:center; justify-content:center; font-size:.7rem; } .ac-quest.done .mk { background:#22c55e; border-color:#22c55e; color:#052e1b; } .ac-quest.na { color:#94a3b8; } .ac-quest small { color:#94a3b8; display:block; }
+.ac-paths { display:grid; grid-template-columns:1fr 1fr; gap:10px; } @media (max-width:560px) { .ac-paths { grid-template-columns:1fr; } } .ac-card { border:1px solid rgba(148,163,184,0.35); border-radius:12px; padding:10px 12px; background:rgba(15,23,42,0.6); cursor:pointer; } .ac-card:hover { border-color:#38bdf8; } .ac-card.on { border-color:#34d399; background:rgba(52,211,153,0.08); } .ac-card h4 { margin:0 0 4px; color:#e0f2fe; font-size:.95rem; }
+.ac-bar { height:6px; border-radius:999px; background:rgba(148,163,184,0.25); overflow:hidden; margin:6px 0; } .ac-bar i { display:block; height:100%; background:linear-gradient(90deg,#34d399,#38bdf8); }
+.ac-badges { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:8px; } .ac-badge { border:1px solid rgba(148,163,184,0.3); border-radius:10px; padding:8px; opacity:.55; font-size:.78rem; } .ac-badge.earned { opacity:1; border-color:#fbbf24; background:rgba(251,191,36,0.08); } .ac-badge b { display:block; color:#f1f5f9; font-size:.85rem; } .ac-badge .ev { color:#86efac; font-size:.68rem; } .ac-badge .cr { color:#94a3b8; margin-top:3px; }
+.ac-step { display:flex; gap:8px; align-items:center; padding:7px 8px; border:1px solid rgba(148,163,184,0.25); border-radius:8px; margin-bottom:6px; cursor:pointer; font-size:.88rem; } .ac-step:hover { border-color:#38bdf8; } .ac-step .mk { width:16px; height:16px; border-radius:50%; border:2px solid #64748b; flex:0 0 auto; } .ac-step.done .mk { background:#22c55e; border-color:#22c55e; } .ac-step small { margin-left:auto; color:#94a3b8; }
+.ac-pre { white-space:pre-wrap; overflow-wrap:anywhere; background:#05080f; border:1px solid rgba(148,163,184,0.35); border-radius:8px; padding:8px 10px; font:12.5px/1.45 ui-monospace,Consolas,monospace; margin:4px 0; } .ac-copy { background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.5); color:#bae6fd; border-radius:6px; padding:2px 10px; font:inherit; font-size:.75rem; cursor:pointer; }
+.ac-h { margin:14px 0 4px; font-size:.78rem; text-transform:uppercase; letter-spacing:.08em; color:#7dd3fc; } .ac-list { margin:4px 0; padding-left:20px; } .ac-toast { background:rgba(251,191,36,0.12); border:1px solid rgba(251,191,36,0.6); color:#fde68a; border-radius:10px; padding:8px 12px; margin-bottom:10px; font-size:.88rem; }
+.ac-frame { width:100%; aspect-ratio:16/9; border:0; border-radius:10px; background:#000; } .ac-nav { display:flex; justify-content:space-between; gap:8px; margin-top:14px; } .ac-crumb { color:#7dd3fc; background:none; border:0; cursor:pointer; font:inherit; padding:0; margin-bottom:8px; }
 .pl-chip { display:none; align-items:center; gap:8px; padding:6px 12px; border-top:1px solid rgba(56,189,248,0.25); background:rgba(2,6,14,0.7); font-size:.8rem; color:#bae6fd; } .pl-chip.on { display:flex; } .pl-chip img { height:44px; width:44px; object-fit:cover; border-radius:8px; } .pl-chip button { margin-left:auto; background:none; border:0; color:#fda4af; cursor:pointer; font:inherit; }
 .pl-feed.drop { outline:2px dashed #38bdf8; outline-offset:-6px; }
 #plLightbox { position:absolute; inset:0; z-index:5; display:none; align-items:center; justify-content:center; background:rgba(2,6,14,0.92); cursor:zoom-out; padding:20px; } #plLightbox.open { display:flex; } #plLightbox img { max-width:100%; max-height:100%; border-radius:10px; }
@@ -11314,8 +11323,9 @@ async function skBuild() {
 <div class="pl-stage" id="plStage" data-tab="floor">
 <aside class="pl-wall left" id="plLeft" aria-label="Your profile"></aside>
 <main class="pl-floor" aria-label="The floor">
-<div class="pl-views" id="plViews" role="tablist" aria-label="Floor views"><button type="button" role="tab" data-v="floor" class="on">Floor</button><button type="button" role="tab" data-v="wall">Profile wall</button><button type="button" role="tab" data-v="public">Public wall</button><button type="button" role="tab" data-v="vault">Image vault</button></div>
-<div class="pl-feed" id="plFeed" aria-live="polite"></div>
+<div class="pl-views" id="plViews" role="tablist" aria-label="Floor views"><button type="button" role="tab" data-v="academy" class="on">Academy</button><button type="button" role="tab" data-v="floor">Floor</button><button type="button" role="tab" data-v="wall">Profile wall</button><button type="button" role="tab" data-v="public">Public wall</button><button type="button" role="tab" data-v="vault">Image vault</button></div>
+<div class="pl-view" id="plAcademyView" aria-label="The Academy"></div>
+<div class="pl-feed" id="plFeed" aria-live="polite" hidden></div>
 <div class="pl-view" id="plWallView" hidden aria-label="Your profile wall"></div>
 <div class="pl-view" id="plPublicView" hidden aria-label="The public wall"></div>
 <div class="pl-view" id="plVaultView" hidden aria-label="Your image vault"></div>
@@ -11472,6 +11482,7 @@ async function skBuild() {
     else if (ev.type === 'vault_added' || ev.type === 'vault_deleted') { if (PL.view === 'vault') loadVault(); else PL.vault = []; }
     else if (ev.type === 'public') { const p = find(ev.post_id); if (p) { p.public = ev.public; upsertPost(p); } refreshRank(); if (PL.view === 'public') loadPublic(); }
     else if (ev.type === 'github') { const p = find(ev.post_id); if (p) { p.gh = ev.gh; upsertPost(p); } if (PL.view === 'public') loadPublic(); }
+    else if (ev.type === 'academy') { if (PL.view === 'academy' && PL.acView.mode === 'home') loadAcademy(); else loadAcademy(); }
     else if (ev.type === 'viewers') { PL.viewers = ev.viewers; liveLabel(true); }
   }
   function liveLabel(on) { const l = $('plLive'); if (!l) return; l.classList.toggle('on', !!on); l.textContent = on ? 'Live · ' + (PL.viewers || 1) + (PL.viewers === 1 ? ' viewport' : ' viewports') : 'reconnecting'; }
@@ -11495,9 +11506,9 @@ async function skBuild() {
   PL.view = 'floor'; PL.wallEdit = null; PL.asVisitor = false; PL.vault = [];
   function setView(v) {
     PL.view = v; if (v !== 'wall') { PL.wallEdit = null; PL.asVisitor = false; }
-    $('plFeed').hidden = v !== 'floor'; $('plWallView').hidden = v !== 'wall'; $('plPublicView').hidden = v !== 'public'; $('plVaultView').hidden = v !== 'vault';
+    $('plAcademyView').hidden = v !== 'academy'; $('plFeed').hidden = v !== 'floor'; $('plWallView').hidden = v !== 'wall'; $('plPublicView').hidden = v !== 'public'; $('plVaultView').hidden = v !== 'vault';
     document.querySelectorAll('#plViews button').forEach(b => { const on = b.dataset.v === v; b.classList.toggle('on', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); });
-    if (v === 'wall') renderWall(); else if (v === 'vault') loadVault(); else if (v === 'public') loadPublic(); else { const f = $('plFeed'); f.scrollTop = f.scrollHeight; }
+    if (v === 'academy') loadAcademy(); else if (v === 'wall') renderWall(); else if (v === 'vault') loadVault(); else if (v === 'public') loadPublic(); else { const f = $('plFeed'); f.scrollTop = f.scrollHeight; }
   }
   $('plViews').addEventListener('click', e => { const b = e.target.closest('button[data-v]'); if (b) setView(b.dataset.v); });
 
@@ -11643,6 +11654,7 @@ async function skBuild() {
     const total = r.points + (r.to_next || 0), bar = el('div', 'bar'), fill = el('i'); fill.style.width = (r.next_tier ? Math.min(100, Math.round(100 * r.points / Math.max(1, total))) : 100) + '%'; bar.append(fill); c.append(bar);
     c.append(el('div', 'pw-sub', r.next_tier ? r.to_next + ' to ' + r.next_tier : 'Top rank reached'));
     const how = el('button', '', 'How ranks work'); how.type = 'button'; how.addEventListener('click', openRankPanel); c.append(how);
+    const bd = el('div', 'pw-sub', (PL.badgeCount || 0) + (PL.badgeCount === 1 ? ' badge' : ' badges') + ' earned'); const ac = el('button', '', 'Open the Academy'); ac.type = 'button'; ac.addEventListener('click', () => { PL.acView = { mode: 'home' }; setView('academy'); }); c.append(bd, ac);
     return c;
   }
   async function refreshRank() { const d = await api('ranks', null, 'GET'); if (d && d.status === 'success') { PL.rank = d; renderLeft(); } return d; }
@@ -11714,6 +11726,105 @@ async function skBuild() {
     });
   }
 
+  // ---------- the Academy ----------
+  PL.ac = null; PL.acView = { mode: 'home', track: null, step: null }; PL.acToast = '';
+  async function loadAcademy() { const d = await api('academy', null, 'GET'); if (d && d.status === 'success') { PL.ac = d; PL.badgeCount = d.badges.filter(b => b.earned).length; renderLeft(); } if (PL.view === 'academy') renderAcademy(); }
+  function copyText(text, btn) {
+    const done = () => { const o = btn.textContent; btn.textContent = 'Copied'; setTimeout(() => { btn.textContent = o; }, 1200); };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, () => fallbackCopy(text, done)); else fallbackCopy(text, done);
+  }
+  function fallbackCopy(text, done) { const ta = document.createElement('textarea'); ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0'; document.body.appendChild(ta); ta.select(); try { document.execCommand('copy'); done(); } catch (_) {} ta.remove(); }
+  function toastNode() { return PL.acToast && Date.now() < PL.acToastUntil ? el('div', 'ac-toast', PL.acToast) : null; }                // stays on screen for a few seconds, across live-sync refreshes
+  function evidenceLabel(b) { return b.earned_info ? ({ 'verified': 'verified by NEXXUS', 'self-reported': 'self-reported', 'mixed': 'part verified, part self-reported' }[b.earned_info.evidence] || b.earned_info.evidence) : ''; }
+  function badgeShelf(list) {
+    const g = el('div', 'ac-badges');
+    list.forEach(b => { const c = el('div', 'ac-badge' + (b.earned ? ' earned' : '')); c.append(el('b', '', (b.earned ? '★ ' : '') + b.name)); if (b.earned) c.append(el('div', 'ev', evidenceLabel(b))); c.append(el('div', 'cr', b.criteria)); g.append(c); });
+    return g;
+  }
+  function acHome(host) {
+    const ac = PL.ac, st = ac.state || {};
+    const hero = el('div', 'ac-hero'); hero.append(el('h3', '', 'NEXXUS Academy'), el('div', '', 'A school and training ground: learn to build, operate and run real systems with exact prompts and commands, earn badges as proof, then guide others through the same path.'), el('div', 'pw-sub', ac.beta));
+    host.append(hero);
+    { const tn = toastNode(); if (tn) host.append(tn); }
+    // start here
+    const open = ac.quests.filter(q => !q.done && q.available).length;
+    const quests = el('section', 'pw-sec'); quests.append(Object.assign(el('div', 'pw-sh'), {})); quests.firstChild.append(el('h4', '', 'Start here' + (open ? ' · ' + open + ' to do' : ' · all done')));
+    ac.quests.forEach(q => { const r = el('div', 'ac-quest' + (q.done ? ' done' : '') + (q.available ? '' : ' na')); r.append(el('span', 'mk', q.done ? '✓' : '')); const tx = el('div'); tx.append(document.createTextNode(q.title), el('small', '', q.available ? q.how : q.how + ' (not available yet)')); r.append(tx);
+      if (q.id === 'conduct' && !q.done) { const b = el('button', 'pl-btn ghost', 'I accept'); b.type = 'button'; b.style.marginLeft = 'auto'; b.addEventListener('click', async () => { await api('academy/conduct', {}); loadAcademy(); }); r.append(b); } quests.append(r); });
+    host.append(quests);
+    // path
+    const ps = el('section', 'pw-sec'); ps.append(Object.assign(el('div', 'pw-sh'), {})); ps.firstChild.append(el('h4', '', 'Choose your path'));
+    const paths = el('div', 'ac-paths');
+    [['solo', 'Solo Build', 'Independent execution. Work through a track at your own pace.'], ['group', 'Group Build', 'Team-based. You follow a trust checklist with real people before you can join a team pod.']].forEach(([id, name, text]) => {
+      const c = el('div', 'ac-card' + (st.path === id ? ' on' : '')); c.setAttribute('role', 'button'); c.tabIndex = 0; c.append(el('h4', '', name + (st.path === id ? '  (your path)' : '')), el('div', 'pw-sub', text));
+      const pick = async () => { const d = await api('academy/path', { path: id, track: st.track || null }); if (d && d.status === 'success') loadAcademy(); }; c.addEventListener('click', pick); c.addEventListener('keydown', e => { if (e.key === 'Enter') pick(); }); paths.append(c); });
+    ps.append(paths);
+    if (st.path === 'group') { const g = ac.group; ps.append(el('div', 'ac-h', 'Group Build trust protocol')); g.items.forEach(i => { const r = el('div', 'ac-quest' + (i.done ? ' done' : '') + (i.available ? '' : ' na')); r.append(el('span', 'mk', i.done ? '✓' : '')); const tx = el('div'); tx.append(document.createTextNode(i.title), el('small', '', i.available ? i.how : i.how + ' (not available yet)')); r.append(tx); ps.append(r); }); ps.append(el('div', 'pw-hint', g.note + ' Team pod entry: ' + g.pod_entry + '.')); }
+    host.append(ps);
+    // tracks
+    const ts = el('section', 'pw-sec'); ts.append(Object.assign(el('div', 'pw-sh'), {})); ts.firstChild.append(el('h4', '', 'Tracks'));
+    ac.tracks.forEach(tr => { const c = el('div', 'ac-card' + (st.track === tr.id ? ' on' : '')); c.style.marginBottom = '8px'; c.setAttribute('role', 'button'); c.tabIndex = 0; c.append(el('h4', '', tr.title + (st.track === tr.id ? '  (your track)' : '')), el('div', 'pw-sub', tr.summary));
+      const bar = el('div', 'ac-bar'), fill = el('i'); fill.style.width = Math.round(100 * tr.done / Math.max(1, tr.steps)) + '%'; bar.append(fill); c.append(bar, el('div', 'pw-sub', tr.done + ' of ' + tr.steps + ' steps · badge: ' + tr.badge));
+      const go = () => { PL.acView = { mode: 'track', track: tr.id, step: null }; renderAcademy(); }; c.addEventListener('click', go); c.addEventListener('keydown', e => { if (e.key === 'Enter') go(); }); ts.append(c); });
+    host.append(ts);
+    // badges + leadership
+    const bs = el('section', 'pw-sec'); bs.append(Object.assign(el('div', 'pw-sh'), {})); bs.firstChild.append(el('h4', '', 'Badges · ' + ac.badges.filter(b => b.earned).length + ' of ' + ac.badges.length)); bs.append(el('div', 'pw-hint', 'A badge is proof of something you learned and did. Each one shows how it was proved: checked by NEXXUS, or self-reported.'), badgeShelf(ac.badges)); host.append(bs);
+    const ls = el('section', 'pw-sec'); ls.append(Object.assign(el('div', 'pw-sh'), {})); ls.firstChild.append(el('h4', '', 'The leadership loop')); ls.append(el('p', '', ac.leadership.text), el('div', 'pw-sub', ac.leadership.mentor_ready ? 'You are Mentor-ready: you can guide others through the track you finished.' : 'Finish any whole track to become Mentor-ready.')); host.append(ls);
+    if (ac.problems && ac.problems.length) host.append(el('div', 'pw-visitor', 'Some curriculum files have problems: ' + ac.problems.join('; ')));
+  }
+  async function acTrack(host) {
+    const d = await api('academy/track/' + PL.acView.track, null, 'GET'); if (!d || d.status !== 'success') { host.append(el('div', 'pl-empty', 'Could not load that track.')); return; }
+    const tr = d.track; const back = el('button', 'ac-crumb', '← Academy'); back.type = 'button'; back.addEventListener('click', () => { PL.acView = { mode: 'home' }; renderAcademy(); }); host.append(back);
+    const hero = el('div', 'ac-hero'); hero.append(el('h3', '', tr.title), el('div', '', tr.summary)); if (tr.disclaimer) hero.append(el('div', 'pw-sub', tr.disclaimer)); host.append(hero);
+    { const tn = toastNode(); if (tn) host.append(tn); }
+    tr.modules.forEach(m => { const s = el('section', 'pw-sec'), h = el('div', 'pw-sh'); const n = m.steps.filter(x => x.done).length; h.append(el('h4', '', m.title + '  ·  ' + n + '/' + m.steps.length), el('span', 'pw-sub', 'badge: ' + m.badge)); s.append(h, el('div', 'pw-hint', m.goal));
+      m.steps.forEach(st => { const r = el('div', 'ac-step' + (st.done ? ' done' : '')); r.setAttribute('role', 'button'); r.tabIndex = 0; r.append(el('span', 'mk'), document.createTextNode(st.title), el('small', '', st.proof.startsWith('auto:') ? 'checked by NEXXUS' : (st.proof === 'link' ? 'link' : 'self-reported')));
+        const go = () => { PL.acView = { mode: 'step', track: tr.id, step: st.id }; renderAcademy(); }; r.addEventListener('click', go); r.addEventListener('keydown', e => { if (e.key === 'Enter') go(); }); s.append(r); }); host.append(s); });
+  }
+  function promptBlock(item, kind) {
+    const w = el('div'); const top = el('div'); top.style.cssText = 'display:flex;gap:8px;align-items:center;justify-content:space-between'; top.append(el('b', '', item.label)); const c = el('button', 'ac-copy', 'Copy'); c.type = 'button'; c.addEventListener('click', () => copyText(item.text, c)); top.append(c);
+    w.append(top, el('div', 'ac-pre', item.text)); if (item.where) w.append(el('div', 'pw-sub', 'Where: ' + item.where)); return w;
+  }
+  function videoBlock(v) {
+    const box = el('div'); const b = el('button', 'pl-btn ghost', 'Play: ' + v.title); b.type = 'button'; box.append(b, el('div', 'pw-hint', 'This video loads from ' + v.host + ', which may track you. Nothing loads until you press play.' + (v.credit ? ' Credit: ' + v.credit + '.' : '')));
+    b.addEventListener('click', () => { const f = document.createElement('iframe'); f.src = v.url; f.title = v.title; f.className = 'ac-frame'; f.allow = 'fullscreen; picture-in-picture'; f.referrerPolicy = 'no-referrer'; f.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-presentation allow-popups'); box.replaceChildren(f); }); return box;
+  }
+  async function acStep(host) {
+    const d = await api('academy/track/' + PL.acView.track, null, 'GET'); if (!d || d.status !== 'success') { host.append(el('div', 'pl-empty', 'Could not load that step.')); return; }
+    const tr = d.track, flat = tr.modules.flatMap(m => m.steps.map(s => Object.assign({ module: m.title }, s))), idx = flat.findIndex(s => s.id === PL.acView.step), s = flat[idx]; if (!s) { PL.acView = { mode: 'home' }; return renderAcademy(); }
+    const back = el('button', 'ac-crumb', '← ' + tr.title); back.type = 'button'; back.addEventListener('click', () => { PL.acView = { mode: 'track', track: tr.id }; renderAcademy(); }); host.append(back);
+    const hero = el('div', 'ac-hero'); hero.append(el('h3', '', s.title), el('div', 'pw-sub', s.module + '  ·  step ' + (idx + 1) + ' of ' + flat.length)); host.append(hero);
+    { const tn = toastNode(); if (tn) host.append(tn); }
+    host.append(el('div', 'ac-h', 'Why it matters'), el('p', '', s.why), el('div', 'ac-h', 'Do this'));
+    const ol = el('ol', 'ac-list'); s.do.forEach(x => ol.append(el('li', '', x))); host.append(ol);
+    if (s.prompts.length) { host.append(el('div', 'ac-h', 'Prompts to use')); s.prompts.forEach(x => host.append(promptBlock(x))); }
+    if (s.commands.length) { host.append(el('div', 'ac-h', 'Commands to run')); s.commands.forEach(x => host.append(promptBlock(x))); }
+    if (s.tips.length) { host.append(el('div', 'ac-h', 'Tips')); const ul = el('ul', 'ac-list'); s.tips.forEach(x => ul.append(el('li', '', x))); host.append(ul); }
+    host.append(el('div', 'ac-h', 'Video')); host.append(s.video ? videoBlock(s.video) : el('div', 'pw-hint', 'No video is attached to this step yet.'));
+    host.append(el('div', 'ac-h', 'How you know you are done'), el('p', '', s.check));
+    const done = el('section', 'pw-sec');
+    if (s.done) { done.append(el('b', '', 'Done'), el('div', 'pw-sub', new Date(s.completed.t * 1000).toLocaleString() + '  ·  ' + ({ auto: 'checked by NEXXUS', note: 'self-reported', link: 'link' }[s.completed.proof])), el('p', '', s.completed.evidence)); }
+    else {
+      const msg = el('div', 'pw-hint'); let input = null, label = 'Mark done';
+      if (s.proof.startsWith('auto:')) { done.append(el('div', '', 'NEXXUS checks this step itself: ' + (s.auto_text || '') + '. It cannot be ticked by hand.')); label = 'Check now'; }
+      else if (s.proof === 'link') { input = el('input'); input.placeholder = 'https:// link that shows what you did'; input.setAttribute('aria-label', 'Link as evidence'); input.style.cssText = 'width:100%;background:#05080f;color:#e2e8f0;border:1px solid rgba(148,163,184,0.45);border-radius:8px;padding:7px 10px;font:inherit'; done.append(input); }
+      else { input = el('textarea'); input.rows = 3; input.maxLength = 300; input.placeholder = 'In a sentence or two: what did you do and what did you see? (self-reported, and your badge will say so)'; input.setAttribute('aria-label', 'What you did'); input.style.cssText = 'width:100%;background:#05080f;color:#e2e8f0;border:1px solid rgba(148,163,184,0.45);border-radius:8px;padding:7px 10px;font:inherit'; done.append(input); }
+      const go = el('button', 'pl-btn', label); go.type = 'button'; go.style.marginTop = '8px';
+      go.addEventListener('click', async () => { go.disabled = true; const r = await api('academy/step', { track: tr.id, step: s.id, evidence: input ? input.value : '' });
+        if (r && r.status === 'success') { if (r.new_badges.length) { PL.acToast = 'Badge earned: ' + r.new_badges.map(b => b.name + ' (' + b.evidence + ')').join(', ') + '.'; PL.acToastUntil = Date.now() + 9000; } await loadAcademy(); } else { msg.textContent = (r && r.message) || 'Could not reach NEXXUS.'; msg.style.color = '#fda4af'; go.disabled = false; } });
+      done.append(go, msg);
+    }
+    host.append(done);
+    const nav = el('div', 'ac-nav'); const prev = el('button', 'pl-btn ghost', '← Previous'), next = el('button', 'pl-btn ghost', 'Next →'); prev.type = next.type = 'button'; prev.disabled = idx === 0; next.disabled = idx === flat.length - 1;
+    prev.addEventListener('click', () => { PL.acView.step = flat[idx - 1].id; renderAcademy(); }); next.addEventListener('click', () => { PL.acView.step = flat[idx + 1].id; renderAcademy(); }); nav.append(prev, next); host.append(nav);
+  }
+  async function renderAcademy() {
+    const host = $('plAcademyView'); if (!PL.ac) { host.replaceChildren(el('div', 'pl-empty', 'Loading the Academy...')); return; }
+    const frag = document.createDocumentFragment(); const tmp = el('div'); frag.append(tmp);
+    if (PL.acView.mode === 'track') await acTrack(tmp); else if (PL.acView.mode === 'step') await acStep(tmp); else acHome(tmp);
+    host.replaceChildren(...tmp.childNodes); host.scrollTop = 0;
+  }
+
   async function load() { const d = await api('state', null, 'GET'); if (d && d.status === 'success') { PL.state = d; PL.rank = d.rank; PL.viewers = d.viewers; renderLeft(); renderRight(); renderFeed(); } else if (d && d.status === 'locked') { await setOperatingMode('conversation'); window.plGateOpen(); } }
   // ---------- the command bar: text, links and photos ----------
   PL.file = null;
@@ -11752,7 +11863,7 @@ async function skBuild() {
   window.plSync = function (mode, changed) {
     const on = mode === 'platform';
     space.classList.toggle('open', on); PL.open = on; document.body.classList.toggle('pl-on', on); document.body.style.overflow = on ? 'hidden' : '';
-    if (on) { PL.editing = false; PL.vault = []; setView('floor'); load().then(streamOpen); setTimeout(() => $('plInput') && $('plInput').focus(), 50); } else { streamClose(); setFile && setFile(null); setView('floor'); }
+    if (on) { PL.editing = false; PL.vault = []; PL.acView = { mode: 'home' }; setView('academy'); load().then(streamOpen); setTimeout(() => $('plInput') && $('plInput').focus(), 50); } else { streamClose(); setFile && setFile(null); setView('academy'); }
     loadOffer();                                   // keeps the lock mark on the Modes menu honest (a monthly key can lapse)
   };
   loadOffer();

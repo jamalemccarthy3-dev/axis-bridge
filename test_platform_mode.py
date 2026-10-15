@@ -58,11 +58,14 @@ class Base(unittest.TestCase):
         pm.VAULT_PATH = os.path.join(pm.DATA_DIR, "vault.json")
         import ranks as _ranks
         _ranks.LEDGER_PATH = os.path.join(pm.DATA_DIR, "ranks.jsonl")
+        import academy as _academy
+        _academy.PROGRESS_PATH, _academy.BADGES_PATH = os.path.join(pm.DATA_DIR, "academy.json"), os.path.join(pm.DATA_DIR, "badges.jsonl")
         os.environ.pop("NEXXUS_GITHUB_TOKEN", None)
         pm.PROFILE_PATH, pm.POSTS_PATH = os.path.join(pm.DATA_DIR, "p.json"), os.path.join(pm.DATA_DIR, "posts.jsonl")
         for name in ("PROFILE_PATH", "POSTS_PATH", "MEDIA_DIR", "VAULT_PATH"):         # every store must live under the temp folder, never the real one
             self.assertTrue(getattr(pm, name).startswith(pm.DATA_DIR), name + " is not redirected to the temp folder")
         self.assertTrue(_ranks.LEDGER_PATH.startswith(pm.DATA_DIR), "the rank ledger is not redirected to the temp folder")
+        self.assertTrue(_academy.PROGRESS_PATH.startswith(pm.DATA_DIR) and _academy.BADGES_PATH.startswith(pm.DATA_DIR), "the academy files are not redirected to the temp folder")
         FakeModes.MODES = {"conversation": {}}
 
 

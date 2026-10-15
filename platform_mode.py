@@ -22,6 +22,7 @@ import threading
 import time
 import uuid
 
+import academy
 import entitlements
 import github_sync
 import privacy
@@ -620,6 +621,14 @@ def github_push_comment(pid, cid):
     return {"url": r["url"]}
 
 
+def _academy_context():
+    """What the learner has really done, for the academy's own checks."""
+    return {"profile": get_profile(), "posts": _read_posts(), "vault": _read_vault()}
+
+
+academy.set_context_provider(_academy_context)
+
+
 def state():
     posts = _read_posts()[-200:]
     return {"profile": get_profile(), "floor": posts, "shared_links": [p for p in posts if p.get("kind") == "link"][-20:],
@@ -782,6 +791,62 @@ def register_routes(app, is_viewer, respond):
         if (request.get_json(silent=True) or {}).get("confirm") is not True:
             return respond({"status": "error", "message": "This comment becomes public on GitHub. Send confirm: true after showing it."}, 400)
         return _gh(github_push_comment, pid, cid)
+
+    @app.route("/api/platform/academy", methods=["GET", "OPTIONS"], endpoint="platform_academy")
+    def academy_route():
+        if request.method == "OPTIONS":
+            return respond({})
+        return guard() or respond({"status": "success", **academy.overview()})
+
+    @app.route("/api/platform/academy/track/<tid>", methods=["GET", "OPTIONS"], endpoint="platform_academy_track")
+    def academy_track_route(tid):
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        tr = academy.track_detail(tid)
+        return respond({"status": "success", "track": tr}) if tr else respond({"status": "error", "message": "No such track."}, 404)
+
+    @app.route("/api/platform/academy/path", methods=["POST", "OPTIONS"], endpoint="platform_academy_path")
+    def academy_path_route():
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        d = request.get_json(silent=True) or {}
+        try:
+            st = academy.set_path(str(d.get("path", "")), d.get("track") or None)
+        except academy.AcademyError as e:
+            return respond({"status": "error", "message": str(e)}, 400)
+        publish({"type": "academy"})
+        return respond({"status": "success", "state": st})
+
+    @app.route("/api/platform/academy/conduct", methods=["POST", "OPTIONS"], endpoint="platform_academy_conduct")
+    def academy_conduct_route():
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        publish({"type": "academy"})
+        return respond({"status": "success", "conduct": academy.acknowledge_conduct()})
+
+    @app.route("/api/platform/academy/step", methods=["POST", "OPTIONS"], endpoint="platform_academy_step")
+    def academy_step_route():
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        d = request.get_json(silent=True) or {}
+        try:
+            res = academy.complete_step(str(d.get("track", "")), str(d.get("step", "")), d.get("evidence", ""))
+        except academy.AcademyError as e:
+            return respond({"status": "error", "message": str(e)}, 400)
+        publish({"type": "academy"})
+        return respond({"status": "success", **res})
 
     @app.route("/api/platform/profile/public", methods=["GET", "OPTIONS"], endpoint="platform_profile_public")
     def profile_public_route():

@@ -1,0 +1,139 @@
+{
+  "id": "operate-nexxus",
+  "title": "Operate NEXXUS",
+  "badge": "NEXXUS Operator",
+  "summary": "Learn the control room itself: modes, the command bar, the guardrails and how to read what the system is doing. Every step uses something that really exists in NEXXUS.",
+  "audience": "Everyone starts here.",
+  "modules": [
+    {
+      "id": "orient",
+      "title": "Find your way around",
+      "badge": "Oriented",
+      "goal": "Know where everything is and what the system is telling you.",
+      "steps": [
+        {
+          "id": "modes",
+          "title": "Meet the Modes menu",
+          "why": "NEXXUS behaves differently in each mode. Conversation only talks; build modes build; Diagnostic watches the machinery. Knowing the mode is knowing what will happen when you type.",
+          "do": [
+            "Open the Modes menu in the bottom bar and read every entry.",
+            "Switch to Diagnostic (Boiler Room) and look at the engine lights on the left.",
+            "Switch back to Conversation."
+          ],
+          "prompts": [],
+          "commands": [{"label": "Ask the Boiler Room", "text": "which engines are answering right now?", "where": "NEXXUS command bar, in Diagnostic mode"}],
+          "tips": ["The mode banner above the command bar always says which mode you are in.", "A restart always returns NEXXUS to Conversation, on purpose."],
+          "video": null,
+          "check": "You can name three modes and say what each is for.",
+          "proof": "note"
+        },
+        {
+          "id": "cheatsheet",
+          "title": "Use the command cheat sheet and the Prompt Recipe Vault",
+          "why": "You never have to memorise commands. The cheat sheet lists what NEXXUS understands, and the vault holds proven build prompts.",
+          "do": [
+            "Press the [i] button next to the search box and type what you want to do in plain words.",
+            "Press [P] to open the Prompt Recipe Vault and open one recipe."
+          ],
+          "prompts": [],
+          "commands": [{"label": "List what is available", "text": "list tools", "where": "NEXXUS command bar"}],
+          "tips": ["Typing 'help' or 'commands' in the cheat sheet search finds the basics.", "A line you click is put in the command box but not sent: you stay in control."],
+          "video": null,
+          "check": "You found a command you did not know and can say what it does.",
+          "proof": "note"
+        }
+      ]
+    },
+    {
+      "id": "talk-and-make",
+      "title": "Talk, make and think",
+      "badge": "Maker",
+      "goal": "Use Conversation, Creation and Sketch modes for what each does best.",
+      "steps": [
+        {
+          "id": "build-halt",
+          "title": "See why building is a deliberate choice",
+          "why": "In Conversation mode a build request is halted and you are asked to pick a build mode. This is a safety feature: nothing is built by accident.",
+          "do": ["Stay in Conversation mode.", "Type a build request and read the reply that stops it."],
+          "prompts": [],
+          "commands": [{"label": "A request that will be halted", "text": "build me a landing page for a coffee shop", "where": "NEXXUS command bar, in Conversation mode"}],
+          "tips": ["A plain question like 'how do I build a funnel?' is just conversation; an order is what gets halted."],
+          "video": null,
+          "check": "NEXXUS asked you to pick a build mode instead of building.",
+          "proof": "note"
+        },
+        {
+          "id": "creation",
+          "title": "Make a visual in Creation mode",
+          "why": "Creation mode turns a description into one picture or animated page you can see straight away, with no project to manage.",
+          "do": ["Switch to Creation mode.", "Describe a logo or badge for something you care about.", "Look at the result in the artifact panel and refine it with a second message."],
+          "prompts": [
+            {"label": "A first logo", "text": "Make a simple, bold logo for a small project called <name>. Two colours, a clean shape, readable at small size."},
+            {"label": "Refine it", "text": "Keep the shape, make the colours calmer, and add a subtle shadow."}
+          ],
+          "commands": [],
+          "tips": ["Say what it is for and who will see it: a good brief beats a long one.", "Change one thing at a time when refining."],
+          "video": null,
+          "check": "You made a visual and changed it at least once.",
+          "proof": "note"
+        },
+        {
+          "id": "sketch",
+          "title": "Think it through in Sketch mode",
+          "why": "Before you build, sketch the idea: pick a domain, state a hypothesis, dig in and reach a thesis. Nothing is built and nothing rushes you.",
+          "do": ["Switch to Sketch mode.", "Pick a domain you want to work in and state one hypothesis about what people need there.", "Follow the suggestion pills until you have a one-paragraph thesis."],
+          "prompts": [{"label": "A hypothesis to start from", "text": "I think <who> struggle with <problem> because <reason>, and a small tool that <does what> would help."}],
+          "commands": [],
+          "tips": ["A good hypothesis can be wrong. That is its job.", "Write down what would change your mind."],
+          "video": null,
+          "check": "You have a thesis you could explain in two sentences.",
+          "proof": "note"
+        }
+      ]
+    },
+    {
+      "id": "safe-and-share",
+      "title": "Stay safe and share what you learn",
+      "badge": "Safe Builder",
+      "goal": "Understand the guardrails, then teach by sharing.",
+      "steps": [
+        {
+          "id": "guardrails",
+          "title": "Read the guardrails",
+          "why": "NEXXUS keeps outside code staged until you approve it, signs what it trusts and reports drift. Knowing this is what lets you use it without fear.",
+          "do": ["Open the System Specs button and read the Grid Controller and AXIS-Bridge sections.", "Open PERIMETER in the control dock and find Hard Lock and Quarantine."],
+          "prompts": [],
+          "commands": [],
+          "tips": ["Hard Lock freezes a node and is lifted only with the admin token.", "Anything that adds capability waits for the owner's approval."],
+          "video": null,
+          "check": "You can explain, in your own words, what Hard Lock does and why tools are staged.",
+          "proof": "note"
+        },
+        {
+          "id": "complete-profile",
+          "title": "Build your profile",
+          "why": "Your profile wall is how others will know what you build. A name, a headline and an about section are the minimum.",
+          "do": ["Open the Profile wall tab.", "Add your name and headline, then write your About section."],
+          "prompts": [{"label": "Draft your About", "text": "Help me write a three-sentence About for a builder who is learning <skill> and wants to build <goal>. Plain, honest, no hype."}],
+          "commands": [],
+          "tips": ["Say what you are learning, not what you wish you were."],
+          "video": null,
+          "check": "Your name, headline and About are filled in.",
+          "proof": "auto:profile_complete"
+        },
+        {
+          "id": "first-public-post",
+          "title": "Share what you learned, publicly",
+          "why": "Teaching is how you learn it twice. A short public post about what you just did helps the next person, and it is the first step toward mentoring.",
+          "do": ["Write a post on the floor about one thing you learned in this track (at least a couple of sentences).", "Press the 'private' tag under it so it becomes public."],
+          "prompts": [{"label": "A good shape for the post", "text": "Today I learned <one thing>. I tried <what I did>. It worked / did not work because <reason>. Next I will try <next step>."}],
+          "commands": [],
+          "tips": ["Keep it PG-13 and keep private details out.", "Specific beats clever."],
+          "video": null,
+          "check": "You have a public post of at least 40 characters.",
+          "proof": "auto:public_post_substantial"
+        }
+      ]
+    }
+  ]
+}

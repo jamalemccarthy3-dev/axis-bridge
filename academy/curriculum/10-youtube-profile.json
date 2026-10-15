@@ -1,0 +1,98 @@
+{
+  "id": "youtube-profile",
+  "title": "Build a YouTube channel profile",
+  "badge": "Channel Builder",
+  "summary": "Set up a channel that says clearly who it is for and why to watch. This is about the profile and the system behind it, not a promise of views or income.",
+  "audience": "Anyone who wants a channel people can understand in five seconds.",
+  "disclaimer": "Education only. Nobody can promise audience growth or earnings. Follow YouTube's own policies, disclose sponsorships and respect copyright.",
+  "modules": [
+    {
+      "id": "yt-identity",
+      "title": "Identity",
+      "badge": "Clear Identity",
+      "goal": "A channel whose purpose is obvious from its name, banner and description.",
+      "steps": [
+        {
+          "id": "audience",
+          "title": "Decide who it is for and what they get",
+          "why": "Channels that try to speak to everyone usually speak to no one. One audience and one promise makes every later choice easier.",
+          "do": ["Write one sentence: 'I help <who> do <what> so they can <result>'.", "List three video ideas that fit that sentence and three that do not."],
+          "prompts": [{"label": "Sharpen the promise", "text": "Here is my channel idea: <idea>. Ask me five questions that would make the audience and promise more specific, then propose three versions of the one-sentence promise."}],
+          "commands": [],
+          "tips": ["If you cannot say who it is not for, it is too broad.", "Pick something you can make fifty videos about."],
+          "video": null,
+          "check": "You have a one-sentence promise and a list of ideas that fit it.",
+          "proof": "note"
+        },
+        {
+          "id": "name-handle",
+          "title": "Pick a name and handle that match everywhere",
+          "why": "People find you by search and by memory. The same short name across your channel, handle and other profiles builds recognition.",
+          "do": ["Brainstorm ten names, cross out hard-to-spell and hard-to-say ones.", "Check the handle is free on the platforms you plan to use before you commit."],
+          "prompts": [{"label": "Name ideas", "text": "Suggest 15 short, easy-to-say channel names for: <promise sentence>. Avoid trademarks and avoid names that need explaining."}],
+          "commands": [],
+          "tips": ["Say it out loud: if you stumble, so will they.", "Do not copy a larger creator's name."],
+          "video": null,
+          "check": "You chose one name and confirmed the handle is available.",
+          "proof": "note"
+        },
+        {
+          "id": "about-banner",
+          "title": "Write the About section and plan the banner",
+          "why": "The About section and banner are your shop window. They should answer: what is this, who is it for, when do new videos come.",
+          "do": ["Write the first two lines of the About so they work even if the rest is cut off.", "Sketch the banner: name, promise, upload rhythm, and nothing else."],
+          "prompts": [{"label": "Draft the About", "text": "Write a channel About section (under 150 words) for: <promise>. First two lines must state who it is for and what they get. Add the upload schedule: <schedule>. Honest tone, no hype, no income claims."}],
+          "commands": [{"label": "Make a banner concept", "text": "Make a channel banner: dark background, the name <name> in bold, the tagline <promise>, a simple shape on the right.", "where": "NEXXUS command bar, in Creation mode"}],
+          "tips": ["Put contact or business email in the dedicated field, not in the banner.", "Use a banner that reads well on a phone, where it is cropped."],
+          "video": null,
+          "check": "Your About and a banner concept are written down.",
+          "proof": "note"
+        }
+      ]
+    },
+    {
+      "id": "yt-system",
+      "title": "The weekly system",
+      "badge": "Consistent",
+      "goal": "A simple routine you can keep up.",
+      "steps": [
+        {
+          "id": "trailer",
+          "title": "Script a 60-second channel trailer",
+          "why": "The trailer is what a new visitor sees first. It should say who the channel is for, show a taste, and tell them what to expect.",
+          "do": ["Write a script with a hook, the promise, one example and a clear invitation.", "Record it and watch it with the sound off: does it still make sense?"],
+          "prompts": [{"label": "Trailer script", "text": "Write a 60-second channel trailer script for <promise>. Structure: 5-second hook, the promise, one concrete example, what to expect and when, one-line invitation. Plain language, spoken style."}],
+          "commands": [],
+          "tips": ["Lead with what the viewer gets, not who you are.", "Add captions: many people watch muted."],
+          "video": null,
+          "check": "You have a trailer script written.",
+          "proof": "note"
+        },
+        {
+          "id": "titles-thumbs",
+          "title": "Make titles and thumbnails a repeatable habit",
+          "why": "A title and thumbnail are a promise about the video. Keep the promise honest and make it quick to understand.",
+          "do": ["For your next video write five titles and sketch two thumbnail ideas.", "Pick the one that is clearest, not the cleverest."],
+          "prompts": [{"label": "Title options", "text": "Give me ten honest title options for a video about <topic> for <audience>. No clickbait, no all-caps, each under 60 characters, each promising something the video really delivers."}],
+          "commands": [{"label": "Thumbnail concept", "text": "Make a thumbnail concept: big readable text '<three words>', one clear subject, high contrast.", "where": "NEXXUS command bar, in Creation mode"}],
+          "tips": ["If the thumbnail needs a paragraph to explain, simplify it.", "Never promise what the video does not show."],
+          "video": null,
+          "check": "You have five titles and two thumbnail ideas for one video.",
+          "proof": "note"
+        },
+        {
+          "id": "review-loop",
+          "title": "Set a weekly review",
+          "why": "Improvement comes from looking at what happened and changing one thing. A fixed weekly slot makes it automatic.",
+          "do": ["Pick a weekly 30-minute slot.", "Each week write: what worked, what did not, and one change for next week."],
+          "prompts": [{"label": "Review template", "text": "Here are my channel numbers this week: <numbers>. Help me find one thing that worked, one that did not, and the single change most worth testing next week. Do not draw big conclusions from small numbers."}],
+          "commands": [],
+          "tips": ["Small samples lie. Look for patterns over several videos.", "Change one thing at a time so you can tell what helped."],
+          "video": null,
+          "check": "Your weekly review slot and template exist.",
+          "proof": "note"
+        }
+      ]
+    }
+  ]
+}
