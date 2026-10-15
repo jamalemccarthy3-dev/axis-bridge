@@ -1,0 +1,19 @@
+# every third-party package any engine imports
+PyYAML==6.0.3
+Scrapy==2.17.0
+cryptography==50.0.0
+diffusers
+imageio-ffmpeg==0.6.0
+itemadapter==0.13.1
+itemloaders==1.4.0
+llama-cpp-python
+neo4j==6.2.0
+numpy==2.5.2
+pillow==12.3.0
+psutil==7.2.2
+pydantic==2.13.4
+pyttsx3==2.99
+redis==8.0.1
+requests==2.34.2
+scipy==1.18.1
+torch==2.14.0+cpu

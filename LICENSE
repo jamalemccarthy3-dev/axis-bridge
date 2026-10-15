@@ -1,0 +1,143 @@
+NEXXUS: source-available, noncommercial license
+Copyright (c) 2026 Jamale McCarthy (GitHub: jamalemccarthy3-dev). All rights reserved except as granted below.
+
+Required Notice: Copyright 2026 Jamale McCarthy (https://github.com/jamalemccarthy3-dev)
+
+
+1. THE LICENSE
+
+The Licensed Work (defined in section 2) is licensed under the
+
+    PolyForm Noncommercial License 1.0.0
+    https://polyformproject.org/licenses/noncommercial/1.0.0
+
+The complete, unmodified text of that license is reproduced in section 7 below. Anyone who receives a copy of the Licensed Work must receive these terms (this file, or the URL above) and the "Required Notice" line at the top of this file. The PolyForm
+Noncommercial License 1.0.0 is the operative legal text; sections 2 to 5 of this file say what it covers and what it does not, and are part of the notice a recipient must receive.
+If anything in this file seems to conflict with the PolyForm text, the PolyForm text controls.
+
+
+2. WHAT IS COVERED (the Licensed Work)
+
+All original work of the copyright holder in this repository and in the repositories published alongside it, including:
+
+  - the NEXXUS 21-node mesh: the hub (python_server.py), the mesh bridge, the governance layer and all 21 engines with their mesh, live-status and link code;
+  - axis gate (axis_gate) and the perimeter, quarantine and Hard Lock modules;
+  - AXIS core middleware (axis-core) and the orchestrator bus;
+  - the dashboard and its UI factories, the Link mode, Boiler Room and Perimeter panels, and the Document, Daemon, Sketch, SLAE and vault-container modules;
+  - PICTHIS studio (3D, animation and sound pipeline);
+  - the blog engines (TheBlogGuy and TheBlogGuyEngine);
+  - every custom script, test, template, checklist, batch file and document written for this project (including README.md, AUDIT.md and the other .md files).
+
+
+3. WHAT YOU MAY DO
+
+You may read, run, study, learn from, modify and share the Licensed Work for any noncommercial purpose. That includes personal use, research, study, teaching, hobby projects and
+use by charities, schools, public research and health organisations, environmental groups and government bodies, as the PolyForm text provides.
+
+When you share a copy or a modified version, you must pass on these terms and the Required Notice, and your sharing must itself be for a noncommercial purpose.
+
+
+4. WHAT YOU MAY NOT DO WITHOUT A SEPARATE WRITTEN LICENSE
+
+  - use the Licensed Work, or anything derived from it, for a commercial purpose;
+  - sell, resell, sublicense, rent or bundle it, or offer it (in whole or in part) as a paid product, a hosted or managed service, or part of one;
+  - rebrand it, remove the Required Notice, or present it as your own work.
+
+Commercial use needs a separate written commercial license from the copyright holder. Contact the repository owner through the GitHub profile above to ask for one. Nothing in this file
+grants a trademark license for the names NEXXUS, axis gate, AXIS, PICTHIS or TheBlogGuy beyond describing where the work comes from.
+
+
+5. THIRD-PARTY COMPONENTS: NOT COVERED BY THIS LICENSE
+
+This license applies only to the original work in section 2. Third-party components keep their own licenses, which are not changed by this file.
+
+  - Included in this repository: Babylon.js (Apache License 2.0; (c) the Babylon.js contributors), served locally from
+    axis-ui-interface/project-X/silo_vault/render/vendor/ and documented, with its version and checksum, in that folder's THIRD_PARTY.md. Any Babylon.js mesh utilities or loaders
+    distributed with it remain under Babylon.js's own license, and their notices must be kept. The Apache-2.0 text is at https://www.apache.org/licenses/LICENSE-2.0.
+  - Not included, installed separately: the NEXXUS software also runs on, and calls, tools and libraries that you install yourself under their own licenses (for example Python and
+    Flask, Scrapy, NumPy, Pillow, imageio-ffmpeg and ffmpeg, the Zig compiler, and, where used, a local Ollama model or the InstantMesh model). They are not part of the Licensed Work and
+    are not distributed here. Check each one's license before any use of your own, especially a commercial one.
+
+
+6. NO WARRANTY
+
+As the PolyForm text provides, the software comes as is, without any warranty or condition, and the copyright holder is not liable for any damages arising from its use.
+
+
+7. THE POLYFORM NONCOMMERCIAL LICENSE 1.0.0 (full text, unmodified, from https://github.com/polyformproject/polyform-licenses, tag 1.0.0)
+
+------------------------------------------------------------------------------
+
+# PolyForm Noncommercial License 1.0.0
+
+<https://polyformproject.org/licenses/noncommercial/1.0.0>
+
+## Acceptance
+
+In order to get any license under these terms, you must agree to them as both strict obligations and conditions to all your licenses.
+
+## Copyright License
+
+The licensor grants you a copyright license for the software to do everything you might do with the software that would otherwise infringe the licensor's copyright in it for any permitted purpose.  However, you may only distribute the software according to [Distribution License](#distribution-license) and make changes or new works based on the software according to [Changes and New Works License](#changes-and-new-works-license).
+
+## Distribution License
+
+The licensor grants you an additional copyright license to distribute copies of the software.  Your license to distribute covers distributing the software with changes and new works permitted by [Changes and New Works License](#changes-and-new-works-license).
+
+## Notices
+
+You must ensure that anyone who gets a copy of any part of the software from you also gets a copy of these terms or the URL for them above, as well as copies of any plain-text lines beginning with `Required Notice:` that the licensor provided with the software.  For example:
+
+> Required Notice: Copyright Yoyodyne, Inc. (http://example.com)
+
+## Changes and New Works License
+
+The licensor grants you an additional copyright license to make changes and new works based on the software for any permitted purpose.
+
+## Patent License
+
+The licensor grants you a patent license for the software that covers patent claims the licensor can license, or becomes able to license, that you would infringe by using the software.
+
+## Noncommercial Purposes
+
+Any noncommercial purpose is a permitted purpose.
+
+## Personal Uses
+
+Personal use for research, experiment, and testing for the benefit of public knowledge, personal study, private entertainment, hobby projects, amateur pursuits, or religious observance, without any anticipated commercial application, is use for a permitted purpose.
+
+## Noncommercial Organizations
+
+Use by any charitable organization, educational institution, public research organization, public safety or health organization, environmental protection organization, or government institution is use for a permitted purpose regardless of the source of funding or obligations resulting from the funding.
+
+## Fair Use
+
+You may have "fair use" rights for the software under the law. These terms do not limit them.
+
+## No Other Rights
+
+These terms do not allow you to sublicense or transfer any of your licenses to anyone else, or prevent the licensor from granting licenses to anyone else.  These terms do not imply any other licenses.
+
+## Patent Defense
+
+If you make any written claim that the software infringes or contributes to infringement of any patent, your patent license for the software granted under these terms ends immediately. If your company makes such a claim, your patent license ends immediately for work on behalf of your company.
+
+## Violations
+
+The first time you are notified in writing that you have violated any of these terms, or done anything with the software not covered by your licenses, your licenses can nonetheless continue if you come into full compliance with these terms, and take practical steps to correct past violations, within 32 days of receiving notice.  Otherwise, all your licenses end immediately.
+
+## No Liability
+
+***As far as the law allows, the software comes as is, without any warranty or condition, and the licensor will not be liable to you for any damages arising out of these terms or the use or nature of the software, under any kind of legal claim.***
+
+## Definitions
+
+The **licensor** is the individual or entity offering these terms, and the **software** is the software the licensor makes available under these terms.
+
+**You** refers to the individual or entity agreeing to these terms.
+
+**Your company** is any legal entity, sole proprietorship, or other kind of organization that you work for, plus all organizations that have control over, are under the control of, or are under common control with that organization.  **Control** means ownership of substantially all the assets of an entity, or the power to direct its management and policies by vote, contract, or otherwise.  Control can be direct or indirect.
+
+**Your licenses** are all the licenses granted to you for the software under these terms.
+
+**Use** means anything you do with the software requiring one of your licenses.

@@ -1,0 +1,3 @@
+[HOOK]: %s
+[BODY]: Aggressive narrative expansion and key benefit focus.
+[TAG]: Call to action.

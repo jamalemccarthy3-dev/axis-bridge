@@ -1,0 +1,12 @@
+{
+  "name": "keys",
+  "type": "app",
+  "hostnames": ["keys.localhost"],
+  "port": 8730,
+  "start": { "cmd": ["{python}", "-u", "server.py"] },
+  "health": "/api/health",
+  "idle_minutes": 10,
+  "wake_timeout": 20,
+  "private_paths": ["/"],
+  "note": "One page to enter every module's API keys. Saves straight into each module's own .env and keeps nothing. This computer only."
+}

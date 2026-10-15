@@ -1,0 +1,15 @@
+title = "NEXXUS gitleaks config"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Reviewed 2026-10-15: test fixtures with deliberately fake values, plus one ordinary line that matched by accident. None is a real secret."
+paths = [
+  '''axis-ui-interface/_gateway/test_gateway_plus\.py''',
+  '''axis-ui-interface/project-X/silo_vault/axis-video_creator/test_pipeline\.py''',
+  '''test_slae\.py''',
+]
+regexes = [
+  '''^max_bytes=256$''',
+]

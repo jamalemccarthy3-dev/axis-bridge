@@ -1,0 +1,52 @@
+--- mesh_bridge.py (before)
++++ mesh_bridge.py (after)
+@@ -26,2 +26,9 @@
+ 
++try:  # optional: independent HTTP modules (blog, picthis); see nexxus_external.py
++    import nexxus_external as _EXT
++except ImportError:  # connector file missing: external modules simply do not exist
++    class _EXT:
++        is_external = staticmethod(lambda name: False)
++        names = staticmethod(lambda: [])
++
+ HUB = "nexxus"
+@@ -136,2 +143,4 @@
+     """Ask one engine what utilities it offers (runs the engine, so opted-in engines only)."""
++    if _EXT.is_external(engine):
++        return _EXT.discover(engine, _UTILS, timeout)
+     path = _find_module_file(engine)
+@@ -156,3 +165,4 @@
+ def discover_all(timeout=15):
+-    return [discover_utilities(n, timeout) for n in ENGINES if _find_module_file(n) and _opted_in(_find_module_file(n))]
++    return [discover_utilities(n, timeout) for n in ENGINES if _find_module_file(n) and _opted_in(_find_module_file(n))] + \
++           [_EXT.discover(n, _UTILS, timeout) for n in _EXT.names()]
+ 
+@@ -170,2 +180,4 @@
+     """NEXXUS asks an engine to run one of its declared utilities. Never raises."""
++    if _EXT.is_external(engine):
++        return _EXT.call(engine, utility, args, timeout, allow_build, chat, _UTILS, post_message)
+     if engine not in ENGINES:
+@@ -318,2 +330,4 @@
+ def probe_engine(name, deep=False, timeout=10):
++    if _EXT.is_external(name):
++        return _EXT.probe(name, deep, timeout)
+     t0 = time.time()
+
+=== stage 2 ===
+--- mesh_bridge.py (before stage 2)
++++ mesh_bridge.py (after stage 2)
+@@ -32,2 +32,4 @@
+         names = staticmethod(lambda: [])
++        prune = staticmethod(lambda UTILS: None)
++        probe = staticmethod(lambda name, deep=False, timeout=10: {})
+ 
+@@ -171,2 +173,3 @@
+     """Cached view (never runs an engine): every utility the mesh knows about."""
++    _EXT.prune(_UTILS)  # modules removed from the UI folder drop out of the list
+     return {e: v for e, v in _UTILS.items()}
+@@ -364,3 +367,4 @@
+             "engines_verified": found, "engines_mesh_ready": sum(1 for n in nodes if n["mesh_ready"]),
+-            "nodes": nodes}
++            "nodes": nodes,
++            "modules": [_EXT.probe(n, deep) for n in _EXT.names()]}  # independent modules the gateway published (separate from the 21 engines)
+ 

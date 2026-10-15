@@ -1,0 +1,49 @@
+name: Beta builder log
+description: Document your journey as a beta builder: what you made, where you are, and when you finish.
+title: "[Builder log] "
+labels: ["builder-log"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Share what you are building with NEXXUS. **This form is public.** Keep keys, passwords and private data out of it. Edit this same entry as you progress, and set your stage to the final option when you finish the beta.
+  - type: input
+    id: building
+    attributes:
+      label: What I am building
+    validations:
+      required: true
+  - type: dropdown
+    id: stage
+    attributes:
+      label: My stage
+      options:
+        - Just started
+        - Building
+        - Shipped something
+        - Final builder progression (I finished the beta)
+    validations:
+      required: true
+  - type: textarea
+    id: created
+    attributes:
+      label: What I created during the beta
+      description: Silos, tools, results, anything you made. Add to this as you go.
+    validations:
+      required: true
+  - type: textarea
+    id: helped
+    attributes:
+      label: What helped, and what blocked me
+  - type: input
+    id: link
+    attributes:
+      label: Link to my project (optional)
+  - type: checkboxes
+    id: consent
+    attributes:
+      label: Permissions
+      options:
+        - label: I understand this log is public and contains nothing private.
+          required: true
+        - label: It is fine to feature my log in the project's README.

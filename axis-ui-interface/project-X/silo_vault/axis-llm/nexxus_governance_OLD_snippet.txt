@@ -1,0 +1,58 @@
+# =====================================================================
+# NEXXUS GOVERNANCE SNIPPET  (only for engines that need to SPEAK FIRST)
+# Lets this engine send signed messages to NEXXUS, or to another engine
+# through the hub (alerts, results, requests).
+# Paste it ABOVE the MESH snippet in the engine's entry file. It does NOT
+# replace the mesh snippet - an engine uses the mesh snippet, and adds this
+# one only if it needs to send messages.
+#
+# Needs, in the engine's environment:
+#   * nexxus_governance.py importable (copy it next to this engine, or put
+#     its folder on PYTHONPATH)
+#   * NEXXUS_GOVERNANCE_SECRET set - the same value the server uses
+#   * optional NEXXUS_MESH_URL (default http://localhost:8000)
+# Set ENGINE_NAME to this engine's exact mesh name.
+# =====================================================================
+import json, os, urllib.request
+
+ENGINE_NAME = "axis-core"   # <-- CHANGE: this engine's name, e.g. "axis-validator"
+
+def send_to_nexxus(kind, body, to="nexxus"):
+    """Send a signed message. to='nexxus' (inbox) or another engine name (relayed
+    by the hub). Returns the hub's reply dict, or {'status':'error',...} - never raises."""
+    try:
+        from nexxus_governance import sign_command
+        packet = sign_command({"engine": ENGINE_NAME, "to": to, "kind": kind, "body": body})
+        req = urllib.request.Request(
+            os.environ.get("NEXXUS_MESH_URL", "http://localhost:8000").rstrip("/") + "/api/mesh/message",
+            data=json.dumps(packet).encode("utf-8"),
+            headers={"Content-Type": "application/json"}, method="POST")
+        with urllib.request.urlopen(req, timeout=15) as r:
+            return json.loads(r.read().decode("utf-8"))
+    except Exception as e:
+        return {"status": "error", "error": f"{type(e).__name__}: {e}"}
+
+PEERS = {"version": None, "peers": []}   # the engine's copy of the mesh map (who is live, what they offer)
+
+def get_peers():
+    """Fetch the mesh map from NEXXUS (the other engines, whether each is live, and their utilities).
+    Also tells the hub which map version this engine now knows. Returns the map, or {'status':'error'}."""
+    try:
+        from nexxus_governance import sign_command
+        packet = sign_command({"engine": ENGINE_NAME})
+        req = urllib.request.Request(
+            os.environ.get("NEXXUS_MESH_URL", "http://localhost:8000").rstrip("/") + "/api/mesh/peers",
+            data=json.dumps(packet).encode("utf-8"),
+            headers={"Content-Type": "application/json"}, method="POST")
+        with urllib.request.urlopen(req, timeout=15) as r:
+            m = json.loads(r.read().decode("utf-8"))
+        if m.get("status") == "success":
+            PEERS["version"], PEERS["peers"] = m["version"], m["peers"]
+        return m
+    except Exception as e:
+        return {"status": "error", "error": f"{type(e).__name__}: {e}"}
+
+# Use anywhere in the engine, e.g.:
+#   send_to_nexxus("alert", {"msg": "disk low"})
+#   send_to_nexxus("request", {"instruction": "ping"}, to="axis-link")
+#   get_peers()   # PEERS["peers"] now lists every engine, live or not, and the utilities it offers

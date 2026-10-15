@@ -1,0 +1,5 @@
+
+# artifacts built for NEXXUS orders
+builds/
+workspace/
+.vc_crypto.key

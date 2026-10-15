@@ -1,0 +1,4 @@
+[OCCASION]: %s
+[TONE]: Celebratory, personal, and high-impact
+[MESSAGE]: [Custom heartfelt or hype message]
+[TAG]: Personalized sign-off

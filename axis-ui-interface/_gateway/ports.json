@@ -1,0 +1,7 @@
+{
+  "gateway": { "host": "127.0.0.1", "port": 8080 },
+  "reserved": { "nexxus_bridge": 8000 },
+  "bridge": { "hostnames": ["nexxus.localhost"], "port": 8000, "local_only": true, "proxy_timeout": 300 },
+  "publish_nexxus": "../external_modules.json",
+  "modules": {}
+}

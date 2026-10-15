@@ -1,0 +1,97 @@
+{
+  "grid_version": "1.0",
+  "system_settings": {
+    "auto_discover": true,
+    "project_prefix": "Project_",
+    "log_path": "./axis_audit_log.txt",
+    "monitor_nodes": true,
+    "default_status": "online"
+  },
+  "runtime_parameters": {
+    "execution_mode": "parallel",
+    "refresh_rate_seconds": 60,
+    "max_concurrent_tasks": 5
+  },
+  "active_nodes": [
+    {
+      "name": "axis-SandM",
+      "path": "axis-SandM"
+    },
+    {
+      "name": "axis-cloud",
+      "path": "axis-cloud"
+    },
+    {
+      "name": "axis-core",
+      "path": "axis-core"
+    },
+    {
+      "name": "axis-curator",
+      "path": "axis-curator"
+    },
+    {
+      "name": "axis-diagnostic",
+      "path": "axis-diagnostic"
+    },
+    {
+      "name": "axis-drive",
+      "path": "axis-drive"
+    },
+    {
+      "name": "axis-integrity",
+      "path": "axis-integrity"
+    },
+    {
+      "name": "axis-link",
+      "path": "axis-link"
+    },
+    {
+      "name": "axis-llm",
+      "path": "axis-llm"
+    },
+    {
+      "name": "axis-logic",
+      "path": "axis-logic"
+    },
+    {
+      "name": "axis-omni",
+      "path": "axis-omni"
+    },
+    {
+      "name": "axis-phonetic",
+      "path": "axis-phonetic"
+    },
+    {
+      "name": "axis-port",
+      "path": "axis-port"
+    },
+    {
+      "name": "axis-search_engine",
+      "path": "axis-search_engine"
+    },
+    {
+      "name": "axis-sweep",
+      "path": "axis-sweep"
+    },
+    {
+      "name": "axis-triage",
+      "path": "axis-triage"
+    },
+    {
+      "name": "axis-validator",
+      "path": "axis-validator"
+    },
+    {
+      "name": "axis-vantage_point",
+      "path": "axis-vantage_point"
+    },
+    {
+      "name": "axis-video_creator",
+      "path": "axis-video_creator"
+    },
+    {
+      "name": "axis-vision",
+      "path": "axis-vision"
+    }
+  ]
+}

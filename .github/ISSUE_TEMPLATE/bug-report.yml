@@ -1,0 +1,24 @@
+name: Bug report
+description: Something broke or behaved unexpectedly.
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **This form is public.** Remove keys, tokens, passwords and personal file paths before you paste anything. Error messages from the dashboard are safe to share.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+  - type: input
+    id: platform
+    attributes:
+      label: Your computer
+      description: For example Windows 11, 8 GB RAM.

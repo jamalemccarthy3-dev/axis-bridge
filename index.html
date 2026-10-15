@@ -1,0 +1,293 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NEXXUS Sandbox</title>
+<meta name="description" content="NEXXUS Sandbox: a local-first, sovereign multi-engine workspace. Install it as an app.">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="theme-color" content="#238636">
+<link rel="icon" href="icon-192.png">
+<style>
+:root{--bg:#0d1117;--panel:#161b22;--line:#30363d;--text:#e6edf3;--mute:#8b949e;--accent:#238636;--accent2:#2ea043;--warn:#d29922;--link:#58a6ff}
+@media (prefers-color-scheme:light){:root{--bg:#f6f8fa;--panel:#fff;--line:#d0d7de;--text:#1f2328;--mute:#59636e;--link:#0969da}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+main{max-width:960px;margin:0 auto;padding:0 16px 80px}
+a{color:var(--link)}
+section{padding:48px 0 8px;border-top:1px solid var(--line)}
+section:first-of-type{border-top:0}
+h1{font-size:2.2rem;margin:0 0 8px;line-height:1.2}
+h2{font-size:1.5rem;margin:0 0 16px}
+h3{font-size:1.1rem;margin:28px 0 8px}
+.mute{color:var(--mute)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px}
+/* header */
+.hero{display:grid;grid-template-columns:1.1fr 1fr;gap:32px;align-items:center;padding-top:48px}
+.hero img{width:100%;border-radius:10px;border:1px solid var(--line);display:block;background:var(--panel);aspect-ratio:16/10;object-fit:cover}
+.btn{display:inline-block;background:var(--accent);color:#fff;border:0;border-radius:8px;padding:11px 20px;font:inherit;font-weight:600;cursor:pointer}
+.btn:hover{background:var(--accent2)}
+.btn.ghost{background:transparent;color:var(--text);border:1px solid var(--line)}
+.btn:disabled{opacity:.6;cursor:default}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+#installHelp{margin-top:12px;font-size:.9rem}
+/* docs */
+.toc{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+.toc a{border:1px solid var(--line);border-radius:999px;padding:3px 12px;font-size:.85rem;text-decoration:none}
+ol.steps{padding-left:22px}ol.steps li{margin:10px 0}
+code,pre{font-family:ui-monospace,Consolas,monospace;font-size:.9em}
+code{background:var(--panel);border:1px solid var(--line);border-radius:4px;padding:1px 5px}
+pre{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--mute);font-weight:600}
+.tag{font-size:.75rem;border-radius:999px;padding:2px 9px;border:1px solid var(--line);white-space:nowrap}
+.tag.built{color:var(--accent2);border-color:var(--accent2)}.tag.partial{color:var(--warn);border-color:var(--warn)}.tag.next{color:var(--mute)}
+.callout{border-left:3px solid var(--accent);padding:8px 14px;background:var(--panel);border-radius:0 8px 8px 0;margin:16px 0}
+/* community */
+.stars button{background:none;border:0;font-size:1.6rem;cursor:pointer;color:var(--line);padding:0 2px}
+.stars button.on{color:var(--warn)}
+form.cm{display:grid;gap:10px}
+input,textarea{width:100%;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:8px;padding:9px 11px;font:inherit}
+.comment{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--line)}
+.comment .body{flex:1;min-width:0;overflow-wrap:anywhere}
+.up{align-self:flex-start;background:var(--panel);border:1px solid var(--line);color:var(--text);border-radius:8px;padding:5px 10px;cursor:pointer;font:inherit}
+.up.voted{border-color:var(--accent2);color:var(--accent2)}
+.timeline{list-style:none;margin:0;padding:0 0 0 18px;border-left:2px solid var(--line)}
+.timeline li{position:relative;margin:0 0 20px;padding-left:14px}
+.timeline li::before{content:"";position:absolute;left:-26px;top:7px;width:10px;height:10px;border-radius:50%;background:var(--line)}
+.timeline li.done::before{background:var(--accent2)}.timeline li.now::before{background:var(--warn)}
+/* feedback trigger */
+#fbTrigger{position:fixed;right:16px;bottom:16px;z-index:20;background:var(--panel);color:var(--mute);border:1px solid var(--line);border-radius:999px;padding:7px 14px;font-size:.85rem;cursor:pointer;opacity:.85}
+#fbTrigger:hover{opacity:1;color:var(--text)}
+#fbPanel{position:fixed;right:16px;bottom:60px;z-index:21;width:min(340px,calc(100vw - 32px));display:none}
+#fbPanel.open{display:block}
+#status{font-size:.85rem;min-height:1.2em}
+@media (max-width:760px){.hero{grid-template-columns:1fr}h1{font-size:1.7rem}}
+</style>
+</head>
+<body>
+<main>
+
+<!-- ===================== 1. HEADER ===================== -->
+<header class="hero" id="top">
+  <div>
+    <h1>NEXXUS Sandbox</h1>
+    <p class="mute">A local-first workspace built from independent, signed engines that talk through one bridge. Runs on your machine, stays on your machine, and only touches the folders you hand it.</p>
+    <div class="row">
+      <button class="btn" id="installBtn">Install app</button>
+      <a class="btn ghost" href="#docs">Read the docs</a>
+    </div>
+    <p id="installHelp" class="mute"></p>
+  </div>
+  <img src="docs/images/dashboard.png" alt="NEXXUS dashboard preview" loading="eager">
+</header>
+
+<!-- ===================== 2. DOCUMENTATION ===================== -->
+<section id="docs">
+  <h2>Documentation</h2>
+  <nav class="toc">
+    <a href="#d-start">Quick start</a><a href="#d-operator">Operator mode</a><a href="#d-arch">Architecture</a><a href="#d-contract">Mesh contract</a><a href="#d-security">Security model</a><a href="#d-status">Status</a>
+  </nav>
+
+  <h3 id="d-start">Quick start</h3>
+  <ol class="steps">
+    <li><b>Start the stack.</b> Run <code>START_NEXXUS.bat</code> (or <code>start_all_engines.bat</code>). Engines bind to loopback only by default.</li>
+    <li><b>Serve this page.</b> Run <code>python site_server.py</code>, then open <code>http://127.0.0.1:8787</code>.</li>
+    <li><b>Install it.</b> Press <i>Install app</i> above. The service worker caches the shell so the page opens offline.</li>
+    <li><b>Grant folders.</b> Open Operator mode and add each folder you want NEXXUS to work in. Nothing else is reachable.</li>
+    <li><b>Check health.</b> Each engine answers <code>health</code> and <code>ping</code>; a failing engine is reported without stopping the others.</li>
+  </ol>
+
+  <h3 id="d-operator">Operator mode (v1 scope)</h3>
+  <div class="callout">In v1, operator mode works <b>only inside folders you explicitly grant</b>. Anything outside a granted folder is refused, not prompted for.</div>
+  <ul>
+    <li>Access is an allow-list of folders, empty by default. Granting is a deliberate user action; revoking takes effect immediately.</li>
+    <li>Paths are resolved to their real location before the check, so <code>..</code> segments and symlinks cannot escape a granted folder.</li>
+    <li>Every operator action, allowed or refused, is written to the logs.</li>
+    <li>Granting a folder does not grant its parents or siblings.</li>
+  </ul>
+
+  <h3 id="d-arch">Architecture</h3>
+<pre>
+  you ──► NEXXUS hub (brain) ──► bridge ──► engine A   (own process, own key)
+                                      ├──► engine B
+                                      └──► engine … (21 total)
+
+  PWA shell (this page) ── static files + /api/* ──► site_server.py ──► logs/
+</pre>
+  <table>
+    <tr><th>Part</th><th>Role</th></tr>
+    <tr><td>Engines</td><td>Independent silos. One OS process per call, per-engine keys. One dying does not stop the rest.</td></tr>
+    <tr><td>Bridge</td><td>Routes signed calls between the hub and engines.</td></tr>
+    <tr><td>Hub</td><td>Coordinates engines; the single point where results are combined.</td></tr>
+    <tr><td>axis gate</td><td>Signed manifests, drift detection, replay protection, sealed core.</td></tr>
+    <tr><td>PWA shell</td><td><code>manifest.json</code> + <code>sw.js</code> cache the app shell under <code>nexxus-v1</code>.</td></tr>
+  </table>
+
+  <h3 id="d-contract">Mesh contract</h3>
+  <p>Every engine answers four calls:</p>
+  <table>
+    <tr><td><code>health</code></td><td>Is the engine alive and consistent?</td></tr>
+    <tr><td><code>ping</code></td><td>Cheap liveness check.</td></tr>
+    <tr><td><code>message</code></td><td>Deliver a message to the engine's inbox.</td></tr>
+    <tr><td><code>instruct</code></td><td>Ask the engine to perform work.</td></tr>
+  </table>
+
+  <h3 id="d-security">Security model</h3>
+  <ul>
+    <li>Loopback-only by default; secrets redacted in logs.</li>
+    <li>Failed signatures are refused, logged and quarantined; quarantined copies are inert.</li>
+    <li>Admin token required for overrides.</li>
+    <li>This site's server serves a fixed whitelist of files and caps all submitted text.</li>
+  </ul>
+
+  <h3 id="d-status">Status</h3>
+  <table>
+    <tr><th>Pillar</th><th>State</th></tr>
+    <tr><td>Sovereign isolation</td><td><span class="tag built">Built</span></td></tr>
+    <tr><td>Universal port (mesh contract)</td><td><span class="tag built">Built</span></td></tr>
+    <tr><td>Hardened discipline (axis gate)</td><td><span class="tag built">Built</span></td></tr>
+    <tr><td>Operational stealth</td><td><span class="tag partial">Partial</span> not tested against outside scanning</td></tr>
+    <tr><td>Automatic escalation to containment</td><td><span class="tag partial">Partial</span></td></tr>
+    <tr><td>Bluetooth</td><td><span class="tag next">Next</span> needs hardware with a radio</td></tr>
+  </table>
+  <p class="mute">Source of truth: <code>docs/VISION_AND_STATUS.md</code>.</p>
+</section>
+
+<!-- ===================== 3. COMMUNITY ===================== -->
+<section id="community">
+  <h2>Community</h2>
+
+  <div class="card">
+    <div class="row" style="justify-content:space-between">
+      <b>Rate &amp; comment</b>
+      <span id="avg" class="mute">No ratings yet</span>
+    </div>
+    <form class="cm" id="cmForm">
+      <div class="stars" id="stars" role="radiogroup" aria-label="Rating"></div>
+      <input id="cmName" maxlength="40" placeholder="Name (optional)" autocomplete="nickname">
+      <textarea id="cmText" rows="3" maxlength="1000" placeholder="What worked, what didn't?" required></textarea>
+      <div class="row"><button class="btn" type="submit">Post</button><span id="status" class="mute"></span></div>
+    </form>
+  </div>
+
+  <div id="comments"></div>
+
+  <h3>Beta builder log</h3>
+  <ul class="timeline">
+    <li class="done"><b>Engines isolated</b><div class="mute">21 engines, one process per call, per-engine keys.</div></li>
+    <li class="done"><b>Mesh contract + axis gate</b><div class="mute">Uniform health/ping/message/instruct; signed manifests and drift detection.</div></li>
+    <li class="done"><b>PWA shell</b><div class="mute">Installable page with offline shell cache.</div></li>
+    <li class="now"><b>Operator mode v1</b><div class="mute">Folder allow-list only. Feedback welcome below.</div></li>
+    <li><b>Phone test over mobile data</b><div class="mute">Then lock remote access down again.</div></li>
+    <li><b>Bluetooth</b><div class="mute">Pending hardware with a radio.</div></li>
+  </ul>
+</section>
+</main>
+
+<!-- in-app feedback: small, closed by default, never auto-opens -->
+<button id="fbTrigger" type="button" aria-expanded="false" aria-controls="fbPanel">Feedback</button>
+<div id="fbPanel" class="card" role="dialog" aria-label="Send feedback">
+  <form class="cm" id="fbForm">
+    <textarea id="fbText" rows="3" maxlength="1000" placeholder="Something broken or confusing?" required></textarea>
+    <label class="mute" style="font-size:.8rem"><input type="checkbox" id="fbCtx" checked style="width:auto"> Include page, browser and install state (no personal data)</label>
+    <div class="row"><button class="btn" type="submit">Send</button><button class="btn ghost" type="button" id="fbClose">Close</button></div>
+    <span id="fbStatus" class="mute" style="font-size:.85rem"></span>
+  </form>
+</div>
+
+<script>
+(function(){
+  var $ = function(id){return document.getElementById(id)};
+  function store(k,v){try{if(v===undefined)return JSON.parse(localStorage.getItem(k));localStorage.setItem(k,JSON.stringify(v))}catch(e){return null}}
+
+  /* ---- PWA install ---- */
+  var deferred=null, btn=$('installBtn'), help=$('installHelp');
+  var standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+  if(standalone){btn.textContent='Installed';btn.disabled=true}
+  window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();deferred=e});
+  window.addEventListener('appinstalled',function(){btn.textContent='Installed';btn.disabled=true;deferred=null});
+  btn.addEventListener('click',function(){
+    if(deferred){deferred.prompt();deferred.userChoice.then(function(){deferred=null});return}
+    help.textContent = /iphone|ipad/i.test(navigator.userAgent)
+      ? 'On iOS: Share, then "Add to Home Screen".'
+      : 'Your browser has not offered install yet. Use the install icon in the address bar or the browser menu. Install needs HTTPS (this page on GitHub Pages) or localhost.';
+  });
+  if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){})}
+
+  /* ---- community ---- */
+  var GH='https://github.com/jamalemccarthy3-dev/axis-bridge/issues/new?template=';
+  function ghLinks(lead){
+    var p=document.createElement('p');p.className='mute';p.appendChild(document.createTextNode(lead));
+    [['Write a review','review-and-rating.yml'],['Start a builder log','builder-log.yml']].forEach(function(l,i){
+      if(i)p.appendChild(document.createTextNode(' · '));
+      var a=document.createElement('a');a.href=GH+l[1];a.target='_blank';a.rel='noopener';a.textContent=l[0];p.appendChild(a);
+    });
+    return p;
+  }
+  var API='api/', rating=0, state={comments:[]};
+  var voted = store('nx_voted') || {};
+  var stars=$('stars');
+  for(var i=1;i<=5;i++)(function(n){
+    var b=document.createElement('button');b.type='button';b.textContent='★';b.setAttribute('aria-label',n+' star'+(n>1?'s':''));
+    b.addEventListener('click',function(){rating=n;paint()});stars.appendChild(b);
+  })(i);
+  function paint(){[].forEach.call(stars.children,function(b,i){b.classList.toggle('on',i<rating)})}
+
+  function post(path,body){
+    return fetch(API+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})
+      .then(function(r){if(!r.ok)throw new Error(r.status);return r.json()});
+  }
+  function render(){
+    var list=$('comments');list.textContent='';
+    var rated=state.comments.filter(function(c){return c.rating});
+    $('avg').textContent = rated.length
+      ? (rated.reduce(function(a,c){return a+c.rating},0)/rated.length).toFixed(1)+' / 5 from '+rated.length+' rating'+(rated.length>1?'s':'')
+      : 'No ratings yet';
+    if(!state.comments.length){var p=document.createElement('p');p.className='mute';p.textContent='No comments yet.';list.appendChild(p);return}
+    state.comments.slice().sort(function(a,b){return b.up-a.up||b.ts-a.ts}).forEach(function(c){
+      var row=document.createElement('div');row.className='comment';
+      var up=document.createElement('button');up.className='up'+(voted[c.id]?' voted':'');
+      up.textContent='👍 '+c.up;up.setAttribute('aria-label','Upvote');
+      up.addEventListener('click',function(){
+        if(voted[c.id])return;
+        post('upvote',{id:c.id}).then(function(r){c.up=r.up;voted[c.id]=1;store('nx_voted',voted);render()}).catch(function(){});
+      });
+      var body=document.createElement('div');body.className='body';
+      var h=document.createElement('b');h.textContent=(c.name||'Anonymous')+(c.rating?'  '+'★'.repeat(c.rating):'');
+      var t=document.createElement('div');t.textContent=c.text;
+      var d=document.createElement('div');d.className='mute';d.style.fontSize='.8rem';d.textContent=new Date(c.ts*1000).toLocaleDateString();
+      body.append(h,t,d);row.append(up,body);list.appendChild(row);
+    });
+  }
+  function load(){
+    fetch(API+'community').then(function(r){return r.json()}).then(function(j){state.comments=j.comments||[];render()})
+      .catch(function(){$('comments').textContent='';$('comments').appendChild(ghLinks('Reviews and builder logs live on GitHub: '))});
+  }
+  $('cmForm').addEventListener('submit',function(e){
+    e.preventDefault();$('status').textContent='Posting…';
+    post('comment',{name:$('cmName').value,text:$('cmText').value,rating:rating}).then(function(r){
+      state.comments.push(r.comment);$('cmText').value='';rating=0;paint();$('status').textContent='Posted.';render();
+    }).catch(function(){$('status').textContent='';$('comments').prepend(ghLinks('The live board is not reachable from here. Post it on GitHub instead: '))});
+  });
+  load();
+
+  /* ---- feedback -> backend logs ---- */
+  var panel=$('fbPanel'),trig=$('fbTrigger');
+  function toggle(open){panel.classList.toggle('open',open);trig.setAttribute('aria-expanded',open);if(open)$('fbText').focus()}
+  trig.addEventListener('click',function(){toggle(!panel.classList.contains('open'))});
+  $('fbClose').addEventListener('click',function(){toggle(false);trig.focus()});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&panel.classList.contains('open'))toggle(false)});
+  $('fbForm').addEventListener('submit',function(e){
+    e.preventDefault();var s=$('fbStatus');s.textContent='Sending…';
+    var ctx=$('fbCtx').checked?{page:location.pathname+location.hash,ua:navigator.userAgent,standalone:!!standalone,sw:!!navigator.serviceWorker&&!!navigator.serviceWorker.controller}:{};
+    post('feedback',{message:$('fbText').value,context:ctx}).then(function(){
+      s.textContent='Thanks, logged.';$('fbText').value='';setTimeout(function(){toggle(false);s.textContent=''},1200);
+    }).catch(function(){s.textContent='';var a=document.createElement('a');a.href=GH+'bug-report.yml';a.target='_blank';a.rel='noopener';a.textContent='Report it on GitHub instead';s.appendChild(a)});
+  });
+})();
+</script>
+</body>
+</html>

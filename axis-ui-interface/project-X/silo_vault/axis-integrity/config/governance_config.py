@@ -1,0 +1,4 @@
+# GOVERNANCE_CONFIG: Master operational state.
+SYSTEM_MODE = "TEST"  # Options: ["TEST", "LIVE", "MAINTENANCE"]
+LOG_LEVEL = "DEBUG"
+EMERGENCY_SHUTDOWN_ENABLED = True

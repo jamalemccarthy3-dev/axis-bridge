@@ -1,0 +1,9 @@
+# NEXXUS core: what the hub, the dashboard, the mesh and the perimeter need to start. Verified by installing ONLY this file into a fresh virtual environment (Python 3.14, Windows)
+# and importing python_server with no startup warnings other than the optional local-model note. Install with:   pip install -r requirements.txt
+Flask==3.1.3
+requests==2.34.2
+numpy==2.5.4
+pillow==12.3.0
+psutil==7.2.2
+PyYAML==6.0.3
+cryptography==50.0.2

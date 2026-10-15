@@ -1,0 +1,12 @@
+# RULES_UTILITY: The Governance Enforcer v1.0
+# District: Auditor/Governance
+# Purpose: Brain that evaluates requests against the rules.yml.
+
+import rules_tool as tool
+
+def is_action_allowed(silo_id, action):
+    rules = tool.load_rules()
+    # Logic: "If Silo_A is in authorized_silos list, allow action"
+    if silo_id in rules.get('authorized_silos', []):
+        return True
+    return False

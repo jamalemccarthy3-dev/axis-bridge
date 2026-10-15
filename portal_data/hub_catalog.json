@@ -1,0 +1,1488 @@
+{
+ "editorial": true,
+ "source": "A curated starting catalog written by NEXXUS from general knowledge, NOT fetched live. Ratings are editorial opinions. Before you rely on any entry, check the provider's current terms, pricing, licence and availability in your jurisdiction. Add, edit or remove entries freely: each needs id, portal, name, kind, category, rating, summary and tags.",
+ "entries": [
+  {
+   "id": "sp-edge",
+   "portal": "sports",
+   "name": "Edge check",
+   "kind": "calculator",
+   "category": "Odds and value",
+   "access": "built-in",
+   "key_required": false,
+   "rating": 5,
+   "url": "",
+   "summary": "Record against the odds: conservative win probability, implied probability, overround, edge and capped Kelly fraction. Analysis only.",
+   "tags": [
+    "odds",
+    "edge",
+    "kelly",
+    "betting",
+    "value",
+    "probability"
+   ],
+   "builtin": {
+    "tab": "edge"
+   }
+  },
+  {
+   "id": "sp-parlay",
+   "portal": "sports",
+   "name": "Parlay filter and pricer",
+   "kind": "calculator",
+   "category": "Odds and value",
+   "access": "built-in",
+   "key_required": false,
+   "rating": 5,
+   "url": "",
+   "summary": "Filter legs by platform, odds band and edge, then price the combined parlay. Never places anything.",
+   "tags": [
+    "parlay",
+    "odds",
+    "betting",
+    "sportsbook",
+    "casino",
+    "filter"
+   ],
+   "builtin": {
+    "tab": "parlay"
+   }
+  },
+  {
+   "id": "sp-teams",
+   "portal": "sports",
+   "name": "Team comparison matrix",
+   "kind": "calculator",
+   "category": "Team analytics",
+   "access": "built-in",
+   "key_required": false,
+   "rating": 5,
+   "url": "",
+   "summary": "Side-by-side win rates with their uncertainty, per-stat leaders and Elo head-to-head.",
+   "tags": [
+    "teams",
+    "compare",
+    "matrix",
+    "elo",
+    "analytics"
+   ],
+   "builtin": {
+    "tab": "teams"
+   }
+  },
+  {
+   "id": "sp-players",
+   "portal": "sports",
+   "name": "Player stat query",
+   "kind": "calculator",
+   "category": "Player analytics",
+   "access": "built-in",
+   "key_required": false,
+   "rating": 5,
+   "url": "",
+   "summary": "Lifetime and single-season queries over your own player file, with a per-season range.",
+   "tags": [
+    "player",
+    "stats",
+    "career",
+    "season",
+    "query",
+    "analytics"
+   ],
+   "builtin": {
+    "tab": "players"
+   }
+  },
+  {
+   "id": "sp-ticker",
+   "portal": "sports",
+   "name": "Broadcast ticker",
+   "kind": "feed",
+   "category": "Live scores",
+   "access": "built-in",
+   "key_required": false,
+   "rating": 4,
+   "url": "",
+   "summary": "Scrolling ticker of the lines in your own portal_data/ticker.json.",
+   "tags": [
+    "ticker",
+    "scores",
+    "live",
+    "broadcast",
+    "news"
+   ],
+   "builtin": {
+    "tab": "broadcast"
+   }
+  },
+  {
+   "id": "sp-oddsapi",
+   "portal": "sports",
+   "name": "The Odds API",
+   "kind": "api",
+   "category": "Odds data",
+   "access": "freemium",
+   "key_required": true,
+   "rating": 5,
+   "url": "https://the-odds-api.com",
+   "summary": "Odds from many bookmakers across sports through one JSON API.",
+   "tags": [
+    "odds",
+    "api",
+    "sportsbook",
+    "betting",
+    "lines",
+    "bookmakers"
+   ]
+  },
+  {
+   "id": "sp-betfair",
+   "portal": "sports",
+   "name": "Betfair Exchange API",
+   "kind": "api",
+   "category": "Betting platforms",
+   "access": "paid",
+   "key_required": true,
+   "rating": 4,
+   "url": "https://developer.betfair.com",
+   "summary": "Exchange prices and market data. Availability and legality depend on your jurisdiction; read the licence.",
+   "tags": [
+    "betting",
+    "exchange",
+    "odds",
+    "platform",
+    "api"
+   ]
+  },
+  {
+   "id": "sp-sportradar",
+   "portal": "sports",
+   "name": "Sportradar",
+   "kind": "api",
+   "category": "Sports data",
+   "access": "paid",
+   "key_required": true,
+   "rating": 5,
+   "url": "https://sportradar.com",
+   "summary": "Commercial live and historical data across major leagues.",
+   "tags": [
+    "sports",
+    "data",
+    "live",
+    "scores",
+    "feed",
+    "official",
+    "stats",
+    "commercial"
+   ]
+  },
+  {
+   "id": "sp-sportsdataio",
+   "portal": "sports",
+   "name": "SportsDataIO",
+   "kind": "api",
+   "category": "Sports data",
+   "access": "paid",
+   "key_required": true,
+   "rating": 4,
+   "url": "https://sportsdata.io",
+   "summary": "Commercial stats, schedules, projections and odds feeds for US leagues.",
+   "tags": [
+    "sports",
+    "data",
+    "stats",
+    "odds",
+    "projections",
+    "feed"
+   ]
+  },
+  {
+   "id": "sp-apisports",
+   "portal": "sports",
+   "name": "API-Sports",
+   "kind": "api",
+   "category": "Sports data",
+   "access": "freemium",
+   "key_required": true,
+   "rating": 4,
+   "url": "https://api-sports.io",
+   "summary": "Fixtures, standings and stats for football and other sports through simple endpoints.",
+   "tags": [
+    "football",
+    "soccer",
+    "fixtures",
+    "standings",
+    "stats",
+    "api"
+   ]
+  },
+  {
+   "id": "sp-balldontlie",
+   "portal": "sports",
+   "name": "balldontlie",
+   "kind": "api",
+   "category": "Player analytics",
+   "access": "freemium",
+   "key_required": true,
+   "rating": 4,
+   "url": "https://www.balldontlie.io",
+   "summary": "Basketball players, games and stats API.",
+   "tags": [
+    "nba",
+    "basketball",
+    "players",
+    "stats",
+    "api"
+   ]
+  },
+  {
+   "id": "sp-nbaapi",
+   "portal": "sports",
+   "name": "nba_api",
+   "kind": "library",
+   "category": "Player analytics",
+   "access": "open-source",
+   "key_required": false,
+   "rating": 4,
+   "url": "https://github.com/swar/nba_api",
+   "summary": "Python client for NBA.com stats endpoints.",
+   "tags": [
+    "nba",
+    "basketball",
+    "python",
+    "stats",
+    "library"
+   ]
+  },
+  {
+   "id": "sp-nflverse",
+   "portal": "sports",
+   "name": "nflverse",
+   "kind": "database",
+   "category": "Historical databases",
+   "access": "open-source",
+   "key_required": false,
+   "rating": 5,
+   "url": "https://github.com/nflverse",
+   "summary": "Open play-by-play, player and team data for the NFL.",
+   "tags": [
+    "nfl",
+    "football",
+    "play-by-play",
+    "historical",
+    "open",
+    "data",
+    "analytics"
+   ]
+  },
+  {
+   "id": "sp-pybaseball",
+   "portal": "sports",
+   "name": "pybaseball",
+   "kind": "library",
+   "category": "Player analytics",
+   "access": "open-source",
+   "key_required": false,
+   "rating": 4,
+   "url": "https://github.com/jldbc/pybaseball",
+   "summary": "Pull baseball statistics from Statcast, Baseball Reference and FanGraphs in Python.",
+   "tags": [
+    "baseball",
+    "statcast",
+    "python",
+    "stats",
+    "library"
+   ]
+  },
+  {
+   "id": "sp-retrosheet",
+   "portal": "sports",
+   "name": "Retrosheet",
+   "kind": "database",
+   "category": "Historical databases",
+   "access": "free",
+   "key_required": false,
+   "rating": 5,
+   "url": "https://www.retrosheet.org",
+   "summary": "Play-by-play and box scores for historical baseball; free with attribution.",
+   "tags": [
+    "baseball",
+    "historical",
+    "play-by-play",
+    "database",
+    "box",
+    "scores"
+   ]
+  },
+  {
+   "id": "sp-lahman",
+   "portal": "sports",
+   "name": "Lahman Baseball Database",
+   "kind": "database",
+   "category": "Historical databases",
+   "access": "free",
+   "key_required": false,
+   "rating": 5,
+   "url": "https://sabr.org/lahman-database/",
+   "summary": "Season-level batting, pitching and fielding records back to 1871.",
+   "tags": [
+    "baseball",
+    "historical",
+    "seasons",
+    "database",
+    "batting",
+    "pitching"
+   ]
+  },
+  {
+   "id": "sp-statsbomb",
+   "portal": "sports",
+   "name": "StatsBomb Open Data",
+   "kind": "database",
+   "category": "Historical databases",
+   "access": "open-source",
+   "key_required": false,
+   "rating": 5,
+   "url": "https://github.com/statsbomb/open-data",
+   "summary": "Free event-level football data for selected competitions.",
+   "tags": [
+    "football",
+    "soccer",
+    "event",
+    "data",
+    "open",
+    "analytics"
+   ]
+  },
+  {
+   "id": "sp-footballdata",
+   "portal": "sports",
+   "name": "Football-Data.co.uk",
+   "kind": "database",
+   "category": "Odds data",
+   "access": "free",
+   "key_required": false,
+   "rating": 4,
+   "url": "https://www.football-data.co.uk",
+   "summary": "Historical football results with closing odds as CSV files.",
+   "tags": [
+    "football",
+    "soccer",
+    "results",
+    "historical",
+    "odds",
+    "csv"
+   ]
+  },
+  {
+   "id": "sp-sportsref",
+   "portal": "sports",
+   "name": "Sports Reference",
+   "kind": "database",
+   "category": "Historical databases",
+   "access": "free",
+   "key_required": false,
+   "rating": 5,
+   "url": "https://www.sports-reference.com",
+   "summary": "The standard reference sites for historical stats. Read their terms before automated access.",
+   "tags": [
+    "stats",
+    "reference",
+    "historical",
+    "players",
+    "seasons",
+    "baseball",
+    "basketball",
+    "football",
+    "hockey"
+   ]
+  },
+  {
+   "id": "mk-prob",
+   "portal": "markets",
+   "name": "Probability workspace",
+   "kind": "calculator",
+   "category": "Probability and simulation",
+   "access": "built-in",
+   "key_required": false,
+   "rating": 5,
+   "url": "",
+   "summary": "Share of up days with its uncertainty, volatility and drawdown from a return series.",
+   "tags": [
+    "probability",
+    "direction",
+    "volatility",
+    "drawdown",
+    "stocks"
+   ],
+   "builtin": {
+    "tab": "prob"
+   }
+  },
+  {
+   "id": "mk-forecast",
+   "portal": "markets",
+   "name": "Forecast cone",
+   "kind": "calculator",
+   "category": "Probability and simulation",
+   "access": "built-in",
+   "key_required": false,
+   "rating": 5,
+   "url": "",
+   "summary": "Bootstrap price cone from past returns: the spread history allows, not a prediction.",
+   "tags": [
+    "forecast",
+    "simulation",
+    "monte",
+    "carlo",
+    "cone",
+    "prediction"
+   ],
+   "builtin": {
+    "tab": "forecast"
+   }
+  },
+  {
+   "id": "mk-yfinance",
+   "portal": "markets",
+   "name": "yfinance",
+   "kind": "library",
+   "category": "Market data",
+   "access": "open-source",
+   "key_required": false,
+   "rating": 4,
+   "url": "https://github.com/ranaroussi/yfinance",
+   "summary": "Python access to Yahoo Finance data. Unofficial: check Yahoo's terms for your use.",
+   "tags": [
+    "stocks",
+    "prices",
+    "historical",
+    "python",
+    "data",
+    "yahoo",
+    "equities"
+   ]
+  },
+  {
+   "id": "mk-alphavantage",
+   "portal": "markets",
+   "name": "Alpha Vantage",
+   "kind": "api",
+   "category": "Market data",
+   "access": "freemium",
+   "key_required": true,
+   "rating": 4,
+   "url": "https://www.alphavantage.co",
+   "summary": "Stocks, forex, crypto and technical indicators through one API.",
+   "tags": [
+    "stocks",
+    "forex",
+    "crypto",
+    "indicators",
+    "api",
+    "prices"
+   ]
+  },
+  {
+   "id": "mk-polygon",
+   "portal": "markets",
+   "name": "Polygon.io",
+   "kind": "api",
+   "category": "Market data",
+   "access": "freemium",
+   "key_required": true,
+   "rating": 5,
+   "url": "https://polygon.io",
+   "summary": "Real-time and historical US market data: stocks, options, forex, crypto.",
+   "tags": [
+    "stocks",
+    "options",
+    "forex",
+    "crypto",
+    "real-time",
+    "api"
+   ]
+  },
+  {
+   "id": "mk-finnhub",
+   "portal": "markets",
+   "name": "Finnhub",
+   "kind": "api",
+   "category": "Market data",
+   "access": "freemium",
+   "key_required": true,
+   "rating": 4,
+   "url": "https://finnhub.io",
+   "summary": "Quotes, company fundamentals, news and economic calendar.",
+   "tags": [
+    "stocks",
+    "quotes",
+    "fundamentals",
+    "news",
+    "calendar",
+    "api"
+   ]
+  },
+  {
+   "id": "mk-tiingo",
+   "portal": "markets",
+   "name": "Tiingo",
+   "kind": "api",
+   "category": "Market data",
+   "access": "freemium",
+   "key_required": true,
+   "rating": 4,
+   "url": "https://www.tiingo.com",
+   "summary": "End-of-day prices, fundamentals and crypto with clean history.",
+   "tags": [
+    "stocks",
+    "end-of-day",
+    "prices",
+    "fundamentals",
+    "crypto",
+    "api"
+   ]
+  },
+  {
+   "id": "mk-stooq",
+   "portal": "markets",
+   "name": "Stooq",
+   "kind": "database",
+   "category": "Market data",
+   "access": "free",
+   "key_required": false,
+   "rating": 3,
+   "url": "https://stooq.com",
+   "summary": "Free historical price downloads for many indices and stocks.",
+   "tags": [
+    "historical",
+    "prices",
+    "indices",
+    "stocks",
+    "download",
+    "free"
+   ]
+  },
+  {
+   "id": "mk-edgar",
+   "portal": "markets",
+   "name": "SEC EDGAR",
+   "kind": "database",
+   "category": "Fundamentals and filings",
+   "access": "free",
+   "key_required": false,
+   "rating": 5,
+   "url": "https://www.sec.gov/edgar",
+   "summary": "Official US company filings: 10-K, 10-Q, insider and ownership forms.",
+   "tags": [
+    "filings",
+    "sec",
+    "10-k",
+    "fundamentals",
+    "insider",
+    "equities"
+   ]
+  },
+  {
+   "id": "mk-coingecko",
+   "portal": "markets",
+   "name": "CoinGecko API",
+   "kind": "api",
+   "category": "Crypto",
+   "access": "freemium",
+   "key_required": true,
+   "rating": 4,
+   "url": "https://www.coingecko.com/en/api",
+   "summary": "Prices, market caps and history for thousands of coins.",
+   "tags": [
+    "crypto",
+    "cryptocurrency",
+    "prices",
+    "market",
+    "cap",
+    "api"
+   ]
+  },
+  {
+   "id": "mk-alpaca",
+   "portal": "markets",
+   "name": "Alpaca",
+   "kind": "platform",
+   "category": "Trading platforms",
+   "access": "freemium",
+   "key_required": true,
+   "rating": 4,
+   "url": "https://alpaca.markets",
+   "summary": "Brokerage API with a paper-trading mode. NEXXUS analyses only and places nothing.",
+   "tags": [
+    "trading",
+    "broker",
+    "api",
+    "paper",
+    "stocks",
+    "platform"
+   ]
+  },
+  {
+   "id": "mk-cboevix",
+   "portal": "markets",
+   "name": "Cboe VIX index",
+   "kind": "feed",
+   "category": "Market indicators",
+   "access": "free",
+   "key_required": false,
+   "rating": 4,
+   "url": "https://www.cboe.com/tradable_products/vix/",
+   "summary": "The market's expected 30-day volatility; history is downloadable.",
+   "tags": [
+    "volatility",
+    "vix",
+    "indicator",
+    "fear",
+    "index",
+    "market"
+   ]
+  },
+  {
+   "id": "mk-talib",
+   "portal": "markets",
+   "name": "TA-Lib",
+   "kind": "library",
+   "category": "Trading tools",
+   "access": "open-source",
+   "key_required": false,
+   "rating": 4,
+   "url": "https://ta-lib.org",
+   "summary": "Over 150 technical indicators: moving averages, RSI, MACD and more.",
+   "tags": [
+    "technical",
+    "indicators",
+    "rsi",
+    "macd",
+    "trading",
+    "library"
+   ]
+  },
+  {
+   "id": "mk-quantlib",
+   "portal": "markets",
+   "name": "QuantLib",
+   "kind": "library",
+   "category": "Trading tools",
+   "access": "open-source",
+   "key_required": false,
+   "rating": 5,
+   "url": "https://www.quantlib.org",
+   "summary": "Pricing of options, bonds and rates; the open standard for quantitative finance.",
+   "tags": [
+    "options",
+    "bonds",
+    "rates",
+    "derivatives",
+    "pricing",
+    "quant",
+    "library"
+   ]
+  },
+  {
+   "id": "mk-backtrader",
+   "portal": "markets",
+   "name": "backtrader",
+   "kind": "library",
+   "category": "Trading tools",
+   "access": "open-source",
+   "key_required": false,
+   "rating": 3,
+   "url": "https://www.backtrader.com",
+   "summary": "Python backtesting framework for trading ideas on past data.",
+   "tags": [
+    "backtest",
+    "strategy",
+    "trading",
+    "python",
+    "library"
+   ]
+  },
+  {
+   "id": "mk-vectorbt",
+   "portal": "markets",
+   "name": "vectorbt",
+   "kind": "library",
+   "category": "Probability and simulation",
+   "access": "freemium",
+   "key_required": false,
+   "rating": 4,
+   "url": "https://vectorbt.dev",
+   "summary": "Fast vectorised backtesting and parameter sweeps.",
+   "tags": [
+    "backtest",
+    "simulation",
+    "strategy",
+    "vectorized",
+    "python",
+    "library"
+   ]
+  },
+  {
+   "id": "mk-pyportfolioopt",
+   "portal": "markets",
+   "name": "PyPortfolioOpt",
+   "kind": "library",
+   "category": "Trading tools",
+   "access": "open-source",
+   "key_required": false,
+   "rating": 4,
+   "url": "https://github.com/robertmartin8/PyPortfolioOpt",
+   "summary": "Portfolio optimisation: efficient frontier, risk models, allocation.",
+   "tags": [
+    "portfolio",
+    "optimization",
+    "risk",
+    "allocation",
+    "frontier",
+    "library"
+   ]
+  },
+  {
+   "id": "lg-cockpit",
+   "portal": "logistics",
+   "name": "Asset and fulfillment cockpit",
+   "kind": "calculator",
+   "category": "Asset tracking",
+   "access": "built-in",
+   "key_required": false,
+   "rating": 5,
+   "url": "",
+   "summary": "Status board of the assets in your own portal_data/assets.json.",
+   "tags": [
+    "assets",
+    "tracking",
+    "fulfillment",
+    "status",
+    "cockpit"
+   ],
+   "builtin": {
+    "tab": "cockpit"
+   }
+  },
+  {
+   "id": "lg-inventory",
+   "portal": "logistics",
+   "name": "Inventory toolkit",
+   "kind": "calculator",
+   "category": "Inventory",
+   "access": "built-in",
+   "key_required": false,
+   "rating": 5,
+   "url": "",
+   "summary": "Stockout risk, economic order quantity and reorder point.",
+   "tags": [
+    "inventory",
+    "stockout",
+    "eoq",
+    "reorder",
+    "safety",
+    "stock",
+    "warehouse"
+   ],
+   "builtin": {
+    "tab": "stock"
+   }
+  },
+  {
+   "id": "lg-queue",
+   "portal": "logistics",
+   "name": "Queue model",
+   "kind": "calculator",
+   "category": "Warehousing and flow",
+   "access": "built-in",
+   "key_required": false,
+   "rating": 5,
+   "url": "",
+   "summary": "Erlang C model for docks, lines and desks: busy %, waiting chance, average wait.",
+   "tags": [
+    "queue",
+    "dock",
+    "warehouse",
+    "throughput",
+    "capacity"
+   ],
+   "builtin": {
+    "tab": "flow"
+   }
+  },
+  {
+   "id": "lg-delivery",
+   "portal": "logistics",
+   "name": "Delivery performance",
+   "kind": "calculator",
+   "category": "Fulfillment",
+   "access": "built-in",
+   "key_required": false,
+   "rating": 5,
+   "url": "",
+   "summary": "On-time rate with its range and a significance test for fulfilment changes.",
+   "tags": [
+    "delivery",
+    "on-time",
+    "fulfillment",
+    "performance",
+    "test"
+   ],
+   "builtin": {
+    "tab": "delivery"
+   }
+  },
+  {
+   "id": "lg-ortools",
+   "portal": "logistics",
+   "name": "Google OR-Tools",
+   "kind": "library",
+   "category": "Routing and optimization",
+   "access": "open-source",
+   "key_required": false,
+   "rating": 5,
+   "url": "https://developers.google.com/optimization",
+   "summary": "Vehicle routing, scheduling and assignment solvers.",
+   "tags": [
+    "routing",
+    "vehicle",
+    "optimization",
+    "scheduling",
+    "solver",
+    "supply",
+    "chain"
+   ]
+  },
+  {
+   "id": "lg-vroom",
+   "portal": "logistics",
+   "name": "VROOM",
+   "kind": "library",
+   "category": "Routing and optimization",
+   "access": "open-source",
+   "key_required": false,
+   "rating": 4,
+   "url": "https://vroom-project.org",
+   "summary": "Open-source vehicle routing engine for delivery rounds.",
+   "tags": [
+    "routing",
+    "vehicle",
+    "delivery",
+    "optimization",
+    "open",
+    "source"
+   ]
+  },
+  {
+   "id": "lg-osrm",
+   "portal": "logistics",
+   "name": "OSRM",
+   "kind": "library",
+   "category": "Routing and optimization",
+   "access": "open-source",
+   "key_required": false,
+   "rating": 4,
+   "url": "http://project-osrm.org",
+   "summary": "Fast road routing and travel-time matrices on OpenStreetMap data.",
+   "tags": [
+    "routing",
+    "travel",
+    "time",
+    "road",
+    "matrix",
+    "maps"
+   ]
+  },
+  {
+   "id": "lg-aftership",
+   "portal": "logistics",
+   "name": "AfterShip",
+   "kind": "api",
+   "category": "Freight tracking",
+   "access": "freemium",
+   "key_required": true,
+   "rating": 4,
+   "url": "https://www.aftership.com",
+   "summary": "Track parcels across hundreds of carriers through one API.",
+   "tags": [
+    "tracking",
+    "parcel",
+    "shipment",
+    "carriers",
+    "freight",
+    "api"
+   ]
+  },
+  {
+   "id": "lg-easypost",
+   "portal": "logistics",
+   "name": "EasyPost",
+   "kind": "api",
+   "category": "Fulfillment",
+   "access": "paid",
+   "key_required": true,
+   "rating": 4,
+   "url": "https://www.easypost.com",
+   "summary": "Shipping labels, rates and tracking across carriers.",
+   "tags": [
+    "shipping",
+    "labels",
+    "rates",
+    "tracking",
+    "carriers",
+    "fulfillment",
+    "api"
+   ]
+  },
+  {
+   "id": "lg-shipengine",
+   "portal": "logistics",
+   "name": "ShipEngine",
+   "kind": "api",
+   "category": "Fulfillment",
+   "access": "paid",
+   "key_required": true,
+   "rating": 4,
+   "url": "https://www.shipengine.com",
+   "summary": "Multi-carrier shipping, labels and tracking API.",
+   "tags": [
+    "shipping",
+    "labels",
+    "carriers",
+    "tracking",
+    "fulfillment",
+    "api"
+   ]
+  },
+  {
+   "id": "lg-shippo",
+   "portal": "logistics",
+   "name": "Shippo",
+   "kind": "api",
+   "category": "Fulfillment",
+   "access": "freemium",
+   "key_required": true,
+   "rating": 4,
+   "url": "https://goshippo.com",
+   "summary": "Shipping rates, labels and returns for e-commerce.",
+   "tags": [
+    "shipping",
+    "rates",
+    "labels",
+    "returns",
+    "ecommerce",
+    "fulfillment",
+    "api"
+   ]
+  },
+  {
+   "id": "lg-marinetraffic",
+   "portal": "logistics",
+   "name": "MarineTraffic",
+   "kind": "api",
+   "category": "Freight tracking",
+   "access": "paid",
+   "key_required": true,
+   "rating": 4,
+   "url": "https://www.marinetraffic.com",
+   "summary": "Live and historical vessel positions and port calls.",
+   "tags": [
+    "vessel",
+    "ship",
+    "ocean",
+    "freight",
+    "tracking",
+    "ais",
+    "port"
+   ]
+  },
+  {
+   "id": "lg-opensky",
+   "portal": "logistics",
+   "name": "OpenSky Network",
+   "kind": "api",
+   "category": "Freight tracking",
+   "access": "free",
+   "key_required": false,
+   "rating": 3,
+   "url": "https://opensky-network.org",
+   "summary": "Open air-traffic data, including cargo flights, for research use.",
+   "tags": [
+    "air",
+    "freight",
+    "flights",
+    "tracking",
+    "cargo",
+    "aviation"
+   ]
+  },
+  {
+   "id": "lg-sonar",
+   "portal": "logistics",
+   "name": "FreightWaves SONAR",
+   "kind": "feed",
+   "category": "Freight tracking",
+   "access": "paid",
+   "key_required": true,
+   "rating": 4,
+   "url": "https://www.freightwaves.com/sonar",
+   "summary": "Freight market rates and capacity indicators.",
+   "tags": [
+    "freight",
+    "rates",
+    "capacity",
+    "trucking",
+    "market",
+    "indicators"
+   ]
+  },
+  {
+   "id": "lg-gs1",
+   "portal": "logistics",
+   "name": "GS1 standards",
+   "kind": "database",
+   "category": "Supply chain management",
+   "access": "free",
+   "key_required": false,
+   "rating": 4,
+   "url": "https://www.gs1.org",
+   "summary": "Barcodes and product identification standards used across supply chains.",
+   "tags": [
+    "barcode",
+    "gtin",
+    "standards",
+    "product",
+    "identification",
+    "supply",
+    "chain"
+   ]
+  },
+  {
+   "id": "lg-erpnext",
+   "portal": "logistics",
+   "name": "ERPNext",
+   "kind": "platform",
+   "category": "Warehousing and flow",
+   "access": "open-source",
+   "key_required": false,
+   "rating": 4,
+   "url": "https://erpnext.com",
+   "summary": "Open-source ERP with inventory, purchasing and warehouse modules.",
+   "tags": [
+    "erp",
+    "inventory",
+    "warehouse",
+    "purchasing",
+    "supply",
+    "chain",
+    "open",
+    "source"
+   ]
+  },
+  {
+   "id": "lg-odoo",
+   "portal": "logistics",
+   "name": "Odoo Inventory",
+   "kind": "platform",
+   "category": "Warehousing and flow",
+   "access": "freemium",
+   "key_required": false,
+   "rating": 4,
+   "url": "https://www.odoo.com",
+   "summary": "Warehouse and inventory management inside a modular business suite.",
+   "tags": [
+    "inventory",
+    "warehouse",
+    "erp",
+    "fulfillment",
+    "suite"
+   ]
+  },
+  {
+   "id": "lg-snipeit",
+   "portal": "logistics",
+   "name": "Snipe-IT",
+   "kind": "platform",
+   "category": "Asset tracking",
+   "access": "open-source",
+   "key_required": false,
+   "rating": 4,
+   "url": "https://snipeitapp.com",
+   "summary": "Open-source IT asset management with check-in, check-out and audit trails.",
+   "tags": [
+    "asset",
+    "tracking",
+    "management",
+    "audit",
+    "open",
+    "source"
+   ]
+  },
+  {
+   "id": "ec-macro",
+   "portal": "economics",
+   "name": "Macro trend engine",
+   "kind": "calculator",
+   "category": "Macro indicators",
+   "access": "built-in",
+   "key_required": false,
+   "rating": 5,
+   "url": "",
+   "summary": "Straight-line fit with a slope range and projection for any series in your own macro file.",
+   "tags": [
+    "macro",
+    "trend",
+    "gdp",
+    "inflation",
+    "unemployment",
+    "series",
+    "projection"
+   ],
+   "builtin": {
+    "tab": "macro"
+   }
+  },
+  {
+   "id": "ec-model",
+   "portal": "economics",
+   "name": "Financial modeling engine",
+   "kind": "calculator",
+   "category": "Financial modeling",
+   "access": "built-in",
+   "key_required": false,
+   "rating": 5,
+   "url": "",
+   "summary": "Growth, real returns, savings, NPV and IRR, loans and inflation restatement.",
+   "tags": [
+    "financial",
+    "modeling",
+    "npv",
+    "irr",
+    "loan",
+    "mortgage",
+    "growth",
+    "inflation",
+    "savings"
+   ],
+   "builtin": {
+    "tab": "model"
+   }
+  },
+  {
+   "id": "ec-fred",
+   "portal": "economics",
+   "name": "FRED API",
+   "kind": "api",
+   "category": "Macro indicators",
+   "access": "free",
+   "key_required": true,
+   "rating": 5,
+   "url": "https://fred.stlouisfed.org/docs/api/fred/",
+   "summary": "Hundreds of thousands of US and international economic series from the St. Louis Fed.",
+   "tags": [
+    "macro",
+    "gdp",
+    "inflation",
+    "cpi",
+    "unemployment",
+    "interest",
+    "rates",
+    "series",
+    "api"
+   ]
+  },
+  {
+   "id": "ec-worldbank",
+   "portal": "economics",
+   "name": "World Bank Open Data API",
+   "kind": "api",
+   "category": "Macro indicators",
+   "access": "free",
+   "key_required": false,
+   "rating": 5,
+   "url": "https://datahelpdesk.worldbank.org/knowledgebase/topics/125589",
+   "summary": "Development and macro indicators for nearly every country.",
+   "tags": [
+    "world",
+    "bank",
+    "gdp",
+    "development",
+    "countries",
+    "indicators",
+    "population",
+    "api"
+   ]
+  },
+  {
+   "id": "ec-bls",
+   "portal": "economics",
+   "name": "BLS Public Data API",
+   "kind": "api",
+   "category": "Macro indicators",
+   "access": "free",
+   "key_required": true,
+   "rating": 5,
+   "url": "https://www.bls.gov/developers/",
+   "summary": "US employment, wages, CPI and productivity from the Bureau of Labor Statistics.",
+   "tags": [
+    "employment",
+    "unemployment",
+    "cpi",
+    "inflation",
+    "wages",
+    "labor",
+    "api"
+   ]
+  },
+  {
+   "id": "ec-bea",
+   "portal": "economics",
+   "name": "BEA API",
+   "kind": "api",
+   "category": "Macro indicators",
+   "access": "free",
+   "key_required": true,
+   "rating": 4,
+   "url": "https://apps.bea.gov/API/signup/",
+   "summary": "US GDP, personal income and trade accounts from the Bureau of Economic Analysis.",
+   "tags": [
+    "gdp",
+    "national",
+    "accounts",
+    "income",
+    "trade",
+    "api"
+   ]
+  },
+  {
+   "id": "ec-imf",
+   "portal": "economics",
+   "name": "IMF Data",
+   "kind": "database",
+   "category": "Macro indicators",
+   "access": "free",
+   "key_required": false,
+   "rating": 4,
+   "url": "https://data.imf.org",
+   "summary": "International financial statistics, balance of payments and forecasts.",
+   "tags": [
+    "imf",
+    "international",
+    "finance",
+    "balance",
+    "payments",
+    "forecasts",
+    "macro"
+   ]
+  },
+  {
+   "id": "ec-oecd",
+   "portal": "economics",
+   "name": "OECD Data",
+   "kind": "database",
+   "category": "Macro indicators",
+   "access": "free",
+   "key_required": false,
+   "rating": 4,
+   "url": "https://data.oecd.org",
+   "summary": "Comparable economic and social statistics across member countries.",
+   "tags": [
+    "oecd",
+    "comparable",
+    "countries",
+    "economy",
+    "statistics"
+   ]
+  },
+  {
+   "id": "ec-eurostat",
+   "portal": "economics",
+   "name": "Eurostat",
+   "kind": "database",
+   "category": "Macro indicators",
+   "access": "free",
+   "key_required": false,
+   "rating": 4,
+   "url": "https://ec.europa.eu/eurostat",
+   "summary": "Official European Union statistics on economy, housing and population.",
+   "tags": [
+    "europe",
+    "eu",
+    "economy",
+    "housing",
+    "population",
+    "statistics"
+   ]
+  },
+  {
+   "id": "ec-census",
+   "portal": "economics",
+   "name": "US Census Bureau API",
+   "kind": "api",
+   "category": "Demographics",
+   "access": "free",
+   "key_required": true,
+   "rating": 5,
+   "url": "https://www.census.gov/data/developers.html",
+   "summary": "Population, income, housing and business data by place.",
+   "tags": [
+    "census",
+    "demographics",
+    "population",
+    "income",
+    "housing",
+    "api"
+   ]
+  },
+  {
+   "id": "ec-ipums",
+   "portal": "economics",
+   "name": "IPUMS",
+   "kind": "database",
+   "category": "Demographics",
+   "access": "free",
+   "key_required": true,
+   "rating": 4,
+   "url": "https://www.ipums.org",
+   "summary": "Harmonised census and survey microdata across time and countries.",
+   "tags": [
+    "census",
+    "survey",
+    "microdata",
+    "demographics",
+    "population",
+    "research"
+   ]
+  },
+  {
+   "id": "ec-undata",
+   "portal": "economics",
+   "name": "UN Data",
+   "kind": "database",
+   "category": "Demographics",
+   "access": "free",
+   "key_required": false,
+   "rating": 3,
+   "url": "https://data.un.org",
+   "summary": "Population, trade and social statistics from UN agencies.",
+   "tags": [
+    "united",
+    "nations",
+    "population",
+    "demographics",
+    "statistics",
+    "countries"
+   ]
+  },
+  {
+   "id": "ec-zillow",
+   "portal": "economics",
+   "name": "Zillow Research Data",
+   "kind": "database",
+   "category": "Real estate and housing",
+   "access": "free",
+   "key_required": false,
+   "rating": 4,
+   "url": "https://www.zillow.com/research/data/",
+   "summary": "Downloadable home value and rent indices by region.",
+   "tags": [
+    "housing",
+    "home",
+    "values",
+    "rent",
+    "real",
+    "estate",
+    "prices",
+    "index"
+   ]
+  },
+  {
+   "id": "ec-redfin",
+   "portal": "economics",
+   "name": "Redfin Data Center",
+   "kind": "database",
+   "category": "Real estate and housing",
+   "access": "free",
+   "key_required": false,
+   "rating": 4,
+   "url": "https://www.redfin.com/news/data-center/",
+   "summary": "Market-level sales, inventory and price trend downloads.",
+   "tags": [
+    "housing",
+    "real",
+    "estate",
+    "sales",
+    "inventory",
+    "prices",
+    "market"
+   ]
+  },
+  {
+   "id": "ec-hud",
+   "portal": "economics",
+   "name": "HUD User",
+   "kind": "database",
+   "category": "Real estate and housing",
+   "access": "free",
+   "key_required": true,
+   "rating": 4,
+   "url": "https://www.huduser.gov",
+   "summary": "US housing data and APIs: fair market rents, income limits, affordability.",
+   "tags": [
+    "housing",
+    "rent",
+    "affordability",
+    "fair",
+    "market",
+    "hud",
+    "real",
+    "estate"
+   ]
+  },
+  {
+   "id": "ec-caseshiller",
+   "portal": "economics",
+   "name": "S&P CoreLogic Case-Shiller indices",
+   "kind": "database",
+   "category": "Real estate and housing",
+   "access": "free",
+   "key_required": false,
+   "rating": 5,
+   "url": "https://www.spglobal.com/spdji/en/index-family/real-estate/sp-corelogic-case-shiller/",
+   "summary": "The benchmark US home price indices (also available through FRED).",
+   "tags": [
+    "housing",
+    "home",
+    "price",
+    "index",
+    "real",
+    "estate",
+    "case",
+    "shiller"
+   ]
+  },
+  {
+   "id": "ec-statsmodels",
+   "portal": "economics",
+   "name": "statsmodels",
+   "kind": "library",
+   "category": "Financial modeling",
+   "access": "open-source",
+   "key_required": false,
+   "rating": 5,
+   "url": "https://www.statsmodels.org",
+   "summary": "Regression, time-series and econometrics in Python.",
+   "tags": [
+    "econometrics",
+    "regression",
+    "time",
+    "series",
+    "arima",
+    "modeling",
+    "python",
+    "library"
+   ]
+  }
+ ]
+}

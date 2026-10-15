@@ -1,0 +1,4 @@
+CONFIG = {
+  "schema_version": "2.0.0",
+  "strict_mode": True
+}

@@ -1,0 +1,8 @@
+.env
+*.log
+node_modules/ 
+.ds_store
+.local_config/ 
+# Silent Consultant Network: the owner's private record + counters (never commit)
+consult_private.jsonl*
+consult_state.json*

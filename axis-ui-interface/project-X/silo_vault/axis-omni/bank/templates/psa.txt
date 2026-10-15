@@ -1,0 +1,3 @@
+[TITLE]: %s
+[DECLARATION]: Authoritative, serious statement.
+[DIRECTIVE]: Clear, actionable instruction for the listener.

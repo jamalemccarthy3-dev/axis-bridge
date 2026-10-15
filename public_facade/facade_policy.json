@@ -1,0 +1,44 @@
+{
+  "_note": "Edit this file, then run: python build_facade.py build. 'descriptions' are DRAFT labels taken from folder names only: confirm or change each one before publishing. An engine with no label is shown as 'Standalone engine'. 'extra_hide_names' removes any path containing those words from the public view.",
+  "extra_hide_names": [],
+  "descriptions": {
+    "axis-video_creator": "Video creation",
+    "axis-search_engine": "Search",
+    "axis-llm": "Language models",
+    "axis-vision": "Vision",
+    "axis-phonetic": "Phonetics",
+    "axis-validator": "Validation suite",
+    "axis-diagnostic": "Diagnostics",
+    "axis-integrity": "Integrity checks",
+    "axis-cloud": "Cloud",
+    "axis-curator": "Curation",
+    "axis-triage": "Triage",
+    "axis-sweep": "Sweep",
+    "axis-logic": "Logic and domain modules"
+  },
+  "github": {
+    "description": "Autonomous Automation AI Infrastructure and Orchestrator: a sovereign, local-first orchestration framework with empty utility skeletons. Infrastructure, not handouts: no plug-and-play code, no cloud crutches. Command your own local AI to build the implementation.",
+    "topics": [
+      "system-design",
+      "software-architecture",
+      "modular-architecture",
+      "reference-architecture",
+      "architecture-diagram",
+      "plugin-architecture",
+      "microservices",
+      "multi-agent-systems",
+      "ai-agents",
+      "local-first",
+      "self-hosted",
+      "python",
+      "design-patterns",
+      "separation-of-concerns",
+      "api-gateway",
+      "human-in-the-loop",
+      "ai-orchestration",
+      "ai-infrastructure",
+      "workflow-automation",
+      "agentic-ai"
+    ]
+  }
+}

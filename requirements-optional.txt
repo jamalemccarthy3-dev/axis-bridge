@@ -1,0 +1,20 @@
+# Optional extras. NEXXUS starts without any of these; each one switches on a feature. Install only what you want:   pip install -r requirements-optional.txt
+# (requirements-all.txt is the generated list of every package any engine imports, heavy and not needed to start.)
+#
+# Web scraping engines
+Scrapy==2.17.0
+itemadapter==0.13.1
+itemloaders==1.4.0
+# Narration (Windows speech)
+pyttsx3==2.99
+# Video and media
+imageio-ffmpeg==0.6.0
+scipy==1.18.1
+pydantic==2.13.4
+# Optional services (only if you run Redis / Neo4j yourself)
+redis==8.0.1
+neo4j==6.2.0
+# Heavy ML (several GB). Photo-to-3D and local image generation. torch needs the CPU index:
+#   pip install torch==2.14.0 --index-url https://download.pytorch.org/whl/cpu
+#   pip install diffusers llama-cpp-python
+# The local chat model runs through Ollama, installed separately from https://ollama.com (not a pip package).

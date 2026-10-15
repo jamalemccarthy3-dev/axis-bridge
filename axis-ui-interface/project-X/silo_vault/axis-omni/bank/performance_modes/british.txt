@@ -1,0 +1,6 @@
+{
+    "mode": "british_rp",
+    "bpm": 75,
+    "cadence": "measured",
+    "stress": "articulated_consonants"
+}

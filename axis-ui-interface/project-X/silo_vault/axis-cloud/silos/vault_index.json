@@ -1,0 +1,30 @@
+{
+  "entities": [
+    {
+      "name": "Test-Node-Alpha",
+      "type": "TestEntity",
+      "attributes": {
+        "status": "verifying"
+      }
+    },
+    {
+      "name": "Test-Node-Alpha",
+      "type": "TestEntity",
+      "attributes": {
+        "status": "verifying"
+      }
+    },
+    {
+      "name": "Test-Node-Alpha",
+      "type": "TestEntity",
+      "attributes": {
+        "status": "verifying"
+      }
+    }
+  ],
+  "metadata": {
+    "version": "1.0.0",
+    "infrastructure": "AXIS",
+    "orchestrator": "NEXXUS"
+  }
+}

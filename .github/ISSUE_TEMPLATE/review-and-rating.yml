@@ -1,0 +1,61 @@
+name: Review and rating
+description: Rate your experience with the NEXXUS beta and tell us what worked and what did not.
+title: "[Review] "
+labels: ["review"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for testing NEXXUS. **This form is public.** Do not paste passwords, keys, tokens, file paths from your computer or anything private. Other testers can add a thumbs-up to reviews that help them.
+  - type: dropdown
+    id: rating
+    attributes:
+      label: Rating
+      description: Your overall experience.
+      options:
+        - "5 - Excellent"
+        - "4 - Good"
+        - "3 - Okay"
+        - "2 - Poor"
+        - "1 - Did not work"
+    validations:
+      required: true
+  - type: dropdown
+    id: progress
+    attributes:
+      label: How far did you get?
+      options:
+        - Downloaded it
+        - Installed it
+        - Ran it and saw the dashboard
+        - Used it for real work
+        - Opened it on my phone
+    validations:
+      required: true
+  - type: input
+    id: platform
+    attributes:
+      label: Your computer or phone
+      description: For example Windows 11, 16 GB RAM, iPhone 14.
+  - type: input
+    id: version
+    attributes:
+      label: NEXXUS version
+      description: The short version id shown in the source feed or the release name, if you know it.
+  - type: textarea
+    id: worked
+    attributes:
+      label: What worked well
+    validations:
+      required: true
+  - type: textarea
+    id: broke
+    attributes:
+      label: What broke, was slow, or confused you
+  - type: checkboxes
+    id: consent
+    attributes:
+      label: Before you send
+      options:
+        - label: I understand this review is public and contains nothing private.
+          required: true
