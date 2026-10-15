@@ -1240,6 +1240,29 @@ body:not([data-face="home"]) .home-only { visibility: hidden !important; pointer
 .pv-full { white-space:pre-wrap; word-break:break-word; font-size:0.7rem; color:#e2e8f0; background:rgba(0,0,0,0.35); border-radius:6px; padding:8px; margin:6px 0 0; }
 .pv-new input, .pv-new select, .pv-new textarea { width:100%; box-sizing:border-box; margin:3px 0; background:rgba(0,0,0,0.35); color:#e2e8f0; border:1px solid rgba(255,255,255,0.18); border-radius:6px; padding:5px; font-size:0.74rem; }
 .cmd-info-btn.p-btn { width:36px; border-radius:13px; font:700 12px ui-monospace,Consolas,monospace; font-style:normal; line-height:24px; color:#5eead4; }
+/* System Specs: the Architecture Reference Manual modal (button sits right of [P]) */
+.cmd-info-btn.specs-btn { width:auto; padding:0 11px; border-radius:13px; font:700 11px ui-monospace,Consolas,monospace; font-style:normal; line-height:24px; color:#93c5fd; white-space:nowrap; }
+.specs-overlay { position:fixed; inset:0; z-index:9600; display:none; align-items:center; justify-content:center; background:rgba(2,6,14,0.72); padding:16px; }
+.specs-overlay.open { display:flex; }
+.specs-modal { width:min(920px,100%); max-height:88vh; display:flex; flex-direction:column; background:rgba(8,12,20,0.98); border:1px solid rgba(56,189,248,0.45); border-radius:12px; box-shadow:0 20px 60px rgba(0,0,0,0.7); color:#cbd5e1; font:14px/1.55 system-ui,-apple-system,Segoe UI,sans-serif; }
+.specs-head { display:flex; align-items:center; gap:12px; padding:12px 16px; border-bottom:1px solid rgba(255,255,255,0.15); }
+.specs-head h2 { margin:0; flex:1; font-size:1rem; color:#93c5fd; letter-spacing:.02em; }
+.specs-close { background:none; border:1px solid rgba(255,255,255,0.3); color:#93c5fd; border-radius:6px; font-size:1.1rem; line-height:1; padding:3px 9px; cursor:pointer; }
+.specs-close:hover { background:rgba(147,197,253,0.2); color:#fff; }
+.specs-body { display:flex; min-height:0; flex:1; }
+.specs-nav { flex:0 0 200px; padding:10px; border-right:1px solid rgba(255,255,255,0.12); overflow-y:auto; display:flex; flex-direction:column; gap:4px; }
+.specs-nav button { text-align:left; background:none; border:1px solid transparent; color:#94a3b8; border-radius:6px; padding:6px 9px; font:inherit; font-size:0.85rem; cursor:pointer; }
+.specs-nav button:hover { color:#fff; background:rgba(147,197,253,0.1); }
+.specs-nav button.on { color:#e0f2fe; border-color:rgba(56,189,248,0.5); background:rgba(56,189,248,0.14); }
+.specs-content { flex:1; min-width:0; overflow-y:auto; padding:6px 20px 20px; }
+.specs-content section { display:none; } .specs-content section.on { display:block; }
+.specs-content h3 { margin:14px 0 4px; color:#e0f2fe; font-size:1.1rem; }
+.specs-content h4 { margin:16px 0 4px; color:#93c5fd; font-size:0.78rem; text-transform:uppercase; letter-spacing:.08em; }
+.specs-content p, .specs-content li { margin:4px 0; } .specs-content ul { padding-left:20px; margin:4px 0; }
+.specs-content code { background:rgba(255,255,255,0.08); border-radius:4px; padding:1px 5px; font:0.85em ui-monospace,Consolas,monospace; color:#fcd34d; }
+.specs-note { border-left:3px solid #38bdf8; background:rgba(56,189,248,0.08); padding:7px 12px; border-radius:0 6px 6px 0; margin:10px 0; font-size:0.88rem; }
+.specs-content table { width:100%; border-collapse:collapse; font-size:0.86rem; margin:6px 0; } .specs-content th, .specs-content td { text-align:left; padding:5px 8px; border-bottom:1px solid rgba(255,255,255,0.1); vertical-align:top; } .specs-content th { color:#94a3b8; font-weight:600; }
+@media (max-width:700px) { .specs-body { flex-direction:column; } .specs-nav { flex:0 0 auto; flex-direction:row; flex-wrap:wrap; border-right:0; border-bottom:1px solid rgba(255,255,255,0.12); } }
 
 body.demo-mode .saved-hub-title, body.demo-mode .saved-hub-meta, body.demo-mode .cr-mini-text, body.demo-mode .cr-row .cr-n, body.demo-mode #notifList { filter:blur(7px); }
 .cmd-sec { margin:10px 0 2px; font-size:0.74rem; letter-spacing:.06em; text-transform:uppercase; color:#93c5fd; }
@@ -1391,6 +1414,7 @@ body.demo-mode .saved-hub-title, body.demo-mode .saved-hub-meta, body.demo-mode 
 <button type="button" class="cmd-info-btn" id="tokLockBtn" title="Admin token" aria-label="Admin token lock" style="font-style:normal; font-size:13px;">&#128274;</button>
 <button type="button" class="cmd-info-btn" id="cmdInfoBtn" title="NEXXUS command cheat sheet" aria-label="Command cheat sheet">i</button>
 <button type="button" class="cmd-info-btn p-btn" id="promptVaultBtn" title="Prompt Recipe Vault: proven build prompts" aria-label="Prompt Recipe Vault">[P]</button>
+<button type="button" class="cmd-info-btn specs-btn" id="specsBtn" title="System Specs: the NEXXUS Architecture Reference Manual" aria-haspopup="dialog" aria-expanded="false" aria-controls="specsModal">System Specs</button>
 </div>
 <div class="bar-right">
 <div class="eng-led-strip" id="engineLedStrip" title="External engines: green answering, red offline, amber building"></div>
@@ -11048,5 +11072,146 @@ async function skBuild() {
   </aside>
 </section>
 
+<!-- System Specs: the NEXXUS Architecture Reference Manual. Text only, written from the code and docs in this repository; nothing here runs. -->
+<div id="specsOverlay" class="specs-overlay" aria-hidden="true">
+<div id="specsModal" class="specs-modal" role="dialog" aria-modal="true" aria-labelledby="specsTitle" tabindex="-1">
+<div class="specs-head"><h2 id="specsTitle">NEXXUS Architecture Reference Manual</h2><button type="button" class="specs-close" id="specsClose" aria-label="Close System Specs">&times;</button></div>
+<div class="specs-body">
+<nav class="specs-nav" id="specsNav" aria-label="Manual sections">
+<button type="button" data-s="overview" class="on">Overview</button>
+<button type="button" data-s="grid">Grid Controller (SRC Governor)</button>
+<button type="button" data-s="validator">AXIS Validator Engine</button>
+<button type="button" data-s="bridge">AXIS-Bridge</button>
+<button type="button" data-s="scrapy">Scrapy pipelines</button>
+<button type="button" data-s="router">Local model router</button>
+<button type="button" data-s="picthis">PICTHIS Studio</button>
+<button type="button" data-s="telemetry">Telemetry panels</button>
+</nav>
+<div class="specs-content" id="specsContent">
+
+<section id="specs-overview" class="on">
+<h3>Overview</h3>
+<p>NEXXUS is a local-first control room: one dashboard, one server, and 21 independent engines that run as separate processes and answer a common contract. Nothing needs the internet to run, and no model decides which engine talks to which: routing is deterministic.</p>
+<table><tr><th>Layer</th><th>Role</th></tr>
+<tr><td>Control plane</td><td><code>python_server.py</code>: the single HTTP surface for the dashboard, chat, jobs and mesh routes.</td></tr>
+<tr><td>Mesh</td><td>Hub plus 21 engines, each a closed silo, reached with signed, stateless calls.</td></tr>
+<tr><td>axis gate</td><td>Signed manifests, replay protection, single-use tickets and drift detection for trusted files.</td></tr>
+<tr><td>Dashboard</td><td>This page, served locally, with its 3D library bundled.</td></tr></table>
+<div class="specs-note">Honest status: "operational" means an engine's own tests pass. See <code>ENGINE_STATUS.md</code> and <code>AUDIT.md</code> for what is not proven.</div>
+</section>
+
+<section id="specs-grid">
+<h3>Grid Controller (SRC Governor)</h3>
+<p>The governing layer that decides what may run and where it goes. In this codebase it is the control-plane server, the deterministic router and the Build Governor working together. "Grid Controller" and "SRC Governor" are the project's umbrella names; the working pieces are listed below.</p>
+<h4>Parts</h4>
+<ul><li><b>Control plane</b> (<code>python_server.py</code>): receives every command and dispatches it. Mode gates stop a command that does not belong to the current operating mode.</li>
+<li><b>Build Governor</b> (<code>axis-logic/operations/build_governor.py</code>): decides whether a build command may run. Only operations on its allow-list run; restricted commands are refused even if someone adds them to the allow-list.</li>
+<li><b>Strict mode</b>: data must be a plain object with no secret-looking keys (password, token, api key and similar) and no path tricks.</li>
+<li><b>Fail closed</b>: a missing or unreadable rule file means nothing is allowed.</li>
+<li><b>Orchestrator bus</b> (<code>ORCHESTRATOR_BUS.md</code>): signed order envelopes with fixed states <code>ORDERED, ACKED, BUILT, QC_PASSED, ACCEPTED</code>. The reviewer is never the builder, and only NEXXUS accepts.</li></ul>
+<h4>Operator limits</h4>
+<p>Anything that adds capability, runs outside the sandbox or changes a trusted file waits for the owner's explicit approval. Operator-mode file access is limited to folders the owner grants (<code>operator_scope.py</code>); screen and camera capture are off until switched on (<code>capture.py</code>).</p>
+</section>
+
+<section id="specs-validator">
+<h3>AXIS Validator Engine</h3>
+<p>The <code>axis-validator</code> silo is one of the 21 engines. Its code is a set of validation modules plus the shared engine files (<code>health_report.py</code>, <code>mesh.py</code>, <code>live_status.py</code>). In the engine status table it is marked operational: all of its source modules import and its tests pass.</p>
+<h4>The definition of done for every engine</h4>
+<ul><li>Every engine is run against a nine-point checklist (<code>engine_checklist.py</code>) and the raw output is dated, not summarised as "it works".</li>
+<li>Each engine answers the mesh contract: <code>health</code>, <code>ping</code>, <code>message</code> and <code>instruct</code>.</li>
+<li>A failed check reports <code>ok: false</code> in plain words. Nothing is swallowed.</li>
+<li>Run the whole suite with <code>python verify_all.py</code>; it ends with <code>ALL GREEN</code> only when every suite passes.</li></ul>
+</section>
+
+<section id="specs-bridge">
+<h3>AXIS-Bridge</h3>
+<p>The connection layer between the NEXXUS server and the engines. It is built so that each engine stays a closed silo.</p>
+<ul><li><b>Roster, not scanning</b>: the bridge publishes <code>mesh_roster.json</code> (engine name to entry file). The server reads the roster and never opens the silo folders itself.</li>
+<li><b>Process isolation</b>: engine code is never imported into the server. Health checks and instructions run the engine's entry file as a separate subprocess with a timeout; only JSON crosses the boundary.</li>
+<li><b>Opt-in</b>: an engine takes part only if it declares the mesh protocol and handles <code>--mesh</code>.</li>
+<li><b>Signed heartbeats</b>: each engine signs with its own derived key; a bad signature is refused, logged and quarantined, never executed.</li>
+<li><b>Two keys, kept apart</b>: the governance secret (server and engines) and the admin token (typed into the dashboard for overrides).</li>
+<li><b>Phone access</b>: off by default. When on, it is reached over Tailscale with an admin token and no cross-site calls.</li></ul>
+<div class="specs-note">The bridge and utility code is kept private; the public repository lists module names only (<code>PRIVATE_MODULES.md</code>).</div>
+</section>
+
+<section id="specs-scrapy">
+<h3>Scrapy pipelines</h3>
+<p>Web crawling in NEXXUS runs through Scrapy, driven from the <code>axis-search_engine</code> silo. A small bridge component (<code>web_crawling_nexxus.py</code>) starts a Scrapy <code>CrawlerProcess</code> with the NEXXUS spider and its crawl configuration, so the search engine and the crawling layer stay separate.</p>
+<ul><li><b>Untrusted by default</b>: crawled text is treated as data. Instruction-like text is scrubbed, results are cut short, and web search sends only the query text.</li>
+<li><b>Switchable</b>: hub web search can be turned off with <code>NEXXUS_PORTAL_WEB_SEARCH=0</code>.</li>
+<li><b>Offline-safe</b>: the engine is tested offline; search queries are URL-encoded and every component loads without a network.</li>
+<li><b>Intake</b>: tools found on the web are staged, never executed, briefed to you, and integrated only after owner approval.</li></ul>
+</section>
+
+<section id="specs-router">
+<h3>Local model router</h3>
+<p><code>llm_router.py</code> picks which local Ollama model NEXXUS uses, based on the operating mode. Everything is free and local: the standard library plus a local Ollama.</p>
+<table><tr><th>Mode</th><th>Model (default)</th><th>Context</th></tr>
+<tr><td>Conversation</td><td><code>phi4-mini</code> (<code>NEXXUS_CHAT_MODEL</code>)</td><td>2048 (<code>NEXXUS_CHAT_CTX</code>)</td></tr>
+<tr><td>Any build mode</td><td><code>qwen2.5-coder:3b</code> (<code>NEXXUS_BUILD_MODEL</code>)</td><td>8192 (<code>NEXXUS_BUILD_CTX</code>)</td></tr></table>
+<ul><li>Only one model is kept loaded at a time, which is what lets it fit in about 8 GB.</li>
+<li>On a mode change the old model is unloaded and the new one preloaded in the background; the switch itself is instant, a cold load can take minutes on a small machine.</li>
+<li>Chat uses the build model while a build mode is active, so there is no model swap mid-build.</li>
+<li>If Ollama is down, callers get an honest error message, never a silent success. Server address: <code>NEXXUS_OLLAMA_URL</code> (default <code>http://127.0.0.1:11434</code>).</li>
+<li>The context guard (<code>context_guard.py</code>) watches chat weight and prepares a handoff and continuation prompt before the small context window overflows.</li></ul>
+</section>
+
+<section id="specs-picthis">
+<h3>PICTHIS Studio</h3>
+<p>picthis is an external module, kept in its own repository and connected through the module gateway with a hostname route. It is the 3D, animation and sound studio.</p>
+<ul><li><b>Photo to 3D</b>: uses the InstantMesh model (TencentARC) for image-to-3D.</li>
+<li><b>Animation and sound</b>: motion is authored, not AI-generated. Models built without a photo are stylised.</li>
+<li><b>Staging</b>: image tools, working copies and a send menu run through the staging area; a dry run comes before anything is exported.</li>
+<li><b>Connection</b>: a one-line <code>&lt;name&gt;.module.json</code> pointer file in the UI folder names the module's folder; the gateway then treats it like any module.</li></ul>
+</section>
+
+<section id="specs-telemetry">
+<h3>Telemetry panels</h3>
+<ul><li><b>Server status</b> (top-left): whether the Python server is active.</li>
+<li><b>Engine LED strip</b> (top bar): one light per engine; green answering, red offline, amber building.</li>
+<li><b>Boiler Room</b> (Diagnostic mode): a live monitor of every engine, the bridge and the infrastructure, refreshed every 2 seconds, with drill-down per engine and a conversation locked to the system (<code>BOILER_ROOM.md</code>).</li>
+<li><b>AXIS LINK</b> (Link mode): the backend window with a Transmission log of everything moving through the machine, click-to-inspect route playback and a two-slot input queue (<code>AXIS_LINK.md</code>).</li>
+<li><b>Perimeter</b> (control dock): the axis gate board with Hard Lock and Quarantine overrides, and breach alerts (<code>PERIMETER.md</code>).</li>
+<li><b>Notifications</b> (top-right bell): events needing attention.</li></ul>
+<div class="specs-note">Telemetry stays on your machine. Nothing is sent out by default.</div>
+</section>
+
+</div></div></div></div>
+<script>
+// System Specs: toggle the Architecture Reference Manual modal.
+(function () {
+  var btn = document.getElementById('specsBtn'), ov = document.getElementById('specsOverlay'), modal = document.getElementById('specsModal');
+  var nav = document.getElementById('specsNav'), content = document.getElementById('specsContent');
+  if (!btn || !ov || !modal) return;
+  function show(name) {
+    [].forEach.call(nav.querySelectorAll('button'), function (b) { b.classList.toggle('on', b.getAttribute('data-s') === name); });
+    [].forEach.call(content.querySelectorAll('section'), function (s) { s.classList.toggle('on', s.id === 'specs-' + name); });
+    content.scrollTop = 0;
+  }
+  function toggleSpecs(open) {
+    if (open === undefined) open = !ov.classList.contains('open');
+    ov.classList.toggle('open', open);
+    ov.setAttribute('aria-hidden', open ? 'false' : 'true');
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    if (open) modal.focus(); else btn.focus();
+  }
+  window.toggleSpecs = toggleSpecs;
+  btn.addEventListener('click', function () { toggleSpecs(); });
+  document.getElementById('specsClose').addEventListener('click', function () { toggleSpecs(false); });
+  ov.addEventListener('mousedown', function (e) { if (e.target === ov) toggleSpecs(false); });
+  nav.addEventListener('click', function (e) { var b = e.target.closest('button[data-s]'); if (b) show(b.getAttribute('data-s')); });
+  document.addEventListener('keydown', function (e) {
+    if (!ov.classList.contains('open')) return;
+    if (e.key === 'Escape') { e.preventDefault(); toggleSpecs(false); }
+    else if (e.key === 'Tab') {   // keep focus inside the dialog
+      var f = modal.querySelectorAll('button'); if (!f.length) return;
+      var first = f[0], last = f[f.length - 1];
+      if (e.shiftKey && (document.activeElement === first || document.activeElement === modal)) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    }
+  });
+})();
+</script>
 </body>
 </html>
