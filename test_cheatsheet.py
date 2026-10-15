@@ -81,7 +81,7 @@ class Sheet(unittest.TestCase):
 
     def test_every_operating_mode_has_its_row(self):
         labels = re.findall(r"label: '([^']+)'", HTML.split("const MODE_INFO = {")[1].split("};")[0])
-        self.assertEqual(len(labels), 9)
+        self.assertEqual(len(labels), 10)
         modes_rows = [r[0] for _, r in rows() if r[0].startswith("Mode:")]
         for lab in labels:
             self.assertTrue(any(m.startswith("Mode: " + lab.split(" (")[0]) for m in modes_rows), lab)

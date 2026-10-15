@@ -562,7 +562,16 @@ def context_new_window():
 import capture as _capture
 
 def _is_local():
-    return request.remote_addr in ("127.0.0.1", "::1")
+    """True only for a request from this machine's own dashboard page. Three checks: the connection is loopback; the Host header names loopback (stops DNS rebinding); and, if the browser sent an
+    Origin, it is this very server (stops another web page from reading these routes, which answer with CORS open for the dashboard's sake)."""
+    if request.remote_addr not in ("127.0.0.1", "::1"):
+        return False
+    if (request.host or "").rsplit(":", 1)[0].strip("[]").lower() not in ("localhost", "127.0.0.1", "::1"):
+        return False
+    origin = request.headers.get("Origin")
+    if origin and (urllib.parse.urlsplit(origin).netloc or "").lower() != (request.host or "").lower():
+        return False
+    return True
 
 def _capture_chat_reply(text):
     """Chat commands for screen and camera capture. Local machine only, and each kind must have been switched on first (see capture.py)."""
@@ -620,6 +629,12 @@ def capture_action(action):
     except (_capture.CaptureError, ValueError) as e:
         return make_response(jsonify({"status": "error", "message": str(e)}), 400)
     return handle_action_response({"status": "success", "result": out})
+
+import platform_mode as _platform
+
+if _mode_state is not None:
+    _platform.register_mode(_mode_state, _modes)          # adds the locked Platform mode (needs a valid license, see entitlements.py)
+_platform.register_routes(app, _is_local, lambda payload, status=200: _json_cors(payload, status))
 
 import telemetry_hub as _tele
 

@@ -102,6 +102,7 @@ through the dashboard. Its autonomy is **bounded**: anything that adds capabilit
 | **Intake pipeline** | Outside code is inspected, self-healed with logged corrections, cleared by the axis gate (or blocked outright) and a private, respectful note for the original author is prepared but never sent. See `INTAKE_PIPELINE.md`. |
 | **Engine Build mode** | NEXXUS writes new modular engines (standalone or linked), staged for your approval. See `ENGINE_BUILD_MODE.md`. |
 | **Tool intake** | Scout, stage (never executed), brief, **owner approval**, then a signed vault entry and a sandbox. |
+| **Platform mode** (locked) | A two-sided spatial layout chosen from Modes: your profile on the left wall, your network on the right, a live floor with the command bar at its base. Unlocked by a signed license key (monthly or lifetime); local only, no network yet. See [docs/PLATFORM.md](docs/PLATFORM.md). |
 | **Module gateway** | Hostname routing for external modules such as picthis (3D, animation and sound). |
 
 Two keys exist and are kept apart: the **governance secret** (shared by the server and the engines) and the **admin token** (typed into the dashboard for Probe,

@@ -157,3 +157,6 @@ logs/operator_audit.jsonl
 nexxus_data/telemetry/
 relay/.dev.vars
 relay/.wrangler/
+
+# ---- Platform mode: your profile and posts (private) and the local license ----
+nexxus_data/platform/

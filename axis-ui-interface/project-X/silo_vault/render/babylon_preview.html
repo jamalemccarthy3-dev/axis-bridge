@@ -1240,6 +1240,46 @@ body:not([data-face="home"]) .home-only { visibility: hidden !important; pointer
 .pv-full { white-space:pre-wrap; word-break:break-word; font-size:0.7rem; color:#e2e8f0; background:rgba(0,0,0,0.35); border-radius:6px; padding:8px; margin:6px 0 0; }
 .pv-new input, .pv-new select, .pv-new textarea { width:100%; box-sizing:border-box; margin:3px 0; background:rgba(0,0,0,0.35); color:#e2e8f0; border:1px solid rgba(255,255,255,0.18); border-radius:6px; padding:5px; font-size:0.74rem; }
 .cmd-info-btn.p-btn { width:36px; border-radius:13px; font:700 12px ui-monospace,Consolas,monospace; font-style:normal; line-height:24px; color:#5eead4; }
+/* Platform mode: the two-sided spatial layout (profile wall left, network wall right, live floor centre, command bar at the base) and its unlock dialog */
+#platformSpace { position:fixed; inset:0; z-index:9300; display:none; flex-direction:column; background:radial-gradient(ellipse at 50% 12%, #162036 0%, #070b14 62%, #04060b 100%); color:#cbd5e1; font:14px/1.5 system-ui,-apple-system,Segoe UI,sans-serif; }
+#platformSpace.open { display:flex; }
+body.pl-on #axisDock { display:none !important; }          /* the desktop control dock belongs to the desktop view; it returns on exit */
+.pl-top { display:flex; align-items:center; gap:12px; padding:10px 16px; border-bottom:1px solid rgba(148,163,184,0.2); }
+.pl-top h2 { margin:0; flex:1; font-size:1rem; color:#bae6fd; letter-spacing:.06em; } .pl-top .pl-note { font-size:.78rem; color:#94a3b8; }
+.pl-exit { background:rgba(244,63,94,0.18); border:1px solid rgba(251,113,133,0.7); color:#ffe4e6; border-radius:8px; padding:6px 14px; font:inherit; font-weight:600; cursor:pointer; }
+.pl-exit:hover { background:rgba(244,63,94,0.35); }
+.pl-stage { flex:1; min-height:0; display:grid; grid-template-columns:minmax(220px,1fr) minmax(300px,1.7fr) minmax(220px,1fr); perspective:1500px; perspective-origin:50% 40%; padding:14px 18px 0; gap:0; }
+.pl-wall { min-height:0; overflow-y:auto; background:linear-gradient(180deg, rgba(30,41,59,0.78), rgba(15,23,42,0.88)); border:1px solid rgba(56,189,248,0.28); padding:14px; box-shadow:0 0 40px rgba(2,6,14,0.7); }
+.pl-wall.left { transform-origin:100% 50%; transform:rotateY(14deg); border-radius:12px 0 0 12px; } .pl-wall.right { transform-origin:0% 50%; transform:rotateY(-14deg); border-radius:0 12px 12px 0; }
+.pl-wall h3 { margin:0 0 8px; font-size:.78rem; text-transform:uppercase; letter-spacing:.1em; color:#7dd3fc; }
+.pl-floor { min-height:0; display:flex; flex-direction:column; background:linear-gradient(180deg, rgba(8,12,22,0.95), rgba(14,22,38,0.98)); border:1px solid rgba(56,189,248,0.4); border-radius:6px; transform-origin:50% 100%; transform:rotateX(3deg); z-index:1; }
+.pl-feed { flex:1; min-height:0; overflow-y:auto; padding:14px; display:flex; flex-direction:column; gap:8px; scroll-behavior:smooth; }
+.pl-msg { align-self:flex-start; max-width:86%; background:rgba(56,189,248,0.14); border:1px solid rgba(56,189,248,0.4); border-radius:14px 14px 14px 4px; padding:7px 12px; overflow-wrap:anywhere; animation:plIn .18s ease-out; }
+.pl-msg.link { background:rgba(167,139,250,0.16); border-color:rgba(167,139,250,0.5); }
+.pl-msg .pl-meta { font-size:.7rem; color:#94a3b8; display:flex; gap:10px; margin-top:2px; } .pl-msg .pl-del { cursor:pointer; background:none; border:0; color:#94a3b8; padding:0; font:inherit; } .pl-msg .pl-del:hover { color:#fb7185; }
+.pl-msg a { color:#c4b5fd; }
+@keyframes plIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+.pl-bar { display:flex; gap:8px; padding:10px 12px; border-top:1px solid rgba(56,189,248,0.35); background:rgba(2,6,14,0.7); }
+.pl-bar input { flex:1; min-width:0; background:#05080f; color:#e2e8f0; border:1px solid rgba(148,163,184,0.45); border-radius:999px; padding:10px 16px; font:inherit; }
+.pl-bar input:focus { outline:2px solid #38bdf8; outline-offset:1px; }
+.pl-btn { background:#0ea5e9; color:#04121c; border:0; border-radius:999px; padding:9px 18px; font:inherit; font-weight:700; cursor:pointer; } .pl-btn:hover { background:#38bdf8; } .pl-btn.ghost { background:transparent; color:#bae6fd; border:1px solid rgba(125,211,252,0.6); } .pl-btn:disabled { opacity:.5; cursor:default; }
+.pl-avatar { width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg,#0ea5e9,#7c3aed); display:flex; align-items:center; justify-content:center; font-size:1.5rem; font-weight:700; color:#fff; margin-bottom:8px; }
+.pl-name { font-size:1.15rem; font-weight:700; color:#f1f5f9; } .pl-head { color:#bae6fd; } .pl-loc { color:#94a3b8; font-size:.85rem; }
+.pl-sec { margin-top:14px; padding-top:10px; border-top:1px solid rgba(148,163,184,0.2); } .pl-sec p { margin:4px 0; overflow-wrap:anywhere; } .pl-sec a { color:#7dd3fc; overflow-wrap:anywhere; }
+.pl-empty { color:#94a3b8; font-size:.88rem; border:1px dashed rgba(148,163,184,0.4); border-radius:10px; padding:12px; }
+.pl-form { display:grid; gap:8px; margin-top:10px; } .pl-form input, .pl-form textarea { width:100%; background:#05080f; color:#e2e8f0; border:1px solid rgba(148,163,184,0.45); border-radius:8px; padding:7px 10px; font:inherit; }
+.pl-tabs { display:none; }
+@media (max-width:820px) {
+  .pl-stage { display:block; perspective:none; padding:8px; overflow:hidden; } .pl-wall, .pl-floor { transform:none !important; border-radius:12px; height:100%; display:none; } .pl-stage[data-tab="left"] .pl-wall.left, .pl-stage[data-tab="right"] .pl-wall.right { display:block; } .pl-stage[data-tab="floor"] .pl-floor { display:flex; }
+  .pl-tabs { display:flex; gap:6px; padding:6px 10px; border-bottom:1px solid rgba(148,163,184,0.2); } .pl-tabs button { flex:1; background:none; border:1px solid rgba(148,163,184,0.4); color:#cbd5e1; border-radius:8px; padding:6px; font:inherit; cursor:pointer; } .pl-tabs button.on { background:rgba(56,189,248,0.2); border-color:#38bdf8; color:#fff; }
+}
+#platformGate { position:fixed; inset:0; z-index:9650; display:none; align-items:center; justify-content:center; background:rgba(2,6,14,0.78); padding:16px; }
+#platformGate.open { display:flex; }
+.pg-box { width:min(640px,100%); max-height:92vh; overflow-y:auto; background:rgba(8,12,20,0.99); border:1px solid rgba(56,189,248,0.5); border-radius:14px; padding:20px; color:#cbd5e1; font:14px/1.5 system-ui,-apple-system,Segoe UI,sans-serif; }
+.pg-box h2 { margin:0 0 4px; color:#e0f2fe; } .pg-plans { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:14px 0; } @media (max-width:560px) { .pg-plans { grid-template-columns:1fr; } }
+.pg-plan { border:1px solid rgba(148,163,184,0.4); border-radius:12px; padding:14px; display:flex; flex-direction:column; gap:6px; } .pg-plan.best { border-color:#7dd3fc; background:rgba(56,189,248,0.07); }
+.pg-price { font-size:1.5rem; font-weight:700; color:#f1f5f9; } .pg-box textarea { width:100%; background:#05080f; color:#e2e8f0; border:1px solid rgba(148,163,184,0.45); border-radius:8px; padding:8px; font:12px ui-monospace,Consolas,monospace; }
+.pg-msg { min-height:1.3em; font-size:.88rem; } .pg-msg.bad { color:#fda4af; } .pg-msg.ok { color:#86efac; }
 /* System Specs: the Architecture Reference Manual modal (button sits right of [P]) */
 .cmd-info-btn.specs-btn { width:auto; padding:0 11px; border-radius:13px; font:700 11px ui-monospace,Consolas,monospace; font-style:normal; line-height:24px; color:#93c5fd; white-space:nowrap; }
 .specs-overlay { position:fixed; inset:0; z-index:9600; display:none; align-items:center; justify-content:center; background:rgba(2,6,14,0.72); padding:16px; }
@@ -1718,6 +1758,7 @@ Connecting to NEXXUS...
 <option value="diagnostic" style="background:#05050a;">Mode: Diagnostic (Boiler Room)</option>
 <option value="link" style="background:#05050a;">Mode: Link</option>
 <option value="sketch" style="background:#05050a;">Mode: Sketch (ideation)</option>
+<option value="platform" style="background:#05050a;">Mode: Platform 🔒</option>
 </select>
 <label class="toggle-control engine-switch" id="engineSwitchWrap" hidden title="Standalone: the engine runs entirely on its own."><input type="checkbox" id="engineStandalone" checked><span id="engineStandaloneLbl">Standalone</span></label>
 <button class="toggle-control" id="engineTrackerBtn" hidden title="Open the live file tracker for engine builds">&#128193; Engine tracker</button>
@@ -3813,7 +3854,8 @@ const CMD_SHEET = [
   ['Mode: Engine Build', 'write a new modular engine; staged for your review with a live file tracker; deploys only after you approve', 'make a new engine|new module|write an app engine|standalone or linked', 'ui'],
   ['Mode: Diagnostic (Boiler Room)', 'the left panel monitors every engine, the bridge and the infrastructure live; the conversation is locked to the system', 'check system health|what is down|boiler room|monitor engines|troubleshoot', 'ui'],
   ['Mode: Link', 'AXIS LINK, read-only: the Transmission log, route inspector, Layman/Terminal switch and the hypothesis desk', 'see traffic|watch requests|slow requests|network ledger|axis link', 'ui'],
-  ['Mode: Sketch (ideation)', 'a drawing board and a rail of suggestion pills: pick a domain, state a hypothesis, deep-dive, reach a thesis. Nothing is built and nothing asks if you are done; Build packages the thesis into the core drive and hands it to the build room you pick (which still asks for approval)', 'brainstorm|think it through|ideas|sketch|hypothesis|thesis|not ready to build|work out an idea', 'ui'] ]],
+  ['Mode: Sketch (ideation)', 'a drawing board and a rail of suggestion pills: pick a domain, state a hypothesis, deep-dive, reach a thesis. Nothing is built and nothing asks if you are done; Build packages the thesis into the core drive and hands it to the build room you pick (which still asks for approval)', 'brainstorm|think it through|ideas|sketch|hypothesis|thesis|not ready to build|work out an idea', 'ui'],
+  ['Mode: Platform (locked)', 'two-sided spatial layout: your profile on the left wall, your network on the right, a live floor with the command bar at its base; unlocked by a license key (monthly or lifetime), local only; the Exit button returns to this desktop view', 'platform|social|profile|feed|friends|network|unlock platform|post to the floor|share a link', 'ui'] ]],
  ['Search', [
   ['search: <what to look for>', 'AXIS search engine (also the top search box, then Enter)', 'look something up|web search|find information|google it|research', 'chat'],
   ['Top search box (Quick triage search)', 'type and press Enter: the same AXIS search', 'quick search|triage|look up fast', 'ui'] ]],
@@ -5572,6 +5614,7 @@ const MODE_INFO = {
     link:          { chip: 'LINK', label: 'Link', local: 'AXIS LINK, the backend window: the Transmission log on the left shows everything moving through the machine, click a line to inspect its route on the right, switch between Layman and Terminal, and test ideas with NEXXUS on the hypothesis desk. Read-only: nothing here changes an engine.' },
     engine_build:  { chip: 'ENGINE BUILD', label: 'Engine Build', local: 'Write a new modular app engine. It is staged for your review (live file tracker on the side) and deploys to the UI directory only after you approve. Standalone, or linked to NEXXUS across the external bridge.' },
     sketch:        { chip: 'SKETCH', label: 'Sketch', local: 'Pure ideation: pick a domain, state a hypothesis, dig in, reach a thesis. Nothing is built and nothing asks if you are done. Build is a button when you want it.' },
+    platform:      { chip: 'PLATFORM', label: 'Platform', local: 'Platform: your profile on the left wall, your network on the right, the live floor in the middle with the command bar at its base. Exit returns to the desktop dashboard.' },
     dashboard_hub: { chip: 'DASHBOARD HUB', label: 'Dashboard Hub Build', local: 'UI/UX construction: dashboard panels, vault profiles and bots mapped into the interface, frontend-backend wiring.' }
 };
 const operatingMode = { mode: 'conversation', server: false };
@@ -5607,6 +5650,7 @@ function applyOperatingMode(mode, summary, serverKnown) {
     if (typeof brSyncLock === 'function') { brSyncLock(); if (changed && mode === 'diagnostic') brOpen(true); }
     if (typeof lkSync === 'function') lkSync(mode, changed);
     if (typeof skSync === 'function') skSync(mode, changed);
+    if (typeof plSync === 'function') plSync(mode, changed);
     if (changed) {
         appendSettingsLog(`MODE: ${info.label}${serverKnown ? '' : ' (server not reachable - not enforced)'}`);
         if (mode === 'dashboard_hub') { refreshHubMapPanel(); refreshDashPanel(); }
@@ -5625,7 +5669,7 @@ async function syncOperatingMode() {
 async function setOperatingMode(mode) {
     const d = await reconApi('api/mode', { mode }, 'POST');
     if (d && d.status === 'success') { applyOperatingMode(d.mode, d.summary, true); return true; }
-    if (d && d.error) { appendSettingsLog('MODE: refused - ' + d.error); await syncOperatingMode(); return false; }
+    if (d && d.error) { appendSettingsLog('MODE: refused - ' + d.error); if (mode === 'platform' && /locked/i.test(d.error) && typeof plGateOpen === 'function') plGateOpen(); await syncOperatingMode(); return false; }
     applyOperatingMode(mode, '', false);      // server offline: show the choice, and say it is not enforced
     return true;
 }
@@ -11211,6 +11255,131 @@ async function skBuild() {
       else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
     }
   });
+})();
+</script>
+<!-- Platform mode: the two-sided spatial layout and its unlock dialog. Everything here is local; the data comes from /api/platform/* and nothing is invented. -->
+<div id="platformSpace" role="dialog" aria-modal="true" aria-label="NEXXUS Platform">
+<div class="pl-top"><h2>NEXXUS PLATFORM</h2><span class="pl-note">Saved on this computer only</span><button type="button" class="pl-exit" id="plExit" aria-label="Exit Platform and return to the desktop dashboard">&#10005; Exit Platform</button></div>
+<div class="pl-tabs" id="plTabs"><button type="button" data-t="left">Profile</button><button type="button" data-t="floor" class="on">Floor</button><button type="button" data-t="right">Network</button></div>
+<div class="pl-stage" id="plStage" data-tab="floor">
+<aside class="pl-wall left" id="plLeft" aria-label="Your profile"></aside>
+<main class="pl-floor" aria-label="The floor">
+<div class="pl-feed" id="plFeed" aria-live="polite"></div>
+<form class="pl-bar" id="plBar" autocomplete="off"><input id="plInput" maxlength="500" placeholder="Say something to the floor, or paste a link to share it..." aria-label="Command bar: post or chat on the floor"><button class="pl-btn" type="submit">Send</button></form>
+</main>
+<aside class="pl-wall right" id="plRight" aria-label="Your network and friends"></aside>
+</div></div>
+<div id="platformGate" role="dialog" aria-modal="true" aria-labelledby="pgTitle"><div class="pg-box">
+<h2 id="pgTitle">Unlock Platform mode</h2>
+<p>Platform is a locked mode. Until you unlock it, NEXXUS stays in the standard desktop view with telemetry, the workstation and the shop.</p>
+<div class="pg-plans" id="pgPlans"></div>
+<p><b>Already bought?</b> Paste your license key:</p>
+<textarea id="pgKey" rows="3" placeholder="NXP1...." aria-label="License key" spellcheck="false"></textarea>
+<div class="pg-msg" id="pgMsg" role="status"></div>
+<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px"><button type="button" class="pl-btn ghost" id="pgClose">Not now</button><button type="button" class="pl-btn" id="pgActivate">Activate key</button></div>
+<p class="pl-note" style="font-size:.78rem;color:#94a3b8;margin-top:10px">NEXXUS never sees your card. You pay on the checkout page; the key it gives you is checked on this computer and saved here.</p>
+</div></div>
+<script>
+// Platform mode: unlock dialog + the two-sided spatial layout. Data comes from /api/platform/*; everything is rendered with textContent (never innerHTML).
+(function () {
+  const $ = id => document.getElementById(id);
+  const space = $('platformSpace'), gate = $('platformGate'); if (!space || !gate) return;
+  const PL = { ent: null, state: null, open: false, editing: false };
+  function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function api(path, body, method) { return (typeof reconApi === 'function') ? reconApi('api/platform/' + path, body, method || 'POST') : Promise.resolve(null); }
+  function safeUrl(u) { return /^https?:\/\/[^\s<>"']{1,300}$/i.test(u || '') ? u : ''; }
+  function link(url, label) { const a = el('a', '', label || url); a.href = safeUrl(url) || '#'; a.target = '_blank'; a.rel = 'noopener noreferrer'; return a; }
+
+  // ---------- unlock dialog ----------
+  function setMsg(t, kind) { const m = $('pgMsg'); m.textContent = t || ''; m.className = 'pg-msg' + (kind ? ' ' + kind : ''); }
+  async function loadOffer() { const d = await api('entitlement', null, 'GET'); if (d && d.status === 'success') { PL.ent = d; markLock(); } return d; }
+  function markLock() {
+    const unlocked = !!(PL.ent && PL.ent.entitlement && PL.ent.entitlement.unlocked);
+    document.querySelectorAll('#renderModeSelect option[value="platform"]').forEach(o => { o.textContent = 'Mode: Platform' + (unlocked ? '' : ' 🔒'); });
+    if (typeof modeMenuSync === 'function') modeMenuSync();
+  }
+  function renderPlans() {
+    const host = $('pgPlans'); host.replaceChildren();
+    ((PL.ent && PL.ent.plans) || []).forEach(p => {
+      const card = el('div', 'pg-plan' + (p.id === 'lifetime' ? ' best' : ''));
+      card.append(el('b', '', p.label), el('div', 'pg-price', p.price_text), el('div', 'pl-note', p.id === 'lifetime' ? 'Pay once, keep Platform for good.' : 'Renews monthly; cancel any time.'));
+      const b = el('button', 'pl-btn', p.checkout_url ? 'Buy ' + (p.id === 'lifetime' ? 'lifetime pass' : 'monthly') : 'Checkout not set up yet'); b.type = 'button';
+      if (p.checkout_url) b.addEventListener('click', () => window.open(p.checkout_url, '_blank', 'noopener,noreferrer')); else { b.disabled = true; b.title = 'The owner has not added a checkout link for this plan yet.'; }
+      card.append(b); host.append(card);
+    });
+  }
+  window.plGateOpen = async function () { setMsg(''); await loadOffer(); renderPlans(); gate.classList.add('open'); $('pgKey').focus(); };
+  function plGateClose() { gate.classList.remove('open'); }
+  $('pgClose').addEventListener('click', plGateClose);
+  gate.addEventListener('mousedown', e => { if (e.target === gate) plGateClose(); });
+  $('pgActivate').addEventListener('click', async () => {
+    const token = $('pgKey').value.trim(); if (!token) { setMsg('Paste your license key first.', 'bad'); return; }
+    setMsg('Checking the key...');
+    const d = await api('license', { token }, 'POST');
+    if (d && d.status === 'success') { setMsg('Unlocked. Opening Platform...', 'ok'); await loadOffer(); setTimeout(async () => { plGateClose(); $('pgKey').value = ''; await setOperatingMode('platform'); }, 500); }
+    else setMsg((d && (d.message || (d.entitlement && d.entitlement.reason))) || 'Could not reach the NEXXUS server.', 'bad');
+  });
+
+  // ---------- the spatial layout ----------
+  function when(t) { const d = new Date(t * 1000); return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); }
+  function renderLeft() {
+    const host = $('plLeft'), p = (PL.state && PL.state.profile) || {}; host.replaceChildren();
+    host.append(el('h3', '', 'Profile hub'));
+    if (PL.editing) { renderEdit(host, p); return; }
+    host.append(el('div', 'pl-avatar', (p.name || 'You').trim().charAt(0).toUpperCase() || 'Y'), el('div', 'pl-name', p.name || 'Add your name'), el('div', 'pl-head', p.headline || 'Add a headline'));
+    if (p.location) host.append(el('div', 'pl-loc', p.location));
+    const ab = el('div', 'pl-sec'); ab.append(el('h3', '', 'About'), el('p', '', p.about || 'Tell people who you are and what you build.')); host.append(ab);
+    const ln = el('div', 'pl-sec'); ln.append(el('h3', '', 'Links')); (p.links || []).forEach(u => { const q = el('p'); q.append(link(u)); ln.append(q); }); if (!(p.links || []).length) ln.append(el('p', 'pl-note', 'No links yet.')); host.append(ln);
+    const sh = el('div', 'pl-sec'); sh.append(el('h3', '', 'Links you shared')); const sl = (PL.state && PL.state.shared_links) || [];
+    sl.slice().reverse().forEach(x => { const q = el('p'); q.append(link(x.url, x.text.length > 60 ? x.text.slice(0, 57) + '...' : x.text)); sh.append(q); }); if (!sl.length) sh.append(el('p', 'pl-note', 'Paste a link in the command bar to share it.')); host.append(sh);
+    const b = el('button', 'pl-btn ghost', 'Edit profile'); b.type = 'button'; b.style.marginTop = '12px'; b.addEventListener('click', () => { PL.editing = true; renderLeft(); }); host.append(b);
+  }
+  function renderEdit(host, p) {
+    const f = el('form', 'pl-form'); const mk = (name, ph, val, max) => { const i = el('input'); i.name = name; i.placeholder = ph; i.value = val || ''; i.maxLength = max; i.setAttribute('aria-label', ph); return i; };
+    const about = el('textarea'); about.name = 'about'; about.rows = 4; about.maxLength = 600; about.placeholder = 'About you'; about.value = p.about || ''; about.setAttribute('aria-label', 'About you');
+    const links = el('textarea'); links.name = 'links'; links.rows = 3; links.placeholder = 'One link per line (https://...)'; links.value = (p.links || []).join('\n'); links.setAttribute('aria-label', 'Links, one per line');
+    const row = el('div'); const save = el('button', 'pl-btn', 'Save'); save.type = 'submit'; const cancel = el('button', 'pl-btn ghost', 'Cancel'); cancel.type = 'button'; cancel.style.marginLeft = '8px'; row.append(save, cancel);
+    f.append(mk('name', 'Name', p.name, 60), mk('headline', 'Headline, e.g. Builder of local-first tools', p.headline, 120), mk('location', 'Location', p.location, 60), about, links, row);
+    cancel.addEventListener('click', () => { PL.editing = false; renderLeft(); });
+    f.addEventListener('submit', async e => { e.preventDefault(); const v = n => f.elements[n].value; const d = await api('profile', { name: v('name'), headline: v('headline'), location: v('location'), about: v('about'), links: v('links').split('\n').map(s => s.trim()).filter(Boolean) });
+      if (d && d.status === 'success') { PL.state.profile = d.profile; PL.editing = false; renderLeft(); } });
+    host.append(f);
+  }
+  function renderRight() {
+    const host = $('plRight'), n = (PL.state && PL.state.network) || {}; host.replaceChildren(); host.append(el('h3', '', 'Network & friends'));
+    host.append(el('div', 'pl-name', (n.connections || 0) + ' connections'));
+    if (!(n.feed || []).length) host.append(el('div', 'pl-empty', n.note || 'Nothing here yet.'));
+    (n.feed || []).forEach(x => { const m = el('div', 'pl-msg', x.text || ''); host.append(m); });
+  }
+  function renderFeed(stick) {
+    const host = $('plFeed'), posts = (PL.state && PL.state.floor) || []; host.replaceChildren();
+    if (!posts.length) host.append(el('div', 'pl-empty', 'The floor is quiet. Type in the command bar below to post or chat; paste a link to share it.'));
+    posts.forEach(x => {
+      const m = el('div', 'pl-msg' + (x.kind === 'link' ? ' link' : '')); const body = el('div');
+      if (x.kind === 'link' && x.url) { const parts = x.text.split(x.url); body.append(document.createTextNode(parts[0] || ''), link(x.url), document.createTextNode(parts.slice(1).join(x.url))); } else body.textContent = x.text;
+      const meta = el('div', 'pl-meta'); meta.append(el('span', '', 'You · ' + when(x.t)));
+      const del = el('button', 'pl-del', 'delete'); del.type = 'button'; del.addEventListener('click', async () => { const d = await api('post/' + x.id, null, 'DELETE'); if (d && d.status === 'success') { PL.state.floor = PL.state.floor.filter(y => y.id !== x.id); PL.state.shared_links = (PL.state.shared_links || []).filter(y => y.id !== x.id); renderFeed(false); renderLeft(); } });
+      meta.append(del); m.append(body, meta); host.append(m);
+    });
+    if (stick !== false) host.scrollTop = host.scrollHeight;
+  }
+  async function load() { const d = await api('state', null, 'GET'); if (d && d.status === 'success') { PL.state = d; renderLeft(); renderRight(); renderFeed(); } else if (d && d.status === 'locked') { await setOperatingMode('conversation'); window.plGateOpen(); } }
+  $('plBar').addEventListener('submit', async e => {
+    e.preventDefault(); const i = $('plInput'), text = i.value.trim(); if (!text) return; i.value = '';
+    const d = await api('post', { text }); if (d && d.status === 'success') { PL.state.floor.push(d.post); if (d.post.kind === 'link') PL.state.shared_links.push(d.post); renderFeed(); renderLeft(); } else i.value = text;
+  });
+  $('plTabs').addEventListener('click', e => { const b = e.target.closest('button[data-t]'); if (!b) return; $('plStage').dataset.tab = b.dataset.t; document.querySelectorAll('#plTabs button').forEach(x => x.classList.toggle('on', x === b)); });
+  $('plExit').addEventListener('click', () => { setOperatingMode('conversation'); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && PL.open && !gate.classList.contains('open')) { e.preventDefault(); setOperatingMode('conversation'); } });
+
+  // called by applyOperatingMode on every mode change: the layout exists only while the mode is Platform
+  window.plSync = function (mode, changed) {
+    const on = mode === 'platform';
+    space.classList.toggle('open', on); PL.open = on; document.body.classList.toggle('pl-on', on); document.body.style.overflow = on ? 'hidden' : '';
+    if (on) { PL.editing = false; load(); setTimeout(() => $('plInput') && $('plInput').focus(), 50); }
+    loadOffer();                                   // keeps the lock mark on the Modes menu honest (a monthly key can lapse)
+  };
+  loadOffer();
 })();
 </script>
 </body>
