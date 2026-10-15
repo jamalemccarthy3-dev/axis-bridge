@@ -649,7 +649,12 @@ import platform_mode as _platform
 
 if _mode_state is not None:
     _platform.register_mode(_mode_state, _modes)          # adds the locked Platform mode (needs a valid license, see entitlements.py)
-_platform.register_routes(app, _is_viewer, lambda payload, status=200: _json_cors(payload, status))
+def _is_admin():
+    """The marketplace administrator: whoever holds the admin token (the same token that guards Probe, Promote and Release). With no token configured, nobody is."""
+    tok = request.headers.get("X-Nexxus-Admin-Token") or ""
+    return bool(VAULT_ADMIN_TOKEN) and hmac.compare_digest(tok.encode("utf-8"), VAULT_ADMIN_TOKEN.encode("utf-8"))
+
+_platform.register_routes(app, _is_viewer, lambda payload, status=200: _json_cors(payload, status), _is_admin)
 _platform.set_system_provider(lambda: _axis_bridge.telemetry())          # team dashboards show the real engine and hub status of this NEXXUS (read-only)
 
 import telemetry_hub as _tele
