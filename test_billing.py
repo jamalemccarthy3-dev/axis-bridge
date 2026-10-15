@@ -252,7 +252,8 @@ class BadgeTest(unittest.TestCase):
         html = open(os.path.join(HERE, "axis-ui-interface", "project-X", "silo_vault", "render", "babylon_preview.html"), encoding="utf-8").read()
         self.assertIn("#ff3333", html)
         self.assertIn("e.beta || (e.plan !== 'monthly' && e.plan !== 'lifetime')", html, "no badge during Beta, when locked, or without a paid plan")
-        self.assertNotIn("innerHTML = ent", html)
+        body = html[html.index("function subscriberBadge"):html.index("function renderLeft")]
+        self.assertNotIn("innerHTML", body, "the badge is built with textContent only")
 
 
 class HygieneTest(unittest.TestCase):
