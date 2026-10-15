@@ -27,6 +27,7 @@ import entitlements
 import github_sync
 import privacy
 import ranks
+import teams
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(HERE, "nexxus_data", "platform")
@@ -419,7 +420,7 @@ def _drop_media_if_unused(mid):
     _drop_media(mid)
 
 
-def add_post(text, media_id=""):
+def add_post(text, media_id="", public=False):
     """The command bar: one message (and optionally one photo) to the floor. A web link in the text becomes a shared link. -> the saved post, or None if there is nothing to post."""
     text = _clean(text, MAX_TEXT)
     media_id = media_id if media_path(media_id) else ""
@@ -438,6 +439,9 @@ def add_post(text, media_id=""):
     for old in dropped:
         _drop_media_if_unused(old.get("media"))
     publish({"type": "post", "post": post})
+    if public:
+        set_public(post["id"], True)                 # shared from the start: it joins the public wall and the rank ledger like any public post
+        post["public"] = True
     return post
 
 
@@ -627,6 +631,12 @@ def _academy_context():
 
 
 academy.set_context_provider(_academy_context)
+teams.set_providers(tracks=lambda: academy.overview()["tracks"])
+
+
+def set_system_provider(fn):
+    """The server gives teams a read-only way to see this NEXXUS's engines and hub (real telemetry, never invented)."""
+    teams.set_providers(system=fn)
 
 
 def state():
@@ -848,6 +858,88 @@ def register_routes(app, is_viewer, respond):
         publish({"type": "academy"})
         return respond({"status": "success", **res})
 
+    def _team(fn, *args, **kw):
+        try:
+            res = fn(*args, **kw)
+        except teams.TeamError as e:
+            return respond({"status": "error", "message": str(e)}, 404 if "No such" in str(e) else 400)
+        publish({"type": "team"})
+        return res
+
+    @app.route("/api/platform/teams", methods=["GET", "POST", "OPTIONS"], endpoint="platform_teams")
+    def teams_route():
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        if request.method == "GET":
+            return respond({"status": "success", "teams": teams.list_teams(), "limits": {"teams": teams.MAX_TEAMS, "tasks": teams.MAX_TASKS}})
+        d = request.get_json(silent=True) or {}
+        res = _team(teams.create_team, d.get("name"), d.get("mission", ""), d.get("kind", "team"), get_profile().get("name") or "You")
+        return res if not isinstance(res, dict) else respond({"status": "success", "team": res})
+
+    @app.route("/api/platform/teams/<tid>", methods=["GET", "DELETE", "OPTIONS"], endpoint="platform_team")
+    def team_route(tid):
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        try:
+            if request.method == "GET":
+                return respond({"status": "success", "team": teams.get_team(tid)})
+            teams.delete_team(tid)
+        except teams.TeamError as e:
+            return respond({"status": "error", "message": str(e)}, 404)
+        publish({"type": "team"})
+        return respond({"status": "success"})
+
+    @app.route("/api/platform/teams/<tid>/task", methods=["POST", "OPTIONS"], endpoint="platform_team_task")
+    def team_task_route(tid):
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        d = request.get_json(silent=True) or {}
+        res = _team(teams.add_task, tid, d.get("title"), d.get("detail", ""), d.get("due", ""))
+        return res if not isinstance(res, dict) else respond({"status": "success", "task": res})
+
+    @app.route("/api/platform/teams/<tid>/task/<xid>", methods=["POST", "DELETE", "OPTIONS"], endpoint="platform_team_task_item")
+    def team_task_item_route(tid, xid):
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        if request.method == "DELETE":
+            res = _team(teams.delete_task, tid, xid)
+            return res if res is not None else respond({"status": "success"})
+        res = _team(teams.move_task, tid, xid, (request.get_json(silent=True) or {}).get("status"))
+        return res if not isinstance(res, dict) else respond({"status": "success", "task": res})
+
+    @app.route("/api/platform/teams/<tid>/blueprint", methods=["POST", "OPTIONS"], endpoint="platform_team_blueprint")
+    def team_blueprint_route(tid):
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        d = request.get_json(silent=True) or {}
+        res = _team(teams.attach_track, tid, str(d.get("track", "")), bool(d.get("on", True)))
+        return res if not isinstance(res, list) else respond({"status": "success", "tracks": res})
+
+    @app.route("/api/platform/academy/welcome", methods=["POST", "OPTIONS"], endpoint="platform_academy_welcome")
+    def academy_welcome_route():
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        publish({"type": "academy"})
+        return respond({"status": "success", "welcomed": academy.mark_welcomed()})
+
     @app.route("/api/platform/profile/public", methods=["GET", "OPTIONS"], endpoint="platform_profile_public")
     def profile_public_route():
         if request.method == "OPTIONS":
@@ -864,10 +956,12 @@ def register_routes(app, is_viewer, respond):
         if not _rate_ok():
             return respond({"status": "error", "message": "Slow down: too many posts in a minute."}, 429)
         mid = ""
+        wants_public = False
         if (request.content_type or "").startswith("multipart/"):
             if (request.content_length or 0) > MAX_UPLOAD + 100_000:
                 return respond({"status": "error", "message": "The photo is larger than 6 MB."}, 413)
             text = request.form.get("text", "")
+            wants_public = request.form.get("public") in ("1", "true", "yes")
             f = request.files.get("image")
             if f:
                 try:
@@ -875,8 +969,10 @@ def register_routes(app, is_viewer, respond):
                 except MediaError as e:
                     return respond({"status": "error", "message": str(e)}, 400)
         else:
-            text = (request.get_json(silent=True) or {}).get("text", "")
-        post = add_post(text, mid)
+            body = request.get_json(silent=True) or {}
+            text = body.get("text", "")
+            wants_public = body.get("public") is True
+        post = add_post(text, mid, public=wants_public)
         if not post and mid:
             _drop_media(mid)
         return respond({"status": "success", "post": post}) if post else respond({"status": "error", "message": "Nothing to post."}, 400)

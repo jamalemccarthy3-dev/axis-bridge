@@ -1325,6 +1325,24 @@ body.pl-on #axisDock { display:none !important; }          /* the desktop contro
 .ac-pre { white-space:pre-wrap; overflow-wrap:anywhere; background:#05080f; border:1px solid rgba(148,163,184,0.35); border-radius:8px; padding:8px 10px; font:12.5px/1.45 ui-monospace,Consolas,monospace; margin:4px 0; } .ac-copy { background:rgba(56,189,248,0.15); border:1px solid rgba(56,189,248,0.5); color:#bae6fd; border-radius:6px; padding:2px 10px; font:inherit; font-size:.75rem; cursor:pointer; }
 .ac-h { margin:14px 0 4px; font-size:.78rem; text-transform:uppercase; letter-spacing:.08em; color:#7dd3fc; } .ac-list { margin:4px 0; padding-left:20px; } .ac-toast { background:rgba(251,191,36,0.12); border:1px solid rgba(251,191,36,0.6); color:#fde68a; border-radius:10px; padding:8px 12px; margin-bottom:10px; font-size:.88rem; }
 .ac-frame { width:100%; aspect-ratio:16/9; border:0; border-radius:10px; background:#000; } .ac-nav { display:flex; justify-content:space-between; gap:8px; margin-top:14px; } .ac-crumb { color:#7dd3fc; background:none; border:0; cursor:pointer; font:inherit; padding:0; margin-bottom:8px; }
+.pl-help { background:none; border:1px solid rgba(125,211,252,0.5); color:#bae6fd; border-radius:999px; padding:3px 12px; font:inherit; font-size:.78rem; cursor:pointer; } .pl-help:hover { background:rgba(56,189,248,0.2); }
+.pl-mode { display:flex; flex-wrap:wrap; gap:8px; align-items:center; padding:8px 12px 0; background:rgba(2,6,14,0.7); border-top:1px solid rgba(56,189,248,0.35); }
+.pl-mode .seg { display:inline-flex; border:1px solid rgba(148,163,184,0.45); border-radius:999px; overflow:hidden; } .pl-mode .seg button { background:none; border:0; color:#94a3b8; padding:5px 13px; font:inherit; font-size:.8rem; cursor:pointer; } .pl-mode .seg button.on { color:#04121c; font-weight:700; } .pl-mode .seg button:hover:not(.on) { color:#fff; }
+.pl-mode.m-talk .seg.main button.on { background:#38bdf8; } .pl-mode.m-private .seg.main button.on { background:#cbd5e1; } .pl-mode.m-shared .seg.main button.on { background:#34d399; } .pl-mode .seg.sub button.on[data-a="private"] { background:#cbd5e1; } .pl-mode .seg.sub button.on[data-a="shared"] { background:#34d399; } .pl-mode .seg.sub[hidden] { display:none; }
+.pl-mode .cue { font-size:.72rem; flex:1 1 180px; } .pl-mode.m-talk .cue { color:#7dd3fc; } .pl-mode.m-private .cue { color:#cbd5e1; } .pl-mode.m-shared .cue { color:#86efac; }
+.pl-bar.talk input { border-color:#38bdf8; box-shadow:0 0 0 1px rgba(56,189,248,0.4); } .pl-bar.private input { border-color:#94a3b8; } .pl-bar.shared input { border-color:#34d399; box-shadow:0 0 0 1px rgba(52,211,153,0.4); }
+.pl-bar.talk .pl-btn { background:#38bdf8; } .pl-bar.private .pl-btn { background:#cbd5e1; } .pl-bar.shared .pl-btn { background:#34d399; } .pl-bar.talk .pl-attach { display:none; }
+.tk-banner { background:rgba(56,189,248,0.1); border:1px solid rgba(56,189,248,0.5); color:#bae6fd; border-radius:10px; padding:8px 12px; margin-bottom:10px; font-size:.85rem; }
+.tk-log { display:flex; flex-direction:column; gap:8px; } .tk-msg { max-width:88%; padding:7px 12px; border-radius:14px; white-space:pre-wrap; overflow-wrap:anywhere; } .tk-msg.me { align-self:flex-end; background:rgba(56,189,248,0.22); border:1px solid rgba(56,189,248,0.5); border-radius:14px 14px 4px 14px; } .tk-msg.ai { align-self:flex-start; background:rgba(15,23,42,0.9); border:1px solid rgba(148,163,184,0.4); border-radius:14px 14px 14px 4px; } .tk-msg.wait { color:#94a3b8; font-style:italic; } .tk-msg.err { border-color:rgba(251,113,133,0.6); color:#fda4af; } .tk-who { font-size:.68rem; color:#94a3b8; margin-bottom:2px; }
+.wl-beta { background:linear-gradient(120deg,rgba(52,211,153,0.18),rgba(251,191,36,0.18)); border:1px solid rgba(251,191,36,0.6); border-radius:12px; padding:10px 14px; margin:10px 0; } .wl-beta b { color:#fde68a; letter-spacing:.06em; }
+.wl-cols { display:grid; grid-template-columns:1fr 1fr; gap:12px; } @media (max-width:640px) { .wl-cols { grid-template-columns:1fr; } } .wl-item { margin:6px 0; font-size:.86rem; } .wl-item b { color:#e0f2fe; } .wl-item .tag { font-size:.66rem; border:1px solid rgba(148,163,184,0.5); color:#94a3b8; border-radius:999px; padding:0 7px; margin-left:6px; } .wl-yes b::before { content:"\2713  "; color:#34d399; } .wl-no b::before { content:"\25CB  "; color:#94a3b8; } .wl-no { color:#94a3b8; }
+.tm-top { display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:10px; } .tm-tabs { display:flex; gap:6px; margin:8px 0; } .tm-tabs button { background:none; border:1px solid rgba(148,163,184,0.35); color:#94a3b8; border-radius:999px; padding:3px 12px; font:inherit; font-size:.8rem; cursor:pointer; } .tm-tabs button.on { background:rgba(56,189,248,0.2); border-color:#38bdf8; color:#fff; }
+.tm-board { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; } @media (max-width:640px) { .tm-board { grid-template-columns:1fr; } } .tm-col { background:rgba(15,23,42,0.6); border:1px solid rgba(148,163,184,0.3); border-radius:10px; padding:8px; min-height:80px; } .tm-col h5 { margin:0 0 6px; font-size:.75rem; letter-spacing:.08em; text-transform:uppercase; color:#7dd3fc; }
+.tm-task { background:#0b1220; border:1px solid rgba(148,163,184,0.3); border-radius:8px; padding:6px 8px; margin-bottom:6px; font-size:.83rem; overflow-wrap:anywhere; } .tm-task .due { font-size:.7rem; color:#94a3b8; } .tm-task .due.late { color:#fda4af; } .tm-task .act { display:flex; gap:6px; margin-top:4px; } .tm-task .act button { background:none; border:1px solid rgba(148,163,184,0.4); color:#bae6fd; border-radius:6px; padding:0 7px; font:inherit; font-size:.72rem; cursor:pointer; }
+.tm-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:8px; } .tm-card { background:rgba(15,23,42,0.7); border:1px solid rgba(148,163,184,0.3); border-radius:10px; padding:10px; } .tm-card h5 { margin:0 0 4px; font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; color:#7dd3fc; } .tm-big { font-size:1.4rem; font-weight:700; color:#f1f5f9; }
+.tm-pill { display:inline-block; padding:1px 9px; border-radius:999px; font-size:.7rem; border:1px solid; } .tm-pill.empty, .tm-pill.not { color:#94a3b8; border-color:#64748b; } .tm-pill.moving { color:#86efac; border-color:#34d399; } .tm-pill.behind { color:#fda4af; border-color:#fb7185; }
+.tm-eng { display:flex; flex-wrap:wrap; gap:4px; } .tm-led { font-size:.65rem; padding:1px 6px; border-radius:6px; border:1px solid rgba(148,163,184,0.4); } .tm-led.ok { border-color:#34d399; color:#86efac; } .tm-led.part { border-color:#fbbf24; color:#fde68a; } .tm-led.off { border-color:#fb7185; color:#fda4af; }
+.tm-stack { display:grid; gap:6px; } .tm-stack .it { border:1px solid rgba(148,163,184,0.3); border-radius:8px; padding:6px 10px; font-size:.82rem; } .tm-stack .it.unavailable { color:#94a3b8; border-style:dashed; } .tm-log { max-height:180px; overflow-y:auto; font-size:.8rem; }
 .pl-chip { display:none; align-items:center; gap:8px; padding:6px 12px; border-top:1px solid rgba(56,189,248,0.25); background:rgba(2,6,14,0.7); font-size:.8rem; color:#bae6fd; } .pl-chip.on { display:flex; } .pl-chip img { height:44px; width:44px; object-fit:cover; border-radius:8px; } .pl-chip button { margin-left:auto; background:none; border:0; color:#fda4af; cursor:pointer; font:inherit; }
 .pl-feed.drop { outline:2px dashed #38bdf8; outline-offset:-6px; }
 #plLightbox { position:absolute; inset:0; z-index:5; display:none; align-items:center; justify-content:center; background:rgba(2,6,14,0.92); cursor:zoom-out; padding:20px; } #plLightbox.open { display:flex; } #plLightbox img { max-width:100%; max-height:100%; border-radius:10px; }
@@ -11318,19 +11336,22 @@ async function skBuild() {
 </script>
 <!-- Platform mode: the two-sided spatial layout and its unlock dialog. Everything here is local; the data comes from /api/platform/* and nothing is invented. -->
 <div id="platformSpace" role="dialog" aria-modal="true" aria-label="NEXXUS Platform">
-<div class="pl-top"><h2>NEXXUS PLATFORM <span class="pl-beta" id="plBeta" hidden title="Platform is open to everyone while it is being built out">BETA</span></h2><span class="pl-live" id="plLive" role="status">connecting</span><span class="pl-note">Saved on this computer only</span><button type="button" class="pl-exit" id="plExit" aria-label="Exit Platform and return to the desktop dashboard">&#10005; Exit Platform</button></div>
+<div class="pl-top"><h2>NEXXUS PLATFORM <span class="pl-beta" id="plBeta" hidden title="Platform is open to everyone while it is being built out">BETA</span></h2><button type="button" class="pl-help" id="plHelp">What is this?</button><span class="pl-live" id="plLive" role="status">connecting</span><span class="pl-note">Saved on this computer only</span><button type="button" class="pl-exit" id="plExit" aria-label="Exit Platform and return to the desktop dashboard">&#10005; Exit Platform</button></div>
 <div class="pl-tabs" id="plTabs"><button type="button" data-t="left">Profile</button><button type="button" data-t="floor" class="on">Floor</button><button type="button" data-t="right">Network</button></div>
 <div class="pl-stage" id="plStage" data-tab="floor">
 <aside class="pl-wall left" id="plLeft" aria-label="Your profile"></aside>
 <main class="pl-floor" aria-label="The floor">
-<div class="pl-views" id="plViews" role="tablist" aria-label="Floor views"><button type="button" role="tab" data-v="academy" class="on">Academy</button><button type="button" role="tab" data-v="floor">Floor</button><button type="button" role="tab" data-v="wall">Profile wall</button><button type="button" role="tab" data-v="public">Public wall</button><button type="button" role="tab" data-v="vault">Image vault</button></div>
+<div class="pl-views" id="plViews" role="tablist" aria-label="Floor views"><button type="button" role="tab" data-v="academy" class="on">Academy</button><button type="button" role="tab" data-v="teams">Teams</button><button type="button" role="tab" data-v="floor">Floor</button><button type="button" role="tab" data-v="wall">Profile wall</button><button type="button" role="tab" data-v="public">Public wall</button><button type="button" role="tab" data-v="vault">Image vault</button></div>
 <div class="pl-view" id="plAcademyView" aria-label="The Academy"></div>
+<div class="pl-view" id="plTeamsView" hidden aria-label="Team workspaces"></div>
+<div class="pl-view" id="plTalkView" hidden aria-label="Talk to NEXXUS"></div>
 <div class="pl-feed" id="plFeed" aria-live="polite" hidden></div>
 <div class="pl-view" id="plWallView" hidden aria-label="Your profile wall"></div>
 <div class="pl-view" id="plPublicView" hidden aria-label="The public wall"></div>
 <div class="pl-view" id="plVaultView" hidden aria-label="Your image vault"></div>
+<div class="pl-mode m-private" id="plMode" role="group" aria-label="What the command bar does"><div class="seg main"><button type="button" data-m="talk">Talk to NEXXUS</button><button type="button" data-m="post" class="on">Post &amp; Publish</button></div><div class="seg sub" id="plAudience"><button type="button" data-a="private" class="on">Private note</button><button type="button" data-a="shared">Shared post</button></div><span class="cue" id="plCue" role="status"></span></div>
 <div class="pl-chip" id="plChip"><img id="plChipImg" alt="Photo to post"><span id="plChipName"></span><button type="button" id="plChipX" aria-label="Remove the photo">remove</button></div>
-<form class="pl-bar" id="plBar" autocomplete="off"><button class="pl-attach" type="button" id="plAttach" aria-label="Attach a photo" title="Attach a photo (or paste or drop one)">&#128247;</button><input type="file" id="plFile" accept="image/jpeg,image/png,image/gif,image/webp" hidden><input id="plInput" maxlength="500" placeholder="Say something, share a link or drop a photo on the floor..." aria-label="Command bar: post or chat on the floor"><button class="pl-btn" type="submit">Send</button></form>
+<form class="pl-bar private" id="plBar" autocomplete="off"><button class="pl-attach" type="button" id="plAttach" aria-label="Attach a photo" title="Attach a photo (or paste or drop one)">&#128247;</button><input type="file" id="plFile" accept="image/jpeg,image/png,image/gif,image/webp" hidden><input id="plInput" maxlength="500" placeholder="Say something, share a link or drop a photo on the floor..." aria-label="Command bar: post or chat on the floor"><button class="pl-btn" type="submit" id="plSend">Save note</button></form>
 <div class="pl-rule">Photos and messages: keep it PG-13 (no explicit, graphic or hateful content, and no private info). <a href="https://github.com/jamalemccarthy3-dev/axis-bridge/blob/main/CODE_OF_CONDUCT.md" target="_blank" rel="noopener noreferrer">Code of Conduct</a></div>
 <div id="plLightbox" role="dialog" aria-label="Photo"><img id="plLightImg" alt=""></div>
 </main>
@@ -11483,6 +11504,7 @@ async function skBuild() {
     else if (ev.type === 'public') { const p = find(ev.post_id); if (p) { p.public = ev.public; upsertPost(p); } refreshRank(); if (PL.view === 'public') loadPublic(); }
     else if (ev.type === 'github') { const p = find(ev.post_id); if (p) { p.gh = ev.gh; upsertPost(p); } if (PL.view === 'public') loadPublic(); }
     else if (ev.type === 'academy') { if (PL.view === 'academy' && PL.acView.mode === 'home') loadAcademy(); else loadAcademy(); }
+    else if (ev.type === 'team') { if (PL.view === 'teams') loadTeams(); }
     else if (ev.type === 'viewers') { PL.viewers = ev.viewers; liveLabel(true); }
   }
   function liveLabel(on) { const l = $('plLive'); if (!l) return; l.classList.toggle('on', !!on); l.textContent = on ? 'Live · ' + (PL.viewers || 1) + (PL.viewers === 1 ? ' viewport' : ' viewports') : 'reconnecting'; }
@@ -11504,11 +11526,14 @@ async function skBuild() {
 
   // ---------- views: Floor | Profile wall | Image vault ----------
   PL.view = 'floor'; PL.wallEdit = null; PL.asVisitor = false; PL.vault = [];
+  const VIEWS = { academy: 'plAcademyView', teams: 'plTeamsView', talk: 'plTalkView', floor: 'plFeed', wall: 'plWallView', public: 'plPublicView', vault: 'plVaultView' };
   function setView(v) {
+    if (v !== 'talk') PL.lastView = v;
     PL.view = v; if (v !== 'wall') { PL.wallEdit = null; PL.asVisitor = false; }
-    $('plAcademyView').hidden = v !== 'academy'; $('plFeed').hidden = v !== 'floor'; $('plWallView').hidden = v !== 'wall'; $('plPublicView').hidden = v !== 'public'; $('plVaultView').hidden = v !== 'vault';
+    Object.keys(VIEWS).forEach(k => { $(VIEWS[k]).hidden = k !== v; });
     document.querySelectorAll('#plViews button').forEach(b => { const on = b.dataset.v === v; b.classList.toggle('on', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); });
-    if (v === 'academy') loadAcademy(); else if (v === 'wall') renderWall(); else if (v === 'vault') loadVault(); else if (v === 'public') loadPublic(); else { const f = $('plFeed'); f.scrollTop = f.scrollHeight; }
+    if (v !== 'talk' && PL.cmd && PL.cmd.mode === 'talk') setComposer('post', PL.cmd.audience, true);          // leaving the talk view puts the command bar back to posting, so the cue is always true
+    if (v === 'academy') loadAcademy(); else if (v === 'teams') loadTeams(); else if (v === 'talk') renderTalk(); else if (v === 'wall') renderWall(); else if (v === 'vault') loadVault(); else if (v === 'public') loadPublic(); else { const f = $('plFeed'); f.scrollTop = f.scrollHeight; }
   }
   $('plViews').addEventListener('click', e => { const b = e.target.closest('button[data-v]'); if (b) setView(b.dataset.v); });
 
@@ -11728,7 +11753,7 @@ async function skBuild() {
 
   // ---------- the Academy ----------
   PL.ac = null; PL.acView = { mode: 'home', track: null, step: null }; PL.acToast = '';
-  async function loadAcademy() { const d = await api('academy', null, 'GET'); if (d && d.status === 'success') { PL.ac = d; PL.badgeCount = d.badges.filter(b => b.earned).length; renderLeft(); } if (PL.view === 'academy') renderAcademy(); }
+  async function loadAcademy() { const d = await api('academy', null, 'GET'); if (d && d.status === 'success') { PL.ac = d; PL.badgeCount = d.badges.filter(b => b.earned).length; renderLeft(); if (!d.state.welcomed && !PL.welcomeShown && PL.open) { PL.welcomeShown = true; openWelcome(true); } } if (PL.view === 'academy') renderAcademy(); }
   function copyText(text, btn) {
     const done = () => { const o = btn.textContent; btn.textContent = 'Copied'; setTimeout(() => { btn.textContent = o; }, 1200); };
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, () => fallbackCopy(text, done)); else fallbackCopy(text, done);
@@ -11745,6 +11770,7 @@ async function skBuild() {
     const ac = PL.ac, st = ac.state || {};
     const hero = el('div', 'ac-hero'); hero.append(el('h3', '', 'NEXXUS Academy'), el('div', '', 'A school and training ground: learn to build, operate and run real systems with exact prompts and commands, earn badges as proof, then guide others through the same path.'), el('div', 'pw-sub', ac.beta));
     host.append(hero);
+    { const bw = ac.welcome.beta, bn = el('div', 'wl-beta'); bn.append(el('b', '', 'BETA \u00b7 ' + bw.headline.replace(/^BETA:\s*/, '')), el('div', '', bw.text)); host.append(bn); }
     { const tn = toastNode(); if (tn) host.append(tn); }
     // start here
     const open = ac.quests.filter(q => !q.done && q.available).length;
@@ -11825,6 +11851,136 @@ async function skBuild() {
     host.replaceChildren(...tmp.childNodes); host.scrollTop = 0;
   }
 
+  // ---------- the welcome manifest ----------
+  function openWelcome(markSeen) {
+    const w = PL.ac && PL.ac.welcome; if (!w) return;
+    dialog(box => {
+      box.append(el('h3', '', w.title), el('p', '', w.what));
+      const b = el('div', 'wl-beta'); b.append(el('b', '', 'BETA · ' + w.beta.headline.replace(/^BETA:\s*/, '')), el('div', '', w.beta.text)); box.append(b);
+      const cols = el('div', 'wl-cols'), yes = el('div'), no = el('div');
+      yes.append(el('div', 'ac-h', 'What works today')); w.today.forEach(x => { const i = el('div', 'wl-item wl-yes'); i.append(el('b', '', x.title), el('div', '', x.text)); yes.append(i); });
+      no.append(el('div', 'ac-h', 'What we are building next')); w.planned.forEach(x => { const i = el('div', 'wl-item wl-no'); const h = el('b', '', x.title); h.append(el('span', 'tag', w.planned_label)); i.append(h, el('div', '', x.text), el('div', 'pw-sub', 'Needs: ' + x.needs)); no.append(i); });
+      cols.append(yes, no); box.append(cols, el('div', 'pd-warn', w.privacy + ' Only what you choose to make public ever reaches the public wall or GitHub.'));
+      const row = el('div'); row.style.cssText = 'display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:10px';
+      const cc = link('https://github.com/jamalemccarthy3-dev/axis-bridge/blob/main/CODE_OF_CONDUCT.md', 'Read the Code of Conduct'); cc.style.alignSelf = 'center';
+      const go = el('button', 'pl-btn', 'Start the Academy'); go.type = 'button';
+      go.addEventListener('click', async () => { if (markSeen) await api('academy/welcome', {}); dialogClose(); PL.acView = { mode: 'home' }; setView('academy'); });
+      row.append(cc, closeBtn('Close'), go); box.append(row);
+    });
+  }
+  $('plHelp').addEventListener('click', () => openWelcome(false));
+
+  // ---------- team workspaces ----------
+  PL.team = { mode: 'list', id: null, tab: 'board' }; PL.teams = [];
+  async function loadTeams() {
+    if (PL.team.mode === 'team') { const d = await api('teams/' + PL.team.id, null, 'GET'); if (d && d.status === 'success') PL.teamData = d.team; else PL.team = { mode: 'list' }; }
+    if (PL.team.mode === 'list') { const d = await api('teams', null, 'GET'); PL.teams = d && d.status === 'success' ? d.teams : []; }
+    if (PL.view === 'teams') renderTeams();
+  }
+  function tmPill(h) { return el('span', 'tm-pill ' + (h === 'not started' ? 'not' : h), h); }
+  function renderTeams() {
+    const host = $('plTeamsView'); host.replaceChildren();
+    if (PL.team.mode === 'list') {
+      const hero = el('div', 'ac-hero'); hero.append(el('h3', '', 'Team workspaces'), el('div', '', 'A workspace is where a team, pod or company plans and tracks its work: a task board, Academy blueprints and a control center with real telemetry. It is private to you.'), el('div', 'pw-sub', 'Today a workspace has one member, you. Inviting teammates, live rooms and a company phone line need the network and a telephony provider, which do not exist yet, so they are shown as not available instead of faked.'));
+      host.append(hero);
+      const f = el('form', 'pw-form'); const nm = inp('name', 'Team name', '', 60), ms = inp('mission', 'Mission, in one line', '', 200), kind = el('select'); ['team', 'pod', 'company'].forEach(k => { const o = el('option', '', k); o.value = k; kind.append(o); }); kind.style.cssText = 'background:#05080f;color:#e2e8f0;border:1px solid rgba(148,163,184,0.45);border-radius:8px;padding:7px 10px;font:inherit'; kind.setAttribute('aria-label', 'Kind of workspace');
+      const go = el('button', 'pl-btn', 'Create workspace'); go.type = 'submit'; const msg = el('div', 'pw-hint'); f.append(nm, ms, kind, go, msg);
+      f.addEventListener('submit', async e => { e.preventDefault(); const d = await api('teams', { name: nm.value, mission: ms.value, kind: kind.value }); if (d && d.status === 'success') { PL.team = { mode: 'team', id: d.team.id, tab: 'board' }; loadTeams(); } else { msg.textContent = (d && d.message) || 'Could not reach NEXXUS.'; msg.style.color = '#fda4af'; } });
+      const s = el('section', 'pw-sec'); s.append(Object.assign(el('div', 'pw-sh'), {})); s.firstChild.append(el('h4', '', 'Start a workspace')); s.append(f); host.append(s);
+      const list = el('section', 'pw-sec'); list.append(Object.assign(el('div', 'pw-sh'), {})); list.firstChild.append(el('h4', '', 'Your workspaces · ' + PL.teams.length));
+      if (!PL.teams.length) list.append(el('div', 'pl-empty', 'No workspaces yet. Create your first above.'));
+      PL.teams.forEach(t => { const c = el('div', 'ac-card'); c.style.marginBottom = '8px'; c.setAttribute('role', 'button'); c.tabIndex = 0; c.append(el('h4', '', t.name + '  ·  ' + t.kind), el('div', 'pw-sub', t.mission || 'No mission yet'), el('div', 'pw-sub', t.done + ' of ' + t.tasks + ' tasks done · ' + t.members + ' member'));
+        const go2 = () => { PL.team = { mode: 'team', id: t.id, tab: 'board' }; loadTeams(); }; c.addEventListener('click', go2); c.addEventListener('keydown', e => { if (e.key === 'Enter') go2(); }); list.append(c); });
+      host.append(list); return;
+    }
+    const t = PL.teamData, d = t.dashboard;
+    const back = el('button', 'ac-crumb', '← All workspaces'); back.type = 'button'; back.addEventListener('click', () => { PL.team = { mode: 'list' }; loadTeams(); }); host.append(back);
+    const hero = el('div', 'ac-hero'); hero.append(el('h3', '', t.name + '  ·  ' + t.kind), el('div', '', t.mission || 'No mission yet')); const mem = el('div', 'pw-sub', 'Members: ' + t.members.map(m => m.name + ' (' + m.role + ')').join(', ') + '  ·  Invite teammates: not available yet (needs the network)'); hero.append(mem); host.append(hero);
+    const tabs = el('div', 'tm-tabs'); [['board', 'Board'], ['blueprints', 'Blueprints'], ['control', 'Control center']].forEach(([k, n]) => { const b = el('button', PL.team.tab === k ? 'on' : '', n); b.type = 'button'; b.addEventListener('click', () => { PL.team.tab = k; renderTeams(); }); tabs.append(b); }); host.append(tabs);
+    if (PL.team.tab === 'board') teamBoard(host, t, d); else if (PL.team.tab === 'blueprints') teamBlueprints(host, t, d); else teamControl(host, t, d);
+    const del = el('button', 'pv-act', ''); del.textContent = 'Delete this workspace'; del.className = 'pw-edit'; del.style.cssText = 'margin-top:14px;color:#fda4af'; del.type = 'button'; let armed = false;
+    del.addEventListener('click', async () => { if (!armed) { armed = true; del.textContent = 'Sure? Press again to delete'; setTimeout(() => { armed = false; del.textContent = 'Delete this workspace'; }, 3000); return; } await api('teams/' + t.id, null, 'DELETE'); PL.team = { mode: 'list' }; loadTeams(); }); host.append(del);
+  }
+  function teamBoard(host, t, d) {
+    const f = el('form', 'tm-top'); const ti = inp('title', 'New task', '', 120); ti.style.flex = '1 1 160px'; const du = el('input'); du.type = 'date'; du.setAttribute('aria-label', 'Due date'); du.style.cssText = 'background:#05080f;color:#e2e8f0;border:1px solid rgba(148,163,184,0.45);border-radius:8px;padding:6px 8px;font:inherit';
+    const add = el('button', 'pl-btn', 'Add task'); add.type = 'submit'; f.append(ti, du, add);
+    f.addEventListener('submit', async e => { e.preventDefault(); if (!ti.value.trim()) return; await api('teams/' + t.id + '/task', { title: ti.value, due: du.value }); });
+    host.append(f);
+    const board = el('div', 'tm-board'), today = new Date().toISOString().slice(0, 10), order = ['todo', 'doing', 'done'], names = { todo: 'To do', doing: 'Doing', done: 'Done' };
+    order.forEach((st, ci) => { const col = el('div', 'tm-col'); col.append(el('h5', '', names[st] + ' · ' + t.tasks.filter(x => x.status === st).length));
+      t.tasks.filter(x => x.status === st).forEach(x => { const c = el('div', 'tm-task'); c.append(el('div', '', x.title)); if (x.due) c.append(el('div', 'due' + (st !== 'done' && x.due < today ? ' late' : ''), 'due ' + x.due)); const act = el('div', 'act');
+        if (ci > 0) { const b = el('button', '', '←'); b.type = 'button'; b.title = 'Move to ' + names[order[ci - 1]]; b.addEventListener('click', () => api('teams/' + t.id + '/task/' + x.id, { status: order[ci - 1] })); act.append(b); }
+        if (ci < 2) { const b = el('button', '', '→'); b.type = 'button'; b.title = 'Move to ' + names[order[ci + 1]]; b.addEventListener('click', () => api('teams/' + t.id + '/task/' + x.id, { status: order[ci + 1] })); act.append(b); }
+        const rm = el('button', '', 'remove'); rm.type = 'button'; rm.addEventListener('click', () => api('teams/' + t.id + '/task/' + x.id, null, 'DELETE')); act.append(rm); c.append(act); col.append(c); }); board.append(col); });
+    host.append(board);
+  }
+  function teamBlueprints(host, t, d) {
+    host.append(el('div', 'pw-hint', 'Attach Academy tracks as your team\'s blueprints. Progress shown is yours, read from the Academy.'));
+    ((PL.ac && PL.ac.tracks) || []).forEach(tr => { const on = t.tracks.includes(tr.id), c = el('div', 'ac-card' + (on ? ' on' : '')); c.style.marginBottom = '8px'; c.append(el('h4', '', tr.title), el('div', 'pw-sub', tr.summary));
+      const bar = el('div', 'ac-bar'), fill = el('i'); fill.style.width = Math.round(100 * tr.done / Math.max(1, tr.steps)) + '%'; bar.append(fill); c.append(bar, el('div', 'pw-sub', tr.done + ' of ' + tr.steps + ' steps'));
+      const row = el('div'); row.style.cssText = 'display:flex;gap:8px;margin-top:6px'; const tg = el('button', 'pl-btn ' + (on ? 'ghost' : ''), on ? 'Remove from team' : 'Attach to team'); tg.type = 'button'; tg.addEventListener('click', e => { e.stopPropagation(); api('teams/' + t.id + '/blueprint', { track: tr.id, on: !on }); });
+      const op = el('button', 'pl-btn ghost', 'Open in Academy'); op.type = 'button'; op.addEventListener('click', e => { e.stopPropagation(); PL.acView = { mode: 'track', track: tr.id }; setView('academy'); }); row.append(tg, op); c.append(row); host.append(c); });
+  }
+  function teamControl(host, t, d) {
+    const cards = el('div', 'tm-cards');
+    const c1 = el('div', 'tm-card'); c1.append(el('h5', '', 'Workflow health'), el('div', 'tm-big', d.percent + '%'), tmPill(d.health), el('div', 'pw-sub', d.counts.todo + ' to do · ' + d.counts.doing + ' doing · ' + d.counts.done + ' done · ' + d.done_this_week + ' done this week')); cards.append(c1);
+    const c2 = el('div', 'tm-card'); c2.append(el('h5', '', 'Overdue')); if (!d.overdue.length) c2.append(el('div', 'pw-sub', 'Nothing overdue.')); d.overdue.forEach(x => c2.append(el('div', 'pw-sub', x.title + ' (due ' + x.due + ')'))); cards.append(c2);
+    const c3 = el('div', 'tm-card'); c3.append(el('h5', '', 'Blueprint progress')); if (!d.blueprints.length) c3.append(el('div', 'pw-sub', 'No blueprints attached.')); d.blueprints.forEach(b => c3.append(el('div', 'pw-sub', b.title + ': ' + b.percent + '% (' + b.done + '/' + b.steps + ')'))); cards.append(c3);
+    const c4 = el('div', 'tm-card'); c4.append(el('h5', '', 'Communication channels')); c4.append(el('div', 'pw-sub', d.channels.text)); cards.append(c4);
+    host.append(cards);
+    const sys = el('section', 'pw-sec'); sys.append(Object.assign(el('div', 'pw-sh'), {})); sys.firstChild.append(el('h4', '', 'System telemetry and bot status (this NEXXUS, live)'));
+    if (!d.system) sys.append(el('div', 'pw-hint', 'Telemetry could not be read right now. Nothing is shown rather than a made-up number.'));
+    else { const h = d.system.hub; sys.append(el('div', 'pw-sub', 'Hub: ' + [h.uptime_s != null ? 'up ' + Math.round(h.uptime_s) + ' s' : '', h.cpu_percent != null ? 'CPU ' + h.cpu_percent + '%' : '', h.rss_mb != null ? h.rss_mb + ' MB' : '', h.threads != null ? h.threads + ' threads' : ''].filter(Boolean).join(' · ')), el('div', 'pw-sub', d.system.engines_found + ' of ' + d.system.engines_total + ' engines found · ' + d.system.engines_mesh_ready + ' ready on the mesh'));
+      const row = el('div', 'tm-eng'); d.system.engines.forEach(e => row.append(el('span', 'tm-led ' + (e.mesh_ready ? 'ok' : (e.found ? 'part' : 'off')), e.name))); sys.append(row); }
+    host.append(sys);
+    const st = el('section', 'pw-sec'); st.append(Object.assign(el('div', 'pw-sh'), {})); st.firstChild.append(el('h4', '', 'Company stack')); const stack = el('div', 'tm-stack');
+    d.stack.forEach(x => { const it = el('div', 'it ' + x.status); it.append(el('b', '', x.name + '  '), el('span', 'tag', x.status === 'unavailable' ? 'Not available yet' : (x.status === 'system' ? 'Partly real' : 'Learn it in the Academy')), el('div', 'pw-sub', x.text)); stack.append(it); }); st.append(stack); host.append(st);
+    const lg = el('section', 'pw-sec'); lg.append(Object.assign(el('div', 'pw-sh'), {})); lg.firstChild.append(el('h4', '', 'Activity log')); const log = el('div', 'tm-log'); d.activity.forEach(a => log.append(el('div', 'pw-sub', new Date(a.t * 1000).toLocaleString() + '  ·  ' + a.text))); lg.append(log); host.append(lg);
+  }
+
+  // ---------- Talk to NEXXUS: a private line to the local NEXXUS ----------
+  PL.talk = []; PL.talking = false;
+  function renderTalk() {
+    const host = $('plTalkView'); host.replaceChildren();
+    host.append(el('div', 'tk-banner', 'Private line to NEXXUS. This conversation is between you and the NEXXUS on this computer: it is never posted, never public, never sent to GitHub and never counted for ranks. Ask, debug, get guidance. To build, exit Platform and pick a build mode.'));
+    const log = el('div', 'tk-log'); log.id = 'tkLog';
+    if (!PL.talk.length) log.append(el('div', 'pl-empty', 'Ask NEXXUS anything: how a step works, why a command failed, what to try next.'));
+    PL.talk.forEach(m => { const b = el('div', 'tk-msg ' + m.who + (m.cls ? ' ' + m.cls : '')); b.append(el('div', 'tk-who', m.who === 'me' ? 'You' : 'NEXXUS'), document.createTextNode(m.text)); log.append(b); });
+    host.append(log); host.scrollTop = host.scrollHeight;
+  }
+  async function askNexxus(text) {
+    PL.talk.push({ who: 'me', text }); const waiting = { who: 'ai', text: 'thinking...', cls: 'wait' }; PL.talk.push(waiting); PL.talking = true; $('plSend').disabled = true; if (PL.view === 'talk') renderTalk();
+    const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 600000);
+    try {
+      const r = await fetch(BASE + '/bridge', { method: 'POST', headers: Object.assign({ 'Content-Type': 'application/json' }, authHeaders()), body: JSON.stringify({ message: text }), cache: 'no-store', signal: ctl.signal }); const d = await r.json();
+      waiting.cls = d && d.error ? 'err' : ''; waiting.text = (d && (d.message || d.error)) || 'NEXXUS did not answer.';
+    } catch (e) { waiting.cls = 'err'; waiting.text = e && e.name === 'AbortError' ? 'NEXXUS took too long to answer.' : 'Could not reach NEXXUS. Is it running?'; }
+    clearTimeout(timer); PL.talking = false; $('plSend').disabled = false; if (PL.view === 'talk') renderTalk();
+  }
+
+  // ---------- the command bar: two modes, three destinations, drafts that survive switching ----------
+  PL.cmd = { mode: 'post', audience: 'private' }; PL.drafts = { talk: '', private: '', shared: '' }; PL.lastView = 'academy';
+  try { const s = JSON.parse(sessionStorage.getItem('nx_pl_drafts') || '{}'); ['talk', 'private', 'shared'].forEach(k => { if (typeof s[k] === 'string') PL.drafts[k] = s[k].slice(0, 500); }); } catch (_) {}
+  function draftKey() { return PL.cmd.mode === 'talk' ? 'talk' : PL.cmd.audience; }
+  function saveDrafts() { PL.drafts[draftKey()] = $('plInput').value; try { sessionStorage.setItem('nx_pl_drafts', JSON.stringify(PL.drafts)); } catch (_) {} }
+  const CUES = { talk: 'Talking to NEXXUS: private, never posted.', private: 'Private note: saved only for you.', shared: 'Shared post: goes on the public wall. Publish to GitHub later, with confirmation.' };
+  const HOLD = { talk: 'Ask NEXXUS a question or paste an error...', private: 'Jot a private note, or drop a photo...', shared: 'Write something to share publicly, or drop a photo...' };
+  const SENDL = { talk: 'Ask', private: 'Save note', shared: 'Share' };
+  function setComposer(mode, audience, keepView) {
+    saveDrafts(); PL.cmd.mode = mode; if (audience) PL.cmd.audience = audience;
+    const k = draftKey(); $('plInput').value = PL.drafts[k] || '';
+    const box = $('plMode'); box.className = 'pl-mode m-' + k; $('plBar').className = 'pl-bar ' + k;
+    document.querySelectorAll('#plMode .seg.main button').forEach(b => b.classList.toggle('on', b.dataset.m === mode));
+    document.querySelectorAll('#plMode .seg.sub button').forEach(b => b.classList.toggle('on', b.dataset.a === PL.cmd.audience)); $('plAudience').hidden = mode === 'talk';
+    $('plCue').textContent = CUES[k]; $('plInput').placeholder = HOLD[k]; $('plSend').textContent = SENDL[k]; $('plChip').style.display = mode === 'talk' ? 'none' : '';
+    if (!keepView) { if (mode === 'talk') setView('talk'); else if (PL.view === 'talk') setView(PL.lastView && PL.lastView !== 'talk' ? PL.lastView : 'floor'); }
+    $('plInput').focus();
+  }
+  document.querySelectorAll('#plMode .seg.main button').forEach(b => b.addEventListener('click', () => setComposer(b.dataset.m, null)));
+  document.querySelectorAll('#plMode .seg.sub button').forEach(b => b.addEventListener('click', () => setComposer('post', b.dataset.a)));
+  $('plInput').addEventListener('input', saveDrafts);
+  setComposer('post', 'private', true); $('plInput').blur();
+
   async function load() { const d = await api('state', null, 'GET'); if (d && d.status === 'success') { PL.state = d; PL.rank = d.rank; PL.viewers = d.viewers; renderLeft(); renderRight(); renderFeed(); } else if (d && d.status === 'locked') { await setOperatingMode('conversation'); window.plGateOpen(); } }
   // ---------- the command bar: text, links and photos ----------
   PL.file = null;
@@ -11845,15 +12001,17 @@ async function skBuild() {
   ['dragleave', 'drop'].forEach(n => feedEl.addEventListener(n, e => { feedEl.classList.remove('drop'); }));
   feedEl.addEventListener('drop', e => { const f = (e.dataTransfer.files || [])[0]; if (f) { e.preventDefault(); setFile(f); $('plInput').focus(); } });
   $('plBar').addEventListener('submit', async e => {
-    e.preventDefault(); const i = $('plInput'), text = i.value.trim(), file = PL.file; if (!text && !file) return;
-    i.value = ''; setFile(null); i.placeholder = 'Say something, share a link or drop a photo on the floor...';
+    e.preventDefault(); const i = $('plInput'), text = i.value.trim();
+    if (PL.cmd.mode === 'talk') { if (!text || PL.talking) return; i.value = ''; PL.drafts.talk = ''; saveDrafts(); askNexxus(text); return; }
+    const file = PL.file, shared = PL.cmd.audience === 'shared'; if (!text && !file) return;
+    i.value = ''; PL.drafts[PL.cmd.audience] = ''; saveDrafts(); setFile(null); i.placeholder = HOLD[draftKey()];
     let d = null;
     if (file) {
-      const fd = new FormData(); fd.append('text', text); fd.append('image', file, file.name || 'photo');
+      const fd = new FormData(); fd.append('text', text); fd.append('image', file, file.name || 'photo'); if (shared) fd.append('public', 'true');
       try { d = await (await fetch(BASE + '/api/platform/post', { method: 'POST', headers: authHeaders(), body: fd, cache: 'no-store' })).json(); } catch (_) { d = null; }
-    } else d = await api('post', { text });
-    if (d && d.status === 'success') { if (!find(d.post.id)) applyEvent({ type: 'post', post: d.post }); }       // the live stream usually delivers it first; this keeps it correct without a stream
-    else { i.value = text; i.placeholder = (d && d.message) || 'Could not post. Is NEXXUS running?'; if (file) setFile(file); }
+    } else d = await api('post', { text, public: shared });
+    if (d && d.status === 'success') { if (!find(d.post.id)) applyEvent({ type: 'post', post: d.post }); $('plCue').textContent = shared ? 'Shared to the public wall. Publish it to GitHub from the Public wall when you are ready.' : 'Saved to your private notes.'; setTimeout(() => { $('plCue').textContent = CUES[draftKey()]; }, 4000); }
+    else { i.value = text; saveDrafts(); i.placeholder = (d && d.message) || 'Could not post. Is NEXXUS running?'; if (file) setFile(file); }
   });
   $('plTabs').addEventListener('click', e => { const b = e.target.closest('button[data-t]'); if (!b) return; $('plStage').dataset.tab = b.dataset.t; document.querySelectorAll('#plTabs button').forEach(x => x.classList.toggle('on', x === b)); });
   $('plExit').addEventListener('click', () => { setOperatingMode('conversation'); });
@@ -11863,7 +12021,7 @@ async function skBuild() {
   window.plSync = function (mode, changed) {
     const on = mode === 'platform';
     space.classList.toggle('open', on); PL.open = on; document.body.classList.toggle('pl-on', on); document.body.style.overflow = on ? 'hidden' : '';
-    if (on) { PL.editing = false; PL.vault = []; PL.acView = { mode: 'home' }; setView('academy'); load().then(streamOpen); setTimeout(() => $('plInput') && $('plInput').focus(), 50); } else { streamClose(); setFile && setFile(null); setView('academy'); }
+    if (on) { PL.editing = false; PL.vault = []; PL.acView = { mode: 'home' }; PL.welcomeShown = false; setView('academy'); load().then(streamOpen); setTimeout(() => $('plInput') && $('plInput').focus(), 50); } else { streamClose(); setFile && setFile(null); setView('academy'); }
     loadOffer();                                   // keeps the lock mark on the Modes menu honest (a monthly key can lapse)
   };
   loadOffer();

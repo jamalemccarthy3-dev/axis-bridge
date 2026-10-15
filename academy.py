@@ -320,6 +320,45 @@ def group_checklist():
     return {"items": items, "pod_entry": "locked", "note": "Team pods open once these steps are done with real people. Pods are not built yet, so nothing here is faked."}
 
 
+def welcome():
+    """The orientation shown when someone first enters Platform mode (and from the "What is this?" button). It separates what works today from what is planned, so nobody is promised
+    something that does not exist. test_academy.py checks that every planned item is marked not available."""
+    return {
+        "title": "Welcome to NEXXUS Platform",
+        "what": "NEXXUS Platform is a sovereign digital academy, a collaborative workspace and a company-building ground. You learn to build, operate and run real systems with exact prompts and commands, "
+                "earn badges as proof of what you learned and did, and then lead others through the same path.",
+        "beta": {"headline": "BETA: wide open",
+                 "text": "Right now everything that exists is open to everyone, free, with no purchase and no locked tiers. You are at the ground floor: explore, test and build across the whole platform while it is "
+                         "being built. Before the public launch some tiers may be introduced. If that happens you will see exactly what each one includes before you pay. Nobody is charged during Beta."},
+        "today": [
+            {"title": "The Academy", "text": "Four tracks, 24 steps with exact prompts and commands, and badges that record how they were proved."},
+            {"title": "Your profile wall", "text": "A LinkedIn-style page with a visitor preview, section by section privacy and an image vault."},
+            {"title": "The floor and public wall", "text": "Posts with photos, comments and ratings, live across your open windows, plus a public wall with a GitHub audit trail."},
+            {"title": "Talk to NEXXUS", "text": "A private line to the local NEXXUS for questions, debugging and guidance. Never posted, never public."},
+            {"title": "Transparent ranks", "text": "One readable ledger of public contributions is the whole formula. Nothing is hidden."},
+            {"title": "Team workspaces", "text": "A task board, Academy blueprints, a control center and real system telemetry for your team, pod or company. Today a workspace has one member, you."},
+            {"title": "Private by design", "text": "Direct messages, group chats and live rooms are never collected, never public, never synced to GitHub and never counted for ranks."},
+        ],
+        "planned": [
+            {"title": "Teams across the country", "needs": "a shared network with accounts and moderation", "text": "Invite other builders, form real teams and companies together."},
+            {"title": "Live clustered rooms", "needs": "other people on a shared server", "text": "Group video and voice rooms inside team workspaces."},
+            {"title": "Developer pods", "needs": "other people and the trust protocol", "text": "Team pods you can join after the Group Build trust steps."},
+            {"title": "Business telephony", "needs": "a telephony provider account, a number and legal registration", "text": "A real company phone line."},
+            {"title": "Team automation bots and storefront connections", "needs": "integration work not yet built", "text": "Bots that run your team's tasks and storefronts managed from the workspace."},
+        ],
+        "planned_label": "Not available yet",
+        "privacy": "Your private conversations stay private.",
+    }
+
+
+def mark_welcomed():
+    with _LOCK:
+        d = _read()
+        d["state"]["welcomed"] = int(time.time())
+        _write(d)
+    return d["state"]["welcomed"]
+
+
 def overview():
     tracks, problems = load_curriculum()
     data = _read()
@@ -334,7 +373,7 @@ def overview():
                                         "steps": [_public(s, data, tr["id"]) for s in m["steps"]]} for m in tr["modules"]]})
     earned = {b["badge"] for b in badges}
     defs = [dict(d, earned=d["id"] in earned, earned_info=next((b for b in badges if b["badge"] == d["id"]), None)) for d in badge_definitions(tracks)]
-    return {"state": data["state"], "tracks": out_tracks, "badges": defs, "problems": problems, "quests": quests(), "group": group_checklist(),
+    return {"state": data["state"], "welcome": welcome(), "tracks": out_tracks, "badges": defs, "problems": problems, "quests": quests(), "group": group_checklist(),
             "leadership": {"mentor_ready": "mentor-ready" in earned,
                            "text": "The leadership loop: work through the system, master the tools, then guide others through the same path. Finish a whole track to become Mentor-ready. Mentoring itself needs other people on the platform and is not built yet."},
             "beta": "Open Beta: every track is open from day one. No payment, no prerequisites."}

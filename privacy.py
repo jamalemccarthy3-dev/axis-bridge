@@ -17,7 +17,7 @@ import os
 HERE = os.path.dirname(os.path.abspath(__file__))
 PRIVATE_DIR = os.path.join(HERE, "nexxus_data", "private")          # future home of DM / group chat stores; no public module may read it
 
-PRIVATE_KINDS = frozenset({"direct_message", "group_chat", "room_session", "room_signal"})
+PRIVATE_KINDS = frozenset({"direct_message", "group_chat", "room_session", "room_signal", "nexxus_talk"})
 PUBLIC_KINDS = frozenset({"public_post", "public_comment"})
 
 PRIVATE_STATEMENT = ("Your private conversations stay private. Direct messages, group chats and live rooms are never collected, never scraped, never shown on the public wall, "

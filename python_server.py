@@ -650,6 +650,7 @@ import platform_mode as _platform
 if _mode_state is not None:
     _platform.register_mode(_mode_state, _modes)          # adds the locked Platform mode (needs a valid license, see entitlements.py)
 _platform.register_routes(app, _is_viewer, lambda payload, status=200: _json_cors(payload, status))
+_platform.set_system_provider(lambda: _axis_bridge.telemetry())          # team dashboards show the real engine and hub status of this NEXXUS (read-only)
 
 import telemetry_hub as _tele
 
