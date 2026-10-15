@@ -51,7 +51,10 @@ class Base(unittest.TestCase):
         pub = os.path.join(d, "pub.pem")
         open(pub, "wb").write(KEY.public_key().public_bytes(serialization.Encoding.PEM, serialization.PublicFormat.SubjectPublicKeyInfo))
         ent.PUBLIC_KEY_PATH, ent.LICENSE_PATH = pub, os.path.join(d, "license.json")
+        ent.BETA_PATH = os.path.join(d, "beta.json")                      # no beta file here: the gate is ON unless a test opens the beta
+        os.environ.pop("NEXXUS_PLATFORM_BETA", None)
         pm.DATA_DIR = os.path.join(d, "platform")
+        pm.MEDIA_DIR = os.path.join(pm.DATA_DIR, "media")
         pm.PROFILE_PATH, pm.POSTS_PATH = os.path.join(pm.DATA_DIR, "p.json"), os.path.join(pm.DATA_DIR, "posts.jsonl")
         FakeModes.MODES = {"conversation": {}}
 
@@ -88,6 +91,50 @@ class EntitlementTest(Base):
             self.assertEqual(ent.checkout_links(), {"monthly": None, "lifetime": "https://buy.example/x"})
         finally:
             del os.environ["NEXXUS_CHECKOUT_MONTHLY"], os.environ["NEXXUS_CHECKOUT_LIFETIME"]
+
+
+class BetaTest(Base):
+    def open_beta(self):
+        open(ent.BETA_PATH, "w").write('{"beta_open": true}')
+
+    def test_beta_unlocks_everyone_without_a_license(self):
+        self.assertFalse(ent.is_unlocked())
+        self.open_beta()
+        st = ent.status()
+        self.assertEqual((st["unlocked"], st["plan"], st["beta"]), (True, "beta", True))
+        self.assertTrue(ent.offer()["beta"])
+
+    def test_beta_off_switch_and_env_override(self):
+        self.open_beta()
+        os.environ["NEXXUS_PLATFORM_BETA"] = "0"
+        try:
+            self.assertFalse(ent.is_unlocked(), "the environment variable brings the gate back")
+        finally:
+            del os.environ["NEXXUS_PLATFORM_BETA"]
+        open(ent.BETA_PATH, "w").write('{"beta_open": false}')
+        self.assertFalse(ent.is_unlocked())
+        open(ent.BETA_PATH, "w").write("not json")
+        self.assertFalse(ent.is_unlocked(), "a broken beta file fails closed")
+
+    def test_mode_and_routes_open_during_beta_and_close_after(self):
+        st = FakeState(); pm.register_mode(st, FakeModes)
+        self.open_beta()
+        self.assertEqual(st.set("platform")["mode"], "platform")
+        app = Flask(__name__); pm.register_routes(app, lambda: True, lambda p, s=200: (jsonify(p), s)); c = app.test_client()
+        self.assertEqual(c.get("/api/platform/state").status_code, 200)
+        open(ent.BETA_PATH, "w").write('{"beta_open": false}')
+        self.assertEqual(c.get("/api/platform/state").status_code, 402, "the gate is back the moment the beta ends")
+        self.assertEqual(st.snapshot()["mode"], "conversation", "and anyone in Platform drops back to the desktop view")
+
+    def test_a_real_license_still_works_when_the_beta_is_off(self):
+        self.assertTrue(ent.activate(token("lifetime"))[0])
+        self.assertTrue(ent.status()["unlocked"])
+        self.assertFalse(ent.status()["beta"])
+
+    def test_the_shipped_default_is_open_beta(self):
+        import json as _j
+        shipped = _j.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "platform_beta.json")))
+        self.assertTrue(shipped["beta_open"])
 
 
 class ModeGateTest(Base):
@@ -151,6 +198,168 @@ class RouteTest(Base):
         p = self.c.post("/api/platform/post", json={"text": "a\x00b" + "x" * 900}).get_json()["post"]
         self.assertEqual(len(p["text"]), 500)
         self.assertNotIn("\x00", p["text"])
+
+
+def image_bytes(fmt="JPEG", size=(40, 30), exif=False, mode="RGB"):
+    import io
+    from PIL import Image
+    im = Image.new(mode, size, (200, 30, 30) if mode == "RGB" else (200, 30, 30, 128))
+    buf = io.BytesIO()
+    kw = {}
+    if exif:
+        e = Image.Exif()
+        e[0x010F] = "SecretCameraMaker"                     # Make
+        e[0x8825] = {1: "N", 2: (51.0, 30.0, 0.0), 3: "W", 4: (0.0, 7.0, 0.0)}      # GPS position
+        kw["exif"] = e
+    im.save(buf, fmt, **kw)
+    return buf.getvalue()
+
+
+class MediaTest(Base):
+    def test_photo_is_reencoded_and_metadata_is_stripped(self):
+        raw = image_bytes(exif=True)
+        self.assertIn(b"SecretCameraMaker", raw)
+        mid = pm.save_media(raw)
+        path, ctype = pm.media_path(mid)
+        data = open(path, "rb").read()
+        self.assertEqual(ctype, "image/jpeg")
+        self.assertNotIn(b"SecretCameraMaker", data)
+        from PIL import Image
+        self.assertFalse(Image.open(path).getexif(), "no EXIF survives")
+
+    def test_big_photo_is_shrunk_and_transparent_png_stays_png(self):
+        from PIL import Image
+        mid = pm.save_media(image_bytes("PNG", size=(3200, 1000)))
+        self.assertEqual(max(Image.open(pm.media_path(mid)[0]).size), pm.MAX_SIDE)
+        mid2 = pm.save_media(image_bytes("PNG", mode="RGBA"))
+        self.assertEqual(pm.media_path(mid2)[1], "image/png")
+        self.assertIsNotNone(pm.save_media(image_bytes("GIF")))
+
+    def test_non_photos_are_refused(self):
+        for bad in (b"", b"just some text pretending to be a png", b'<svg xmlns="http://www.w3.org/2000/svg"><script>alert(1)</script></svg>',
+                    b"<html><script>alert(1)</script></html>", b"MZ\x90\x00 an exe", b"x" * (pm.MAX_UPLOAD + 1)):
+            with self.assertRaises(pm.MediaError, msg=bad[:20]):
+                pm.save_media(bad)
+
+    def test_media_ids_cannot_escape_the_folder(self):
+        for bad in ("../license", "..\\x", "a" * 16 + "/../x", "0123456789abcdeg", "", None):
+            self.assertIsNone(pm.media_path(bad))
+
+
+class FloorTest(Base):
+    def setUp(self):
+        super().setUp()
+        pm._recent_posts.clear()
+        self.local = True
+        app = Flask(__name__)
+        pm.register_routes(app, lambda: self.local, lambda p, s=200: (jsonify(p), s))
+        self.c = app.test_client()
+        self.c.post("/api/platform/license", json={"token": token()})
+
+    def test_photo_post_comment_rating_delete_roundtrip(self):
+        import io
+        r = self.c.post("/api/platform/post", data={"text": "look at this", "image": (io.BytesIO(image_bytes(exif=True)), "x.jpg")}, content_type="multipart/form-data")
+        self.assertEqual(r.status_code, 200, r.get_json())
+        post = r.get_json()["post"]
+        self.assertEqual(post["kind"], "photo")
+        m = self.c.get("/api/platform/media/" + post["media"])
+        self.assertEqual((m.status_code, m.headers["Content-Type"], m.headers["X-Content-Type-Options"]), (200, "image/jpeg", "nosniff"))
+        self.assertIn("sandbox", m.headers["Content-Security-Policy"])
+        m.close()                                          # a finished download releases the file (Windows cannot delete an open one)
+        self.assertEqual(self.c.post("/api/platform/post/%s/rating" % post["id"], json={"rating": 4}).get_json()["rating"], 4)
+        self.assertEqual(self.c.post("/api/platform/post/%s/rating" % post["id"], json={"rating": 9}).status_code, 400)
+        c = self.c.post("/api/platform/post/%s/comment" % post["id"], json={"text": "nice <b>one</b>"}).get_json()["comment"]
+        self.assertEqual(self.c.post("/api/platform/post/nope/comment", json={"text": "x"}).status_code, 400)
+        s = self.c.get("/api/platform/state").get_json()["floor"][0]
+        self.assertEqual((s["rating"], len(s["comments"]), s["media"] == post["media"]), (4, 1, True))
+        self.assertEqual(self.c.delete("/api/platform/post/%s/comment/%s" % (post["id"], c["id"])).status_code, 200)
+        self.assertEqual(self.c.delete("/api/platform/post/" + post["id"]).status_code, 200)
+        self.assertEqual(self.c.get("/api/platform/media/" + post["media"]).status_code, 404, "the photo file goes with its post")
+
+    def test_sweep_removes_orphans_even_if_a_delete_could_not(self):
+        keep = pm.add_post("kept", pm.save_media(image_bytes()))
+        orphan = pm.save_media(image_bytes())
+        self.assertEqual(pm.sweep_media(), 1)
+        self.assertIsNone(pm.media_path(orphan))
+        self.assertIsNotNone(pm.media_path(keep["media"]), "a photo that a post uses is never swept")
+
+    def test_photo_only_post_and_bad_upload(self):
+        import io
+        ok = self.c.post("/api/platform/post", data={"text": "", "image": (io.BytesIO(image_bytes()), "x.jpg")}, content_type="multipart/form-data")
+        self.assertEqual(ok.status_code, 200)
+        bad = self.c.post("/api/platform/post", data={"text": "hi", "image": (io.BytesIO(b"<svg onload=alert(1)>"), "x.svg")}, content_type="multipart/form-data")
+        self.assertEqual(bad.status_code, 400)
+        self.assertEqual(len(self.c.get("/api/platform/state").get_json()["floor"]), 1, "a refused photo posts nothing")
+
+    def test_posting_is_rate_limited(self):
+        codes = [self.c.post("/api/platform/post", json={"text": "spam %d" % i}).status_code for i in range(pm.POSTS_PER_MINUTE + 3)]
+        self.assertEqual(codes.count(200), pm.POSTS_PER_MINUTE)
+        self.assertEqual(codes[-1], 429)
+
+    def test_media_and_stream_are_locked_without_a_license(self):
+        self.c.delete("/api/platform/license")
+        self.assertEqual(self.c.get("/api/platform/media/" + "0" * 16).status_code, 402)
+        self.assertEqual(self.c.get("/api/platform/stream").status_code, 402)
+
+
+class LiveSyncTest(Base):
+    """Two viewports (two subscribers): everything one does reaches the other at once, in order, without a reload."""
+
+    def setUp(self):
+        super().setUp()
+        pm._recent_posts.clear()
+        del pm._subs[:]
+
+    def drain(self, q):
+        out = []
+        while not q.empty():
+            out.append(q.get_nowait())
+        return out
+
+    def test_every_change_reaches_every_viewport(self):
+        a, b = pm.subscribe(), pm.subscribe()
+        post = pm.add_post("hello")
+        pm.set_rating(post["id"], 5)
+        c = pm.add_comment(post["id"], "first")
+        pm.delete_comment(post["id"], c["id"])
+        pm.save_profile({"name": "Ada"})
+        pm.delete_post(post["id"])
+        for q in (a, b):
+            self.assertEqual([e["type"] for e in self.drain(q)], ["post", "rating", "comment", "comment_deleted", "profile", "post_deleted"])
+
+    def test_unsubscribed_and_stuck_viewports_do_not_block_others(self):
+        a, b = pm.subscribe(), pm.subscribe()
+        pm.unsubscribe(a)
+        for i in range(250):
+            pm.publish({"type": "x", "i": i})              # b is never read: its queue fills and drops the oldest
+        self.assertEqual(self.drain(a), [])
+        self.assertEqual(len(self.drain(b)), 200)
+        self.assertEqual(pm.viewers(), 1)
+
+    def test_viewport_cap(self):
+        qs = [pm.subscribe() for _ in range(pm.MAX_STREAMS)]
+        self.assertTrue(all(qs))
+        self.assertIsNone(pm.subscribe())
+
+    def test_the_stream_route_sends_events_as_they_happen(self):
+        self.local = True
+        app = Flask(__name__)
+        pm.register_routes(app, lambda: True, lambda p, s=200: (jsonify(p), s))
+        c = app.test_client()
+        c.post("/api/platform/license", json={"token": token()})
+        r = c.get("/api/platform/stream", buffered=False)
+        self.assertEqual(r.mimetype, "text/event-stream")
+        it = iter(r.response)
+        self.assertIn(b"event: hello", next(it))
+        pm.add_post("live one")
+        seen = b""
+        for _ in range(3):
+            seen += next(it)
+            if b"live one" in seen:
+                break
+        self.assertIn(b'"type": "post"', seen)
+        self.assertIn(b"live one", seen)
+        r.close()
 
 
 if __name__ == "__main__":

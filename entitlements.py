@@ -21,6 +21,7 @@ from cryptography.hazmat.primitives import serialization
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 PUBLIC_KEY_PATH = os.path.join(HERE, "license_public_key.pem")
+BETA_PATH = os.path.join(HERE, "platform_beta.json")
 LICENSE_PATH = os.path.join(HERE, "nexxus_data", "state", "license.json")
 PREFIX = "NXP1"
 FEATURE = "platform"
@@ -72,6 +73,18 @@ def verify(token, now=None):
         return bad("the key could not be read")
 
 
+def beta_open():
+    """True while Platform is in open Beta: everyone gets in with no license. Controlled by platform_beta.json ({"beta_open": true}); the environment variable NEXXUS_PLATFORM_BETA=0 forces the gate back on
+    (used for testing and for the day the beta ends). The license checks below stay in place either way."""
+    if os.environ.get("NEXXUS_PLATFORM_BETA", "").strip().lower() in ("0", "false", "off", "no"):
+        return False
+    try:
+        with open(BETA_PATH, encoding="utf-8") as f:
+            return bool(json.load(f).get("beta_open", False))
+    except (OSError, ValueError, AttributeError):
+        return False
+
+
 def _saved_token():
     try:
         with open(LICENSE_PATH, encoding="utf-8") as f:
@@ -81,8 +94,10 @@ def _saved_token():
 
 
 def status(now=None):
+    if beta_open():
+        return {"unlocked": True, "plan": "beta", "expires": None, "beta": True, "reason": "open Beta: Platform is unlocked for everyone"}
     v = verify(_saved_token(), now)
-    return {"unlocked": v["valid"], "plan": v["plan"], "expires": v["exp"], "reason": v["reason"] if _saved_token() else "locked: no license key on this computer"}
+    return {"unlocked": v["valid"], "plan": v["plan"], "expires": v["exp"], "beta": False, "reason": v["reason"] if _saved_token() else "locked: no license key on this computer"}
 
 
 def is_unlocked():
@@ -121,4 +136,4 @@ def checkout_links():
 
 def offer():
     links = checkout_links()
-    return {"plans": [{"id": k, **v, "checkout_url": links[k]} for k, v in PLANS.items()], "entitlement": status()}
+    return {"plans": [{"id": k, **v, "checkout_url": links[k]} for k, v in PLANS.items()], "entitlement": status(), "beta": beta_open()}

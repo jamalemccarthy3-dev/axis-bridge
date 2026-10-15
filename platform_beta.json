@@ -1,0 +1,4 @@
+{
+  "beta_open": true,
+  "note": "Platform is in open Beta: no license is needed. Set beta_open to false (or set NEXXUS_PLATFORM_BETA=0) to bring the monthly / lifetime gate back."
+}

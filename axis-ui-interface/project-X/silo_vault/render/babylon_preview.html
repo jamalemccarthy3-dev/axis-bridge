@@ -1246,6 +1246,8 @@ body:not([data-face="home"]) .home-only { visibility: hidden !important; pointer
 body.pl-on #axisDock { display:none !important; }          /* the desktop control dock belongs to the desktop view; it returns on exit */
 .pl-top { display:flex; align-items:center; gap:12px; padding:10px 16px; border-bottom:1px solid rgba(148,163,184,0.2); }
 .pl-top h2 { margin:0; flex:1; font-size:1rem; color:#bae6fd; letter-spacing:.06em; } .pl-top .pl-note { font-size:.78rem; color:#94a3b8; }
+.pl-beta { display:inline-block; vertical-align:middle; margin-left:8px; padding:2px 9px; border-radius:999px; font-size:.68rem; font-weight:800; letter-spacing:.14em; color:#052e1b; background:linear-gradient(135deg,#34d399,#fbbf24); box-shadow:0 0 14px rgba(52,211,153,0.45); }
+.pl-beta-note { font-size:.75rem; color:#fde68a; border:1px solid rgba(251,191,36,0.45); background:rgba(251,191,36,0.08); border-radius:8px; padding:5px 9px; margin-bottom:10px; }
 .pl-exit { background:rgba(244,63,94,0.18); border:1px solid rgba(251,113,133,0.7); color:#ffe4e6; border-radius:8px; padding:6px 14px; font:inherit; font-weight:600; cursor:pointer; }
 .pl-exit:hover { background:rgba(244,63,94,0.35); }
 .pl-stage { flex:1; min-height:0; display:grid; grid-template-columns:minmax(220px,1fr) minmax(300px,1.7fr) minmax(220px,1fr); perspective:1500px; perspective-origin:50% 40%; padding:14px 18px 0; gap:0; }
@@ -1269,6 +1271,18 @@ body.pl-on #axisDock { display:none !important; }          /* the desktop contro
 .pl-empty { color:#94a3b8; font-size:.88rem; border:1px dashed rgba(148,163,184,0.4); border-radius:10px; padding:12px; }
 .pl-form { display:grid; gap:8px; margin-top:10px; } .pl-form input, .pl-form textarea { width:100%; background:#05080f; color:#e2e8f0; border:1px solid rgba(148,163,184,0.45); border-radius:8px; padding:7px 10px; font:inherit; }
 .pl-tabs { display:none; }
+.pl-live { font-size:.75rem; color:#94a3b8; display:flex; align-items:center; gap:6px; } .pl-live::before { content:""; width:8px; height:8px; border-radius:50%; background:#64748b; } .pl-live.on { color:#86efac; } .pl-live.on::before { background:#22c55e; box-shadow:0 0 8px #22c55e; }
+.pl-photo { display:block; max-width:100%; max-height:300px; border-radius:10px; margin:0 0 6px; cursor:zoom-in; background:#0b1220; }
+.pl-msg.photo { max-width:92%; }
+.pl-stars { display:inline-flex; } .pl-stars button { background:none; border:0; padding:0 1px; font-size:.95rem; line-height:1; color:#475569; cursor:pointer; } .pl-stars button.on { color:#fbbf24; } .pl-stars button:hover { color:#fde68a; }
+.pl-meta button.pl-cm { background:none; border:0; color:#7dd3fc; padding:0; font:inherit; cursor:pointer; }
+.pl-comments { margin-top:6px; padding-top:6px; border-top:1px solid rgba(148,163,184,0.25); display:grid; gap:4px; } .pl-comment { font-size:.85rem; display:flex; gap:8px; justify-content:space-between; } .pl-comment span { overflow-wrap:anywhere; } .pl-comment button { background:none; border:0; color:#94a3b8; cursor:pointer; padding:0; font:inherit; font-size:.7rem; } .pl-comment button:hover { color:#fb7185; }
+.pl-cin { width:100%; background:#05080f; color:#e2e8f0; border:1px solid rgba(148,163,184,0.4); border-radius:999px; padding:5px 12px; font:inherit; font-size:.85rem; }
+.pl-bar .pl-attach { background:transparent; border:1px solid rgba(125,211,252,0.6); color:#bae6fd; border-radius:999px; width:42px; font-size:1.1rem; cursor:pointer; } .pl-bar .pl-attach:hover { background:rgba(56,189,248,0.2); }
+.pl-rule { padding:4px 14px 8px; font-size:.7rem; color:#94a3b8; background:rgba(2,6,14,0.7); } .pl-rule a { color:#7dd3fc; }
+.pl-chip { display:none; align-items:center; gap:8px; padding:6px 12px; border-top:1px solid rgba(56,189,248,0.25); background:rgba(2,6,14,0.7); font-size:.8rem; color:#bae6fd; } .pl-chip.on { display:flex; } .pl-chip img { height:44px; width:44px; object-fit:cover; border-radius:8px; } .pl-chip button { margin-left:auto; background:none; border:0; color:#fda4af; cursor:pointer; font:inherit; }
+.pl-feed.drop { outline:2px dashed #38bdf8; outline-offset:-6px; }
+#plLightbox { position:absolute; inset:0; z-index:5; display:none; align-items:center; justify-content:center; background:rgba(2,6,14,0.92); cursor:zoom-out; padding:20px; } #plLightbox.open { display:flex; } #plLightbox img { max-width:100%; max-height:100%; border-radius:10px; }
 @media (max-width:820px) {
   .pl-stage { display:block; perspective:none; padding:8px; overflow:hidden; } .pl-wall, .pl-floor { transform:none !important; border-radius:12px; height:100%; display:none; } .pl-stage[data-tab="left"] .pl-wall.left, .pl-stage[data-tab="right"] .pl-wall.right { display:block; } .pl-stage[data-tab="floor"] .pl-floor { display:flex; }
   .pl-tabs { display:flex; gap:6px; padding:6px 10px; border-bottom:1px solid rgba(148,163,184,0.2); } .pl-tabs button { flex:1; background:none; border:1px solid rgba(148,163,184,0.4); color:#cbd5e1; border-radius:8px; padding:6px; font:inherit; cursor:pointer; } .pl-tabs button.on { background:rgba(56,189,248,0.2); border-color:#38bdf8; color:#fff; }
@@ -11259,13 +11273,16 @@ async function skBuild() {
 </script>
 <!-- Platform mode: the two-sided spatial layout and its unlock dialog. Everything here is local; the data comes from /api/platform/* and nothing is invented. -->
 <div id="platformSpace" role="dialog" aria-modal="true" aria-label="NEXXUS Platform">
-<div class="pl-top"><h2>NEXXUS PLATFORM</h2><span class="pl-note">Saved on this computer only</span><button type="button" class="pl-exit" id="plExit" aria-label="Exit Platform and return to the desktop dashboard">&#10005; Exit Platform</button></div>
+<div class="pl-top"><h2>NEXXUS PLATFORM <span class="pl-beta" id="plBeta" hidden title="Platform is open to everyone while it is being built out">BETA</span></h2><span class="pl-live" id="plLive" role="status">connecting</span><span class="pl-note">Saved on this computer only</span><button type="button" class="pl-exit" id="plExit" aria-label="Exit Platform and return to the desktop dashboard">&#10005; Exit Platform</button></div>
 <div class="pl-tabs" id="plTabs"><button type="button" data-t="left">Profile</button><button type="button" data-t="floor" class="on">Floor</button><button type="button" data-t="right">Network</button></div>
 <div class="pl-stage" id="plStage" data-tab="floor">
 <aside class="pl-wall left" id="plLeft" aria-label="Your profile"></aside>
 <main class="pl-floor" aria-label="The floor">
 <div class="pl-feed" id="plFeed" aria-live="polite"></div>
-<form class="pl-bar" id="plBar" autocomplete="off"><input id="plInput" maxlength="500" placeholder="Say something to the floor, or paste a link to share it..." aria-label="Command bar: post or chat on the floor"><button class="pl-btn" type="submit">Send</button></form>
+<div class="pl-chip" id="plChip"><img id="plChipImg" alt="Photo to post"><span id="plChipName"></span><button type="button" id="plChipX" aria-label="Remove the photo">remove</button></div>
+<form class="pl-bar" id="plBar" autocomplete="off"><button class="pl-attach" type="button" id="plAttach" aria-label="Attach a photo" title="Attach a photo (or paste or drop one)">&#128247;</button><input type="file" id="plFile" accept="image/jpeg,image/png,image/gif,image/webp" hidden><input id="plInput" maxlength="500" placeholder="Say something, share a link or drop a photo on the floor..." aria-label="Command bar: post or chat on the floor"><button class="pl-btn" type="submit">Send</button></form>
+<div class="pl-rule">Photos and messages: keep it PG-13 (no explicit, graphic or hateful content, and no private info). <a href="https://github.com/jamalemccarthy3-dev/axis-bridge/blob/main/CODE_OF_CONDUCT.md" target="_blank" rel="noopener noreferrer">Code of Conduct</a></div>
+<div id="plLightbox" role="dialog" aria-label="Photo"><img id="plLightImg" alt=""></div>
 </main>
 <aside class="pl-wall right" id="plRight" aria-label="Your network and friends"></aside>
 </div></div>
@@ -11295,7 +11312,9 @@ async function skBuild() {
   async function loadOffer() { const d = await api('entitlement', null, 'GET'); if (d && d.status === 'success') { PL.ent = d; markLock(); } return d; }
   function markLock() {
     const unlocked = !!(PL.ent && PL.ent.entitlement && PL.ent.entitlement.unlocked);
-    document.querySelectorAll('#renderModeSelect option[value="platform"]').forEach(o => { o.textContent = 'Mode: Platform' + (unlocked ? '' : ' 🔒'); });
+    const beta = !!(PL.ent && PL.ent.beta);
+    document.querySelectorAll('#renderModeSelect option[value="platform"]').forEach(o => { o.textContent = 'Mode: Platform' + (beta ? ' ' + String.fromCharCode(183) + ' BETA' : (unlocked ? '' : ' ' + String.fromCodePoint(0x1F512))); });
+    const bd = $('plBeta'); if (bd) bd.hidden = !beta;
     if (typeof modeMenuSync === 'function') modeMenuSync();
   }
   function renderPlans() {
@@ -11325,6 +11344,7 @@ async function skBuild() {
   function renderLeft() {
     const host = $('plLeft'), p = (PL.state && PL.state.profile) || {}; host.replaceChildren();
     host.append(el('h3', '', 'Profile hub'));
+    if (PL.ent && PL.ent.beta) host.append(el('div', 'pl-beta-note', 'BETA ' + String.fromCharCode(183) + ' open to everyone while Platform is built out. Some parts are still coming.'));
     if (PL.editing) { renderEdit(host, p); return; }
     host.append(el('div', 'pl-avatar', (p.name || 'You').trim().charAt(0).toUpperCase() || 'Y'), el('div', 'pl-name', p.name || 'Add your name'), el('div', 'pl-head', p.headline || 'Add a headline'));
     if (p.location) host.append(el('div', 'pl-loc', p.location));
@@ -11351,32 +11371,110 @@ async function skBuild() {
     if (!(n.feed || []).length) host.append(el('div', 'pl-empty', n.note || 'Nothing here yet.'));
     (n.feed || []).forEach(x => { const m = el('div', 'pl-msg', x.text || ''); host.append(m); });
   }
+  // ---------- the floor: photos, ratings, comments ----------
+  const BASE = (typeof PYTHON_SERVER_BASE_URL !== 'undefined') ? PYTHON_SERVER_BASE_URL : '';
+  const authHeaders = () => (typeof recon !== 'undefined' && recon.adminToken) ? { 'X-Nexxus-Admin-Token': recon.adminToken } : {};
+  PL.openComments = new Set();
+  function nearBottom(h) { return h.scrollHeight - h.scrollTop - h.clientHeight < 90; }
+  function postNode(x) {
+    const m = el('div', 'pl-msg' + (x.kind === 'link' ? ' link' : '') + (x.media ? ' photo' : '')); m.dataset.id = x.id;
+    if (x.media) { const img = el('img', 'pl-photo'); img.decoding = 'async'; img.alt = x.text || 'Photo on the floor'; img.src = BASE + '/api/platform/media/' + x.media; img.addEventListener('click', () => lightbox(img.src, img.alt)); m.append(img); }
+    if (x.text) { const body = el('div');
+      if (x.kind === 'link' && x.url) { const parts = x.text.split(x.url); body.append(document.createTextNode(parts[0] || ''), link(x.url), document.createTextNode(parts.slice(1).join(x.url))); } else body.textContent = x.text;
+      m.append(body); }
+    const meta = el('div', 'pl-meta'); meta.append(el('span', '', 'You · ' + when(x.t)));
+    const stars = el('span', 'pl-stars'); stars.setAttribute('role', 'group'); stars.setAttribute('aria-label', 'Rating');
+    for (let n = 1; n <= 5; n++) { const s = el('button', n <= (x.rating || 0) ? 'on' : '', '★'); s.type = 'button'; s.setAttribute('aria-label', n + ' star' + (n > 1 ? 's' : '')); s.title = (x.rating === n) ? 'Clear rating' : 'Rate ' + n;
+      s.addEventListener('click', () => api('post/' + x.id + '/rating', { rating: x.rating === n ? 0 : n })); stars.append(s); }
+    const cm = el('button', 'pl-cm', 'comments (' + (x.comments || []).length + ')'); cm.type = 'button'; cm.addEventListener('click', () => { PL.openComments.has(x.id) ? PL.openComments.delete(x.id) : PL.openComments.add(x.id); upsertPost(x); });
+    const del = el('button', 'pl-del', 'delete'); del.type = 'button'; del.addEventListener('click', () => api('post/' + x.id, null, 'DELETE'));
+    meta.append(stars, cm, del); m.append(meta);
+    if (PL.openComments.has(x.id)) {
+      const box = el('div', 'pl-comments');
+      (x.comments || []).forEach(c => { const r = el('div', 'pl-comment'); r.append(el('span', '', c.text)); const d = el('button', '', 'delete'); d.type = 'button'; d.addEventListener('click', () => api('post/' + x.id + '/comment/' + c.id, null, 'DELETE')); r.append(d); box.append(r); });
+      const inp = el('input', 'pl-cin'); inp.maxLength = 300; inp.placeholder = 'Add a comment...'; inp.setAttribute('aria-label', 'Add a comment');
+      inp.addEventListener('keydown', e => { if (e.key === 'Enter' && inp.value.trim()) { e.preventDefault(); const text = inp.value.trim(); inp.value = ''; api('post/' + x.id + '/comment', { text }); } });
+      box.append(inp); m.append(box);
+    }
+    return m;
+  }
+  function upsertPost(x) {                                   // replace just this post's node, keeping a half-typed comment and focus
+    const host = $('plFeed'), old = host.querySelector('.pl-msg[data-id="' + x.id + '"]'), stick = nearBottom(host);
+    const typed = old && old.querySelector('.pl-cin'), keep = typed ? { v: typed.value, f: document.activeElement === typed } : null;
+    const node = postNode(x);
+    if (old) old.replaceWith(node); else { const empty = host.querySelector('.pl-empty'); if (empty) empty.remove(); host.append(node); if (stick) host.scrollTop = host.scrollHeight; }
+    if (keep) { const i = node.querySelector('.pl-cin'); if (i) { i.value = keep.v; if (keep.f) i.focus(); } }
+  }
   function renderFeed(stick) {
     const host = $('plFeed'), posts = (PL.state && PL.state.floor) || []; host.replaceChildren();
-    if (!posts.length) host.append(el('div', 'pl-empty', 'The floor is quiet. Type in the command bar below to post or chat; paste a link to share it.'));
-    posts.forEach(x => {
-      const m = el('div', 'pl-msg' + (x.kind === 'link' ? ' link' : '')); const body = el('div');
-      if (x.kind === 'link' && x.url) { const parts = x.text.split(x.url); body.append(document.createTextNode(parts[0] || ''), link(x.url), document.createTextNode(parts.slice(1).join(x.url))); } else body.textContent = x.text;
-      const meta = el('div', 'pl-meta'); meta.append(el('span', '', 'You · ' + when(x.t)));
-      const del = el('button', 'pl-del', 'delete'); del.type = 'button'; del.addEventListener('click', async () => { const d = await api('post/' + x.id, null, 'DELETE'); if (d && d.status === 'success') { PL.state.floor = PL.state.floor.filter(y => y.id !== x.id); PL.state.shared_links = (PL.state.shared_links || []).filter(y => y.id !== x.id); renderFeed(false); renderLeft(); } });
-      meta.append(del); m.append(body, meta); host.append(m);
-    });
+    if (!posts.length) host.append(el('div', 'pl-empty', 'The floor is quiet. Type in the command bar below to post or chat; paste a link to share it, or drop in a photo.'));
+    posts.forEach(x => host.append(postNode(x)));
     if (stick !== false) host.scrollTop = host.scrollHeight;
   }
-  async function load() { const d = await api('state', null, 'GET'); if (d && d.status === 'success') { PL.state = d; renderLeft(); renderRight(); renderFeed(); } else if (d && d.status === 'locked') { await setOperatingMode('conversation'); window.plGateOpen(); } }
+  function lightbox(src, alt) { $('plLightImg').src = src; $('plLightImg').alt = alt || ''; $('plLightbox').classList.add('open'); }
+  $('plLightbox').addEventListener('click', () => $('plLightbox').classList.remove('open'));
+
+  // ---------- live sync: every change from any viewport arrives here at once ----------
+  function find(id) { return ((PL.state && PL.state.floor) || []).find(p => p.id === id); }
+  function applyEvent(ev) {
+    if (!PL.state) return;
+    if (ev.type === 'post') { if (!find(ev.post.id)) { PL.state.floor.push(ev.post); if (ev.post.kind === 'link') PL.state.shared_links.push(ev.post); renderLeft(); } upsertPost(find(ev.post.id)); }
+    else if (ev.type === 'post_deleted') { PL.state.floor = PL.state.floor.filter(p => p.id !== ev.id); PL.state.shared_links = (PL.state.shared_links || []).filter(p => p.id !== ev.id); const n = $('plFeed').querySelector('.pl-msg[data-id="' + ev.id + '"]'); if (n) n.remove(); if (!PL.state.floor.length) renderFeed(false); renderLeft(); }
+    else if (ev.type === 'comment') { const p = find(ev.post_id); if (p && !p.comments.some(c => c.id === ev.comment.id)) { p.comments.push(ev.comment); upsertPost(p); } }
+    else if (ev.type === 'comment_deleted') { const p = find(ev.post_id); if (p) { p.comments = p.comments.filter(c => c.id !== ev.id); upsertPost(p); } }
+    else if (ev.type === 'rating') { const p = find(ev.post_id); if (p) { p.rating = ev.rating; upsertPost(p); } }
+    else if (ev.type === 'profile') { PL.state.profile = ev.profile; if (!PL.editing) renderLeft(); }
+    else if (ev.type === 'viewers') { PL.viewers = ev.viewers; liveLabel(true); }
+  }
+  function liveLabel(on) { const l = $('plLive'); if (!l) return; l.classList.toggle('on', !!on); l.textContent = on ? 'Live · ' + (PL.viewers || 1) + (PL.viewers === 1 ? ' viewport' : ' viewports') : 'reconnecting'; }
+  function streamOpen() {
+    streamClose(); if (typeof EventSource === 'undefined') { liveLabel(false); return; }
+    const es = new EventSource(BASE + '/api/platform/stream'); PL.es = es;
+    es.addEventListener('hello', e => { try { PL.viewers = JSON.parse(e.data).viewers; } catch (_) {} liveLabel(true); if (PL.wasLive) load(); PL.wasLive = true; });   // after a drop, reload so nothing missed is lost
+    es.onmessage = e => { try { applyEvent(JSON.parse(e.data)); } catch (_) {} };
+    es.onerror = () => liveLabel(false);
+  }
+  function streamClose() { if (PL.es) { PL.es.close(); PL.es = null; } PL.wasLive = false; }
+
+  async function load() { const d = await api('state', null, 'GET'); if (d && d.status === 'success') { PL.state = d; PL.viewers = d.viewers; renderLeft(); renderRight(); renderFeed(); } else if (d && d.status === 'locked') { await setOperatingMode('conversation'); window.plGateOpen(); } }
+  // ---------- the command bar: text, links and photos ----------
+  PL.file = null;
+  function setFile(f) {
+    const chip = $('plChip');
+    if (PL.chipUrl) { URL.revokeObjectURL(PL.chipUrl); PL.chipUrl = null; }
+    if (!f) { PL.file = null; chip.classList.remove('on'); $('plFile').value = ''; return; }
+    if (!/^image\/(jpeg|png|gif|webp)$/.test(f.type)) { $('plInput').placeholder = 'Only JPEG, PNG, GIF or WebP photos can be posted.'; return; }
+    if (f.size > 6 * 1024 * 1024) { $('plInput').placeholder = 'That photo is over 6 MB.'; return; }
+    PL.file = f; PL.chipUrl = URL.createObjectURL(f); $('plChipImg').src = PL.chipUrl; $('plChipName').textContent = f.name || 'Pasted photo'; chip.classList.add('on');
+  }
+  $('plAttach').addEventListener('click', () => $('plFile').click());
+  $('plFile').addEventListener('change', e => setFile(e.target.files[0]));
+  $('plChipX').addEventListener('click', () => setFile(null));
+  $('plInput').addEventListener('paste', e => { const it = [...(e.clipboardData || {}).items || []].find(i => i.kind === 'file' && i.type.startsWith('image/')); if (it) { e.preventDefault(); setFile(it.getAsFile()); } });
+  const feedEl = $('plFeed');
+  ['dragenter', 'dragover'].forEach(n => feedEl.addEventListener(n, e => { if ([...(e.dataTransfer || {}).types || []].includes('Files')) { e.preventDefault(); feedEl.classList.add('drop'); } }));
+  ['dragleave', 'drop'].forEach(n => feedEl.addEventListener(n, e => { feedEl.classList.remove('drop'); }));
+  feedEl.addEventListener('drop', e => { const f = (e.dataTransfer.files || [])[0]; if (f) { e.preventDefault(); setFile(f); $('plInput').focus(); } });
   $('plBar').addEventListener('submit', async e => {
-    e.preventDefault(); const i = $('plInput'), text = i.value.trim(); if (!text) return; i.value = '';
-    const d = await api('post', { text }); if (d && d.status === 'success') { PL.state.floor.push(d.post); if (d.post.kind === 'link') PL.state.shared_links.push(d.post); renderFeed(); renderLeft(); } else i.value = text;
+    e.preventDefault(); const i = $('plInput'), text = i.value.trim(), file = PL.file; if (!text && !file) return;
+    i.value = ''; setFile(null); i.placeholder = 'Say something, share a link or drop a photo on the floor...';
+    let d = null;
+    if (file) {
+      const fd = new FormData(); fd.append('text', text); fd.append('image', file, file.name || 'photo');
+      try { d = await (await fetch(BASE + '/api/platform/post', { method: 'POST', headers: authHeaders(), body: fd, cache: 'no-store' })).json(); } catch (_) { d = null; }
+    } else d = await api('post', { text });
+    if (d && d.status === 'success') { if (!find(d.post.id)) applyEvent({ type: 'post', post: d.post }); }       // the live stream usually delivers it first; this keeps it correct without a stream
+    else { i.value = text; i.placeholder = (d && d.message) || 'Could not post. Is NEXXUS running?'; if (file) setFile(file); }
   });
   $('plTabs').addEventListener('click', e => { const b = e.target.closest('button[data-t]'); if (!b) return; $('plStage').dataset.tab = b.dataset.t; document.querySelectorAll('#plTabs button').forEach(x => x.classList.toggle('on', x === b)); });
   $('plExit').addEventListener('click', () => { setOperatingMode('conversation'); });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape' && PL.open && !gate.classList.contains('open')) { e.preventDefault(); setOperatingMode('conversation'); } });
+  document.addEventListener('keydown', e => { if (e.key !== 'Escape' || !PL.open || gate.classList.contains('open')) return; e.preventDefault(); const lb = $('plLightbox'); if (lb.classList.contains('open')) lb.classList.remove('open'); else setOperatingMode('conversation'); });
 
   // called by applyOperatingMode on every mode change: the layout exists only while the mode is Platform
   window.plSync = function (mode, changed) {
     const on = mode === 'platform';
     space.classList.toggle('open', on); PL.open = on; document.body.classList.toggle('pl-on', on); document.body.style.overflow = on ? 'hidden' : '';
-    if (on) { PL.editing = false; load(); setTimeout(() => $('plInput') && $('plInput').focus(), 50); }
+    if (on) { PL.editing = false; load().then(streamOpen); setTimeout(() => $('plInput') && $('plInput').focus(), 50); } else { streamClose(); setFile && setFile(null); }
     loadOffer();                                   // keeps the lock mark on the Modes menu honest (a monthly key can lapse)
   };
   loadOffer();

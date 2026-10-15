@@ -573,6 +573,21 @@ def _is_local():
         return False
     return True
 
+def _is_viewer():
+    """Who may use Platform: this machine's own dashboard page (see _is_local), or another device the dashboard's network rules already admit (Tailscale, or the LAN only if NEXXUS_ALLOW_LAN=1).
+    Another device must reach us by an IP address, not a hostname (stops DNS rebinding), and a browser Origin must be this server. Every CHANGE from another device still needs the admin token (_peer_guard)."""
+    if _is_local():
+        return True
+    if _net is None or _net.is_loopback(request.remote_addr) or not _net.peer_allowed(request.remote_addr):
+        return False
+    import ipaddress as _ipaddress
+    try:
+        _ipaddress.ip_address((request.host or "").rsplit(":", 1)[0].strip("[]"))
+    except ValueError:
+        return False
+    origin = request.headers.get("Origin")
+    return not origin or (urllib.parse.urlsplit(origin).netloc or "").lower() == (request.host or "").lower()
+
 def _capture_chat_reply(text):
     """Chat commands for screen and camera capture. Local machine only, and each kind must have been switched on first (see capture.py)."""
     t = (text or "").strip().lower().rstrip(".!?")
@@ -634,7 +649,7 @@ import platform_mode as _platform
 
 if _mode_state is not None:
     _platform.register_mode(_mode_state, _modes)          # adds the locked Platform mode (needs a valid license, see entitlements.py)
-_platform.register_routes(app, _is_local, lambda payload, status=200: _json_cors(payload, status))
+_platform.register_routes(app, _is_viewer, lambda payload, status=200: _json_cors(payload, status))
 
 import telemetry_hub as _tele
 

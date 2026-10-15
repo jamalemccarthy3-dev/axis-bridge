@@ -12,6 +12,16 @@ NEXXUS is a small project with a public beta community. These rules keep it a pl
 
 Reports of unacceptable behaviour go to the maintainer through the repository's private channels (see [SECURITY.md](SECURITY.md) for private reporting). They are read in confidence. Depending on severity the maintainer may warn, hide or delete content, or block an account from the repository.
 
+## Content standard: PG-13
+
+People may post photos and messages on Platform. Everything shared there is kept to a **PG-13** standard:
+
+* Fine: everyday language (including mild swearing), non-graphic conflict or danger, people in ordinary clothing, art, memes, product and workspace photos.
+* Not fine: explicit sexual content or nudity, graphic gore or violence, content that sexualises minors (this is reported and removed at once, no exceptions), hate speech, harassment, and anything illegal.
+* Photos of other people need their consent; do not post private information (addresses, IDs, passwords, keys) in a photo or a message.
+
+Today Platform is local to your own computer, so this is a standard you hold yourself to and a rule for any shared community space. Once people can see each other's posts, the project will add reporting and removal, and the maintainer may remove content or block accounts that break this standard. Automatic detection of explicit images is not built, so a rule you have agreed to, plus reports from people, is what enforces it.
+
 ## For the bots
 
 NEXXUS uses automated watchers (`watchers.py`) to notice signs of malicious intent, such as floods, schema probing or repeated refused requests. Their conduct is part of this code:
