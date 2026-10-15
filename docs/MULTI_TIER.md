@@ -39,4 +39,8 @@ Raw events are stored in `nexxus_data/telemetry/` (gitignored). The summary retu
 
 * It does not monitor the desktop app, only the public sandbox page.
 * It cannot identify anyone: the ID is random and local to one browser, and clearing site data or opting out resets it.
-* Relay rate limiting is not built in. Add a Cloudflare rate-limiting rule on `/e` if the relay is ever abused.
+* It is not a hard guarantee against abuse, only a brake: the relay limits each client to 20 requests a minute and the whole relay to 300 a minute (`PER_CLIENT_LIMITER` and `GLOBAL_LIMITER` in `relay/wrangler.toml`; Cloudflare holds the counters, we store nothing). Too many requests get a 429.
+
+## Taking a break
+
+Set `PAUSE = "1"` under `[vars]` in `relay/wrangler.toml` and run `npx wrangler deploy`. The relay answers 503 to sandbox pages (they ignore it and carry on working), while your desktop can still pull what is already queued. Remove the line and redeploy to resume.

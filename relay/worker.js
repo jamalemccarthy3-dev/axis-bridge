@@ -4,6 +4,8 @@
 //   POST /ack   private: the desktop confirms the keys it stored; they are deleted
 // It stores no IP address, no user agent and no free text. Bindings: KV namespace EVENTS_KV, secret PULL_KEY, variable ALLOWED_ORIGIN (your Pages origin, e.g. https://jamalemccarthy3-dev.github.io).
 // The schema must match telemetry_hub.py (test_telemetry_hub.py checks that they agree).
+// Rate limits (public POST /e only; Cloudflare keeps the counters, nothing is stored by us): PER_CLIENT_LIMITER caps one client, GLOBAL_LIMITER caps the whole relay so a flood cannot use up the free KV quota.
+// Set the variable PAUSE = "1" to stop accepting events (a break): /e answers 503, the desktop can still pull what is queued.
 
 const EVENTS = ["page_view", "install_clicked", "app_installed", "section_opened", "feedback_opened", "review_link_clicked", "error"];
 const FIELDS = ["e", "t", "v", "i", "s", "w", "x"];
@@ -39,6 +41,9 @@ export default {
 
     if (url.pathname === "/e" && req.method === "POST") {
       if (req.headers.get("Origin") !== env.ALLOWED_ORIGIN) return new Response("forbidden", { status: 403, headers: cors });
+      if (env.PAUSE === "1") return new Response("paused", { status: 503, headers: { ...cors, "Retry-After": "3600" } });
+      if (env.GLOBAL_LIMITER && !(await env.GLOBAL_LIMITER.limit({ key: "all" })).success) return new Response("busy", { status: 429, headers: { ...cors, "Retry-After": "60" } });
+      if (env.PER_CLIENT_LIMITER && !(await env.PER_CLIENT_LIMITER.limit({ key: req.headers.get("CF-Connecting-IP") || "unknown" })).success) return new Response("slow down", { status: 429, headers: { ...cors, "Retry-After": "60" } });
       const text = await req.text();
       if (text.length > MAX_BODY) return new Response("too large", { status: 413, headers: cors });
       let body;

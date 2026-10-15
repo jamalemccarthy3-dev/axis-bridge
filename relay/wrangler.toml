@@ -10,3 +10,18 @@ ALLOWED_ORIGIN = "https://jamalemccarthy3-dev.github.io"
 [[kv_namespaces]]
 binding = "EVENTS_KV"
 id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
+
+# Rate limits for the public POST /e (counters live in Cloudflare; period must be 10 or 60 seconds).
+[[unsafe.bindings]]
+name = "PER_CLIENT_LIMITER"
+type = "ratelimit"
+namespace_id = "1001"
+simple = { limit = 20, period = 60 }
+
+[[unsafe.bindings]]
+name = "GLOBAL_LIMITER"
+type = "ratelimit"
+namespace_id = "1002"
+simple = { limit = 300, period = 60 }
+
+# To take a break (stop accepting events), set PAUSE = "1" under [vars] and run: npx wrangler deploy
