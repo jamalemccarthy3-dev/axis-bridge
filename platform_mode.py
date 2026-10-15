@@ -28,6 +28,7 @@ DATA_DIR = os.path.join(HERE, "nexxus_data", "platform")
 PROFILE_PATH = os.path.join(DATA_DIR, "profile.json")
 POSTS_PATH = os.path.join(DATA_DIR, "posts.jsonl")
 MEDIA_DIR = os.path.join(DATA_DIR, "media")
+VAULT_PATH = os.path.join(DATA_DIR, "vault.json")
 MODE = "platform"
 MAX_POSTS = 500
 MAX_TEXT = 500
@@ -37,6 +38,7 @@ MAX_UPLOAD = 6 * 1024 * 1024
 MAX_SIDE = 1600
 MAX_PIXELS = 40_000_000
 MAX_STREAMS = 20
+MAX_VAULT = 300
 POSTS_PER_MINUTE = 30
 _LOCK = threading.RLock()
 _URL = re.compile(r"https?://[^\s<>\"']{1,300}", re.I)
@@ -126,18 +128,71 @@ def _safe_url(u):
     return u if re.match(r"^https?://[^\s<>\"']{1,300}$", u, re.I) else ""
 
 
+SECTIONS = ("about", "experience", "projects", "skills", "featured", "location", "links")
+DEFAULT_VISIBLE = {"about": True, "experience": True, "projects": True, "skills": True, "featured": True, "location": False, "links": False}     # privacy first: contact-like details start hidden
+MAX_FEATURED = 3
+
+
+def _list_of_dicts(items, fields, limit):
+    out = []
+    for it in (items or [])[:limit * 5]:                 # skip junk entries first, then cap the real ones
+        if len(out) >= limit:
+            break
+        if not isinstance(it, dict):
+            continue
+        row = {k: _clean(it.get(k), n) for k, n in fields.items() if k != "url"}
+        if "url" in fields:
+            row["url"] = _safe_url(it.get("url"))
+        if any(row.get(k) for k in fields):
+            out.append(row)
+    return out
+
+
+EXP_FIELDS = {"title": 80, "org": 80, "period": 40, "desc": 300}
+PROJ_FIELDS = {"name": 80, "url": 300, "desc": 300}
+
+
+def _profile_from(p):
+    p = p if isinstance(p, dict) else {}
+    vis = p.get("visible") if isinstance(p.get("visible"), dict) else {}
+    skills, seen = [], set()
+    for x in (p.get("skills") or [])[:40]:
+        x = _clean(x, 30)
+        if x and x.lower() not in seen:
+            seen.add(x.lower()); skills.append(x)
+    return {"name": _clean(p.get("name"), 60), "headline": _clean(p.get("headline"), 120), "location": _clean(p.get("location"), 60), "about": _clean(p.get("about"), 600),
+            "links": [u for u in (_safe_url(x) for x in (p.get("links") or [])[:5]) if u], "skills": skills[:20],
+            "experience": _list_of_dicts(p.get("experience"), EXP_FIELDS, 10), "projects": _list_of_dicts(p.get("projects"), PROJ_FIELDS, 10),
+            "featured": [str(x)[:12] for x in (p.get("featured") or [])[:MAX_FEATURED] if isinstance(x, str)],
+            "avatar": p.get("avatar") if _MEDIA_ID.match(str(p.get("avatar") or "")) else "",
+            "visible": {k: bool(vis.get(k, DEFAULT_VISIBLE[k])) for k in SECTIONS}}
+
+
 def get_profile():
     try:
         with open(PROFILE_PATH, encoding="utf-8") as f:
-            p = json.load(f)
+            raw = json.load(f)
     except (OSError, ValueError):
-        p = {}
-    return {"name": p.get("name", ""), "headline": p.get("headline", ""), "location": p.get("location", ""), "about": p.get("about", ""), "links": [u for u in p.get("links", []) if _safe_url(u)][:5]}
+        raw = {}
+    p = _profile_from(raw)
+    ids = {x.get("id") for x in _read_posts()}
+    p["featured"] = [x for x in p["featured"] if x in ids]                  # a deleted post leaves the featured shelf
+    if p["avatar"] and not media_path(p["avatar"]):
+        p["avatar"] = ""
+    return p
 
 
 def save_profile(d):
-    p = {"name": _clean(d.get("name"), 60), "headline": _clean(d.get("headline"), 120), "location": _clean(d.get("location"), 60), "about": _clean(d.get("about"), 600),
-         "links": [u for u in (_safe_url(x) for x in (d.get("links") or [])[:5]) if u]}
+    """Merge the given fields into the profile (fields that are not sent keep their value), then clean everything again."""
+    d = d if isinstance(d, dict) else {}
+    cur = get_profile()
+    merged = dict(cur, **{k: v for k, v in d.items() if k in cur and k != "visible"})
+    merged["visible"] = dict(cur["visible"], **(d.get("visible") if isinstance(d.get("visible"), dict) else {}))
+    p = _profile_from(merged)
+    ids = {x.get("id") for x in _read_posts()}
+    p["featured"] = [x for x in p["featured"] if x in ids]
+    if p["avatar"] and not media_path(p["avatar"]):
+        p["avatar"] = ""
     with _LOCK:
         os.makedirs(DATA_DIR, exist_ok=True)
         tmp = PROFILE_PATH + ".tmp"
@@ -146,6 +201,31 @@ def save_profile(d):
         os.replace(tmp, PROFILE_PATH)
     publish({"type": "profile", "profile": p})
     return p
+
+
+def visitor_view():
+    """What someone visiting this profile sees: name and headline always, then only the sections the owner marked visible. Featured posts show their text, link and photo only: never comments,
+    ratings, other posts, or anything private. This is the one place that decides, so a future network serves exactly this."""
+    p = get_profile()
+    v = p["visible"]
+    out = {"name": p["name"], "headline": p["headline"], "avatar": p["avatar"], "sections": []}
+    if v["location"] and p["location"]:
+        out["location"] = p["location"]
+    if v["about"] and p["about"]:
+        out["about"] = p["about"]
+    if v["experience"] and p["experience"]:
+        out["experience"] = p["experience"]
+    if v["projects"] and p["projects"]:
+        out["projects"] = p["projects"]
+    if v["skills"] and p["skills"]:
+        out["skills"] = p["skills"]
+    if v["links"] and p["links"]:
+        out["links"] = p["links"]
+    if v["featured"] and p["featured"]:
+        by_id = {x.get("id"): x for x in _read_posts()}
+        out["featured"] = [{"id": x, "text": by_id[x].get("text", ""), "url": by_id[x].get("url", ""), "media": by_id[x].get("media", ""), "t": by_id[x].get("t", 0)} for x in p["featured"] if x in by_id]
+    out["sections"] = [k for k in ("about", "experience", "projects", "skills", "featured", "links", "location") if k in out]
+    return out
 
 
 def _norm(p):
@@ -251,7 +331,7 @@ def sweep_media(min_age=0):
     except OSError:
         return 0
     with _LOCK:
-        used = {p.get("media") for p in _read_posts()}
+        used = {p.get("media") for p in _read_posts()} | {v.get("id") for v in _read_vault()} | {get_profile().get("avatar")}
         n = 0
         for name in names:
             mid, _, ext = name.partition(".")
@@ -263,6 +343,73 @@ def sweep_media(min_age=0):
             except OSError:
                 pass            # still in use: the next sweep gets it
     return n
+
+
+def _read_vault():
+    try:
+        with open(VAULT_PATH, encoding="utf-8") as f:
+            data = json.load(f)
+        return [v for v in data if isinstance(v, dict) and _MEDIA_ID.match(str(v.get("id", "")))] if isinstance(data, list) else []
+    except (OSError, ValueError):
+        return []
+
+
+def _write_vault(items):
+    os.makedirs(DATA_DIR, exist_ok=True)
+    tmp = VAULT_PATH + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(items[-MAX_VAULT:], f)
+    os.replace(tmp, VAULT_PATH)
+
+
+def vault_add(mid, name="", source="upload"):
+    """Record a stored photo in the image vault (once). -> the vault item, or None if the photo does not exist."""
+    found = media_path(mid)
+    if not found:
+        return None
+    with _LOCK:
+        items = _read_vault()
+        for v in items:
+            if v["id"] == mid:
+                return v
+        item = {"id": mid, "t": int(time.time()), "name": _clean(os.path.basename(str(name)), 60), "source": source if source in ("upload", "post") else "upload", "bytes": os.path.getsize(found[0])}
+        items.append(item)
+        dropped = items[:-MAX_VAULT] if len(items) > MAX_VAULT else []
+        _write_vault(items)
+    for old in dropped:
+        _drop_media_if_unused(old["id"])
+    publish({"type": "vault_added", "item": item})
+    return item
+
+
+def vault_list():
+    items = [v for v in _read_vault() if media_path(v["id"])]
+    used = {}
+    for p in _read_posts():
+        if p.get("media"):
+            used.setdefault(p["media"], []).append(p["id"])
+    avatar = get_profile().get("avatar")
+    return [dict(v, posts=used.get(v["id"], []), avatar=(v["id"] == avatar)) for v in items]
+
+
+def vault_delete(mid):
+    """Remove a photo from the vault. The file itself goes only if no post and no profile photo still use it."""
+    with _LOCK:
+        items = _read_vault()
+        kept = [v for v in items if v["id"] != str(mid)]
+        if len(kept) == len(items):
+            return False
+        _write_vault(kept)
+    _drop_media_if_unused(str(mid))
+    publish({"type": "vault_deleted", "id": str(mid)})
+    return True
+
+
+def _drop_media_if_unused(mid):
+    with _LOCK:
+        if any(p.get("media") == mid for p in _read_posts()) or mid == get_profile().get("avatar") or any(v["id"] == mid for v in _read_vault()):
+            return
+    _drop_media(mid)
 
 
 def add_post(text, media_id=""):
@@ -279,8 +426,10 @@ def add_post(text, media_id=""):
         posts.append(post)
         dropped = posts[:-MAX_POSTS] if len(posts) > MAX_POSTS else []
         _write_posts(posts)
+    if media_id:
+        vault_add(media_id, text[:60], "post")
     for old in dropped:
-        _drop_media(old.get("media"))
+        _drop_media_if_unused(old.get("media"))
     publish({"type": "post", "post": post})
     return post
 
@@ -292,7 +441,8 @@ def delete_post(pid):
         if not gone:
             return False
         _write_posts([p for p in posts if p.get("id") != str(pid)])
-    _drop_media(gone[0].get("media"))
+    if gone[0].get("media"):
+        _drop_media_if_unused(gone[0]["media"])        # a photo that is also in the vault stays there
     sweep_media(min_age=60)                    # also clears anything an in-flight download kept open earlier
     publish({"type": "post_deleted", "id": str(pid)})
     return True
@@ -354,7 +504,7 @@ def delete_comment(pid, cid):
 def state():
     posts = _read_posts()[-200:]
     return {"profile": get_profile(), "floor": posts, "shared_links": [p for p in posts if p.get("kind") == "link"][-20:],
-            "viewers": viewers(),
+            "viewers": viewers(), "vault_count": len(vault_list()),
             "network": {"connections": 0, "feed": [], "note": "No network yet: connections and posts from other people will appear here once networking exists. Nothing is invented."}}
 
 
@@ -400,6 +550,57 @@ def register_routes(app, is_viewer, respond):
         if request.method == "OPTIONS":
             return respond({})
         return guard() or respond({"status": "success", "profile": save_profile(request.get_json(silent=True) or {})})
+
+    @app.route("/api/platform/vault", methods=["GET", "POST", "OPTIONS"], endpoint="platform_vault")
+    def vault_route():
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        if request.method == "GET":
+            return respond({"status": "success", "items": vault_list()})
+        if not _rate_ok():
+            return respond({"status": "error", "message": "Slow down: too many uploads in a minute."}, 429)
+        if (request.content_length or 0) > MAX_UPLOAD + 100_000:
+            return respond({"status": "error", "message": "The photo is larger than 6 MB."}, 413)
+        f = request.files.get("image")
+        if not f:
+            return respond({"status": "error", "message": "Choose a photo to add."}, 400)
+        try:
+            item = vault_add(save_media(f.read(MAX_UPLOAD + 1)), f.filename or "", "upload")
+        except MediaError as e:
+            return respond({"status": "error", "message": str(e)}, 400)
+        return respond({"status": "success", "item": item})
+
+    @app.route("/api/platform/vault/<mid>", methods=["DELETE", "OPTIONS"], endpoint="platform_vault_delete")
+    def vault_delete_route(mid):
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        return respond({"status": "success"}) if vault_delete(mid) else respond({"status": "error", "message": "No such photo in the vault."}, 404)
+
+    @app.route("/api/platform/vault/<mid>/post", methods=["POST", "OPTIONS"], endpoint="platform_vault_post")
+    def vault_post_route(mid):
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        if not any(v["id"] == mid for v in _read_vault()):
+            return respond({"status": "error", "message": "No such photo in the vault."}, 404)
+        if not _rate_ok():
+            return respond({"status": "error", "message": "Slow down: too many posts in a minute."}, 429)
+        post = add_post((request.get_json(silent=True) or {}).get("text", ""), mid)
+        return respond({"status": "success", "post": post}) if post else respond({"status": "error", "message": "Could not post that photo."}, 400)
+
+    @app.route("/api/platform/profile/public", methods=["GET", "OPTIONS"], endpoint="platform_profile_public")
+    def profile_public_route():
+        if request.method == "OPTIONS":
+            return respond({})
+        return guard() or respond({"status": "success", "profile": visitor_view()})
 
     @app.route("/api/platform/post", methods=["POST", "OPTIONS"], endpoint="platform_post")
     def post_route():

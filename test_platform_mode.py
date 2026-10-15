@@ -55,7 +55,10 @@ class Base(unittest.TestCase):
         os.environ.pop("NEXXUS_PLATFORM_BETA", None)
         pm.DATA_DIR = os.path.join(d, "platform")
         pm.MEDIA_DIR = os.path.join(pm.DATA_DIR, "media")
+        pm.VAULT_PATH = os.path.join(pm.DATA_DIR, "vault.json")
         pm.PROFILE_PATH, pm.POSTS_PATH = os.path.join(pm.DATA_DIR, "p.json"), os.path.join(pm.DATA_DIR, "posts.jsonl")
+        for name in ("PROFILE_PATH", "POSTS_PATH", "MEDIA_DIR", "VAULT_PATH"):         # every store must live under the temp folder, never the real one
+            self.assertTrue(getattr(pm, name).startswith(pm.DATA_DIR), name + " is not redirected to the temp folder")
         FakeModes.MODES = {"conversation": {}}
 
 
@@ -274,7 +277,9 @@ class FloorTest(Base):
         self.assertEqual((s["rating"], len(s["comments"]), s["media"] == post["media"]), (4, 1, True))
         self.assertEqual(self.c.delete("/api/platform/post/%s/comment/%s" % (post["id"], c["id"])).status_code, 200)
         self.assertEqual(self.c.delete("/api/platform/post/" + post["id"]).status_code, 200)
-        self.assertEqual(self.c.get("/api/platform/media/" + post["media"]).status_code, 404, "the photo file goes with its post")
+        self.assertEqual(self.c.get("/api/platform/media/" + post["media"]).status_code, 200, "the photo stays in the image vault after its post is deleted")
+        self.assertEqual(self.c.delete("/api/platform/vault/" + post["media"]).status_code, 200)
+        self.assertEqual(self.c.get("/api/platform/media/" + post["media"]).status_code, 404, "deleted from the vault with no post using it: the file is gone")
 
     def test_sweep_removes_orphans_even_if_a_delete_could_not(self):
         keep = pm.add_post("kept", pm.save_media(image_bytes()))
@@ -300,6 +305,117 @@ class FloorTest(Base):
         self.c.delete("/api/platform/license")
         self.assertEqual(self.c.get("/api/platform/media/" + "0" * 16).status_code, 402)
         self.assertEqual(self.c.get("/api/platform/stream").status_code, 402)
+
+
+class ProfileWallTest(Base):
+    def test_sections_are_cleaned_capped_and_unsafe_links_dropped(self):
+        p = pm.save_profile({"name": "Ada", "headline": "Builder", "skills": ["Python", "python", " Flask ", "x" * 99] + ["s%d" % i for i in range(40)],
+                             "experience": [{"title": "Founder", "org": "Acme", "period": "2024-now", "desc": "d" * 900}, {"nonsense": 1}, "junk"] + [{"title": "t%d" % i} for i in range(20)],
+                             "projects": [{"name": "NEXXUS", "url": "https://example.com/x", "desc": "local-first"}, {"name": "bad", "url": "javascript:alert(1)"}],
+                             "links": ["https://a.example", "ftp://no", "javascript:x"], "visible": {"links": True, "bogus": True}})
+        self.assertEqual(p["skills"][:3], ["Python", "Flask", "x" * 30], "duplicates (any case) collapse and long skills are cut")
+        self.assertEqual(len(p["skills"]), 20)
+        self.assertEqual((len(p["experience"]), len(p["experience"][0]["desc"])), (10, 300))
+        self.assertEqual([x["url"] for x in p["projects"]], ["https://example.com/x", ""])
+        self.assertEqual(p["links"], ["https://a.example"])
+        self.assertNotIn("bogus", p["visible"])
+        self.assertTrue(p["visible"]["links"])
+
+    def test_visitor_view_shows_only_what_is_marked_visible(self):
+        post = pm.add_post("my launch day")
+        pm.add_post("a private note")
+        pm.add_comment(post["id"], "secret comment")
+        pm.set_rating(post["id"], 5)
+        pm.save_profile({"name": "Ada", "headline": "Builder", "location": "London", "about": "About me", "links": ["https://a.example"], "skills": ["Python"],
+                         "experience": [{"title": "Founder"}], "featured": [post["id"], "nonexistent"], "visible": {"experience": False}})
+        v = pm.visitor_view()
+        self.assertEqual((v["name"], v["headline"], v["about"], v["skills"]), ("Ada", "Builder", "About me", ["Python"]))
+        for hidden in ("location", "links", "experience"):
+            self.assertNotIn(hidden, v, hidden + " is private by default / by choice")
+        self.assertEqual([f["text"] for f in v["featured"]], ["my launch day"])
+        blob = json.dumps(v)
+        for secret in ("secret comment", "a private note", "rating", "comments"):
+            self.assertNotIn(secret, blob)
+
+    def test_featured_is_limited_and_follows_deletes(self):
+        ids = [pm.add_post("p%d" % i)["id"] for i in range(5)]
+        self.assertEqual(len(pm.save_profile({"featured": ids})["featured"]), pm.MAX_FEATURED)
+        pm.delete_post(ids[0])
+        self.assertNotIn(ids[0], pm.get_profile()["featured"])
+
+    def test_a_partial_save_keeps_everything_else(self):
+        pm.save_profile({"name": "Ada", "skills": ["Python"], "experience": [{"title": "Founder"}], "visible": {"links": True}})
+        p = pm.save_profile({"headline": "Builder"})                      # what the small edit form sends
+        self.assertEqual((p["name"], p["headline"], p["skills"], p["experience"][0]["title"]), ("Ada", "Builder", ["Python"], "Founder"))
+        self.assertTrue(p["visible"]["links"], "visibility choices survive a partial save too")
+        p = pm.save_profile({"skills": []})
+        self.assertEqual(p["skills"], [], "an explicit empty list does clear it")
+        self.assertEqual(pm.save_profile({"visible": {"about": False}})["visible"]["about"], False)
+        self.assertEqual(pm.save_profile({"unknown": 1, "visible": "nonsense"})["name"], "Ada")
+
+    def test_default_visibility_hides_contact_like_details(self):
+        v = pm.get_profile()["visible"]
+        self.assertFalse(v["links"] or v["location"])
+        self.assertTrue(v["about"] and v["experience"] and v["skills"])
+
+
+class VaultTest(Base):
+    def setUp(self):
+        super().setUp()
+        pm._recent_posts.clear()
+
+    def test_posted_photos_land_in_the_vault_and_survive_the_post(self):
+        mid = pm.save_media(image_bytes())
+        post = pm.add_post("pic", mid)
+        self.assertEqual([v["id"] for v in pm.vault_list()], [mid])
+        self.assertEqual(pm.vault_list()[0]["posts"], [post["id"]])
+        pm.delete_post(post["id"])
+        self.assertIsNotNone(pm.media_path(mid), "deleting the post keeps the photo in the vault")
+        self.assertEqual(pm.vault_list()[0]["posts"], [])
+
+    def test_direct_upload_post_from_vault_and_delete(self):
+        mid = pm.save_media(image_bytes())
+        self.assertEqual(pm.vault_add(mid, "C:\fake\path\holiday.jpg", "upload")["name"], "holiday.jpg", "only the file name is kept")
+        self.assertEqual(pm.sweep_media(), 0, "a vault photo is never swept")
+        post = pm.add_post("from the vault", mid)
+        self.assertEqual(len(pm.vault_list()), 1, "posting a vault photo does not duplicate it")
+        self.assertTrue(pm.vault_delete(mid))
+        self.assertIsNotNone(pm.media_path(mid), "a post still uses it, so the file stays")
+        pm.delete_post(post["id"])
+        self.assertEqual(pm.sweep_media(), 0)
+        self.assertIsNone(pm.media_path(mid), "no post, no vault entry, no profile photo: gone")
+
+    def test_profile_photo_protects_the_file_and_must_be_real(self):
+        mid = pm.save_media(image_bytes())
+        pm.vault_add(mid, "me.jpg")
+        self.assertEqual(pm.save_profile({"avatar": mid})["avatar"], mid)
+        pm.vault_delete(mid)
+        self.assertIsNotNone(pm.media_path(mid), "the profile photo keeps its file")
+        self.assertEqual(pm.save_profile({"avatar": "0123456789abcdef"})["avatar"], "", "an avatar that does not exist is dropped")
+        self.assertEqual(pm.save_profile({"avatar": "../../x"})["avatar"], "")
+
+    def test_vault_routes(self):
+        import io
+        app = Flask(__name__); pm.register_routes(app, lambda: True, lambda p, s=200: (jsonify(p), s)); c = app.test_client()
+        c.post("/api/platform/license", json={"token": token()})
+        up = c.post("/api/platform/vault", data={"image": (io.BytesIO(image_bytes(exif=True)), "me.jpg")}, content_type="multipart/form-data").get_json()["item"]
+        self.assertEqual(c.post("/api/platform/vault", data={"image": (io.BytesIO(b"<svg onload=1>"), "x.svg")}, content_type="multipart/form-data").status_code, 400)
+        self.assertEqual([i["id"] for i in c.get("/api/platform/vault").get_json()["items"]], [up["id"]])
+        p = c.post("/api/platform/vault/%s/post" % up["id"], json={"text": "from vault"}).get_json()["post"]
+        self.assertEqual(p["media"], up["id"])
+        self.assertEqual(c.post("/api/platform/vault/%s/post" % ("f" * 16), json={}).status_code, 404)
+        self.assertEqual(c.delete("/api/platform/vault/" + up["id"]).status_code, 200)
+        self.assertEqual(c.delete("/api/platform/vault/" + up["id"]).status_code, 404)
+        pub = c.get("/api/platform/profile/public").get_json()["profile"]
+        self.assertNotIn("vault", json.dumps(pub), "the vault is private: visitors never see it")
+
+    def test_vault_changes_reach_every_viewport(self):
+        del pm._subs[:]
+        q = pm.subscribe()
+        mid = pm.save_media(image_bytes())
+        pm.vault_add(mid, "a.jpg")
+        pm.vault_delete(mid)
+        self.assertEqual([e["type"] for e in [q.get_nowait() for _ in range(q.qsize())]], ["vault_added", "vault_deleted"])
 
 
 class LiveSyncTest(Base):

@@ -22,6 +22,18 @@ Platform is in **open Beta**: no purchase and no license key are needed, for any
 * **Live sync:** every change (posts, photos, comments, ratings, deletes, profile edits) is pushed at once to every open viewport over a Server-Sent Events stream, with no refresh. The header shows `Live - N viewports`. A viewport that drops reconnects on its own and reloads so nothing missed is lost. "Viewport" means any place that opens this same NEXXUS: another tab or window, or your phone through the dashboard's Tailscale access (changes from another device need the admin token, as everywhere else in the dashboard).
 * Limits: 30 posts a minute, 500 posts kept, 20 viewports at once.
 
+## The profile wall (what visitors see)
+
+The centre column has three views: **Floor**, **Profile wall** and **Image vault**. The profile wall is a LinkedIn-style page for visitors: a banner and your profile photo, name, headline and location, then **About**, **Experience** (a timeline of roles), **Projects** (cards with links), **Skills** (chips), **Featured** (up to 3 of your floor posts or photos) and **Links**. Each section has its own *Visible to visitors* switch and its own editor, and your profile photo is chosen from your image vault.
+
+* **Privacy first:** location and links start **hidden**; the other sections start visible. Visitors always see name and headline, and nothing else unless you leave it on.
+* **View as visitor:** shows the page exactly as a visitor sees it, built by the same server code (`GET /api/platform/profile/public`) that a future network will use to serve real visitors. Hidden sections do not appear at all. Featured posts show only their text, link and photo, never comments, ratings or your other posts.
+* There are **no visitors yet**, because there is no network. The wall is complete and ready; it is the preview you can check today.
+
+## The image vault
+
+Every photo you add or post is kept in your **image vault**, private to you: a grid you can open full size, add to (button or drag-and-drop), post from, use as your profile photo, or delete (click twice). Deleting a post leaves its photo in the vault; deleting from the vault removes the file once no post and no profile photo use it. Up to 300 photos; all are cleaned of location and camera data when stored.
+
 ## Content standard: PG-13
 
 Photos and messages are welcome and are held to a **PG-13** standard (details in [CODE_OF_CONDUCT.md](../CODE_OF_CONDUCT.md)). The command bar carries a short reminder. **Nothing detects explicit images automatically in this build**; photos are validated and stripped of metadata, not judged. While Platform is local to your computer that is yours to keep; before other people can see each other's posts, add reporting, removal and (ideally) automated screening.
@@ -62,4 +74,4 @@ The private key never leaves your machine and is gitignored. If it is lost, no n
 
 ## Routes (local machine only)
 
-`GET /api/platform/entitlement`, `POST|DELETE /api/platform/license`, `GET /api/platform/state`, `GET /api/platform/stream` (live events), `POST /api/platform/profile`, `POST /api/platform/post` (JSON, or multipart with an `image`), `DELETE /api/platform/post/<id>`, `POST /api/platform/post/<id>/rating`, `POST /api/platform/post/<id>/comment`, `DELETE /api/platform/post/<id>/comment/<cid>`, `GET /api/platform/media/<id>`. Outside Beta, everything except the entitlement and license routes returns 402 with the plans until a valid key is present. All of them refuse requests from another web page and another hostname (DNS rebinding); other devices are served only if the dashboard's own network rules admit them, and their changes need the admin token.
+`GET /api/platform/entitlement`, `POST|DELETE /api/platform/license`, `GET /api/platform/state`, `GET /api/platform/stream` (live events), `POST /api/platform/profile` (merges the fields sent), `GET /api/platform/profile/public`, `GET|POST /api/platform/vault`, `DELETE /api/platform/vault/<id>`, `POST /api/platform/vault/<id>/post`, `POST /api/platform/post` (JSON, or multipart with an `image`), `DELETE /api/platform/post/<id>`, `POST /api/platform/post/<id>/rating`, `POST /api/platform/post/<id>/comment`, `DELETE /api/platform/post/<id>/comment/<cid>`, `GET /api/platform/media/<id>`. Outside Beta, everything except the entitlement and license routes returns 402 with the plans until a valid key is present. All of them refuse requests from another web page and another hostname (DNS rebinding); other devices are served only if the dashboard's own network rules admit them, and their changes need the admin token.

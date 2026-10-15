@@ -1280,6 +1280,31 @@ body.pl-on #axisDock { display:none !important; }          /* the desktop contro
 .pl-cin { width:100%; background:#05080f; color:#e2e8f0; border:1px solid rgba(148,163,184,0.4); border-radius:999px; padding:5px 12px; font:inherit; font-size:.85rem; }
 .pl-bar .pl-attach { background:transparent; border:1px solid rgba(125,211,252,0.6); color:#bae6fd; border-radius:999px; width:42px; font-size:1.1rem; cursor:pointer; } .pl-bar .pl-attach:hover { background:rgba(56,189,248,0.2); }
 .pl-rule { padding:4px 14px 8px; font-size:.7rem; color:#94a3b8; background:rgba(2,6,14,0.7); } .pl-rule a { color:#7dd3fc; }
+.pl-feed[hidden], .pl-view[hidden] { display:none !important; }
+.pl-feed, .pl-view, .pl-wall { scrollbar-width:thin; scrollbar-color:#334155 transparent; }
+.pl-views { display:flex; gap:6px; padding:8px 12px 0; } .pl-views button { background:none; border:1px solid rgba(148,163,184,0.35); color:#94a3b8; border-radius:999px; padding:4px 14px; font:inherit; font-size:.8rem; cursor:pointer; } .pl-views button.on { background:rgba(56,189,248,0.2); border-color:#38bdf8; color:#fff; } .pl-views button:hover { color:#fff; }
+.pl-view { flex:1; min-height:0; overflow-y:auto; padding:10px 14px 14px; }
+.pl-avatar { overflow:hidden; flex:0 0 auto; } .pl-avatar img { width:100%; height:100%; object-fit:cover; display:block; } .pl-avatar.big { width:96px; height:96px; font-size:2.2rem; border:4px solid #0b1220; margin-top:-48px; }
+.pw-visitor { display:flex; gap:10px; align-items:center; justify-content:space-between; flex-wrap:wrap; background:rgba(251,191,36,0.1); border:1px solid rgba(251,191,36,0.5); color:#fde68a; border-radius:10px; padding:8px 12px; margin-bottom:10px; font-size:.85rem; }
+.pw-tools { display:flex; justify-content:flex-end; gap:8px; margin-bottom:8px; }
+.pw-banner { height:96px; border-radius:12px 12px 0 0; background:linear-gradient(120deg,#0ea5e9 0%,#7c3aed 55%,#f97316 120%); }
+.pw-head { background:rgba(15,23,42,0.85); border:1px solid rgba(56,189,248,0.25); border-top:0; border-radius:0 0 12px 12px; padding:0 16px 14px; margin-bottom:12px; }
+.pw-head .pl-name { font-size:1.35rem; margin-top:6px; } .pw-sec { background:rgba(15,23,42,0.7); border:1px solid rgba(148,163,184,0.25); border-radius:12px; padding:12px 14px; margin-bottom:10px; }
+.pw-sec h4 { margin:0; font-size:.95rem; color:#e0f2fe; } .pw-sh { display:flex; align-items:center; gap:10px; margin-bottom:8px; } .pw-sh h4 { flex:1; }
+.pw-vis { font-size:.72rem; color:#94a3b8; display:flex; align-items:center; gap:4px; cursor:pointer; } .pw-edit { background:none; border:0; color:#7dd3fc; cursor:pointer; font:inherit; font-size:.8rem; padding:0; }
+.pw-job { padding:8px 0 8px 14px; border-left:2px solid rgba(56,189,248,0.5); margin-left:4px; position:relative; } .pw-job::before { content:""; position:absolute; left:-6px; top:13px; width:10px; height:10px; border-radius:50%; background:#38bdf8; }
+.pw-job b { color:#f1f5f9; } .pw-sub { color:#94a3b8; font-size:.82rem; }
+.pw-chips { display:flex; flex-wrap:wrap; gap:6px; } .pw-chip { background:rgba(56,189,248,0.14); border:1px solid rgba(56,189,248,0.4); border-radius:999px; padding:2px 11px; font-size:.82rem; }
+.pw-cards { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:10px; } .pw-card { border:1px solid rgba(148,163,184,0.3); border-radius:10px; padding:10px; background:rgba(2,6,14,0.5); overflow-wrap:anywhere; } .pw-card a { color:#7dd3fc; }
+.pw-feat { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px; } .pw-feat .pl-msg { max-width:none; align-self:auto; margin:0; } .pw-feat img { width:100%; max-height:150px; object-fit:cover; border-radius:8px; cursor:zoom-in; }
+.pw-hint { color:#94a3b8; font-size:.85rem; } .pw-form { display:grid; gap:8px; } .pw-form input, .pw-form textarea { width:100%; background:#05080f; color:#e2e8f0; border:1px solid rgba(148,163,184,0.45); border-radius:8px; padding:7px 10px; font:inherit; }
+.pw-row { display:grid; grid-template-columns:1fr 1fr; gap:6px; padding:8px; border:1px dashed rgba(148,163,184,0.35); border-radius:8px; } .pw-row textarea { grid-column:1 / -1; } .pw-row .pw-x { grid-column:1 / -1; justify-self:end; background:none; border:0; color:#fda4af; cursor:pointer; font:inherit; font-size:.78rem; }
+.pw-pick { display:grid; grid-template-columns:repeat(auto-fill,minmax(84px,1fr)); gap:8px; } .pw-pick label { position:relative; cursor:pointer; display:block; } .pw-pick img { width:100%; height:84px; object-fit:cover; border-radius:8px; border:2px solid transparent; } .pw-pick input { position:absolute; top:6px; left:6px; } .pw-pick input:checked + img { border-color:#38bdf8; }
+.pv-top { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:10px; } .pv-top h3 { margin:0; flex:1; font-size:1rem; color:#e0f2fe; text-transform:none; letter-spacing:0; }
+.pv-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:10px; } .pv-item { border:1px solid rgba(148,163,184,0.3); border-radius:10px; overflow:hidden; background:rgba(2,6,14,0.6); display:flex; flex-direction:column; } .pv-item img { width:100%; height:130px; object-fit:cover; cursor:zoom-in; display:block; background:#0b1220; }
+.pv-meta { padding:6px 8px; font-size:.72rem; color:#94a3b8; display:grid; gap:4px; } .pv-meta .pv-name { color:#e2e8f0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; } .pv-tag { color:#86efac; }
+.pv-act { display:flex; gap:4px; flex-wrap:wrap; } .pv-act button { background:rgba(56,189,248,0.12); border:1px solid rgba(56,189,248,0.4); color:#bae6fd; border-radius:6px; padding:2px 7px; font:inherit; font-size:.7rem; cursor:pointer; } .pv-act button.danger { border-color:rgba(251,113,133,0.6); color:#fda4af; background:rgba(244,63,94,0.1); } .pv-act button:hover { background:rgba(56,189,248,0.3); }
+.pl-view.drop { outline:2px dashed #38bdf8; outline-offset:-6px; }
 .pl-chip { display:none; align-items:center; gap:8px; padding:6px 12px; border-top:1px solid rgba(56,189,248,0.25); background:rgba(2,6,14,0.7); font-size:.8rem; color:#bae6fd; } .pl-chip.on { display:flex; } .pl-chip img { height:44px; width:44px; object-fit:cover; border-radius:8px; } .pl-chip button { margin-left:auto; background:none; border:0; color:#fda4af; cursor:pointer; font:inherit; }
 .pl-feed.drop { outline:2px dashed #38bdf8; outline-offset:-6px; }
 #plLightbox { position:absolute; inset:0; z-index:5; display:none; align-items:center; justify-content:center; background:rgba(2,6,14,0.92); cursor:zoom-out; padding:20px; } #plLightbox.open { display:flex; } #plLightbox img { max-width:100%; max-height:100%; border-radius:10px; }
@@ -11278,7 +11303,10 @@ async function skBuild() {
 <div class="pl-stage" id="plStage" data-tab="floor">
 <aside class="pl-wall left" id="plLeft" aria-label="Your profile"></aside>
 <main class="pl-floor" aria-label="The floor">
+<div class="pl-views" id="plViews" role="tablist" aria-label="Floor views"><button type="button" role="tab" data-v="floor" class="on">Floor</button><button type="button" role="tab" data-v="wall">Profile wall</button><button type="button" role="tab" data-v="vault">Image vault</button></div>
 <div class="pl-feed" id="plFeed" aria-live="polite"></div>
+<div class="pl-view" id="plWallView" hidden aria-label="Your profile wall"></div>
+<div class="pl-view" id="plVaultView" hidden aria-label="Your image vault"></div>
 <div class="pl-chip" id="plChip"><img id="plChipImg" alt="Photo to post"><span id="plChipName"></span><button type="button" id="plChipX" aria-label="Remove the photo">remove</button></div>
 <form class="pl-bar" id="plBar" autocomplete="off"><button class="pl-attach" type="button" id="plAttach" aria-label="Attach a photo" title="Attach a photo (or paste or drop one)">&#128247;</button><input type="file" id="plFile" accept="image/jpeg,image/png,image/gif,image/webp" hidden><input id="plInput" maxlength="500" placeholder="Say something, share a link or drop a photo on the floor..." aria-label="Command bar: post or chat on the floor"><button class="pl-btn" type="submit">Send</button></form>
 <div class="pl-rule">Photos and messages: keep it PG-13 (no explicit, graphic or hateful content, and no private info). <a href="https://github.com/jamalemccarthy3-dev/axis-bridge/blob/main/CODE_OF_CONDUCT.md" target="_blank" rel="noopener noreferrer">Code of Conduct</a></div>
@@ -11346,7 +11374,7 @@ async function skBuild() {
     host.append(el('h3', '', 'Profile hub'));
     if (PL.ent && PL.ent.beta) host.append(el('div', 'pl-beta-note', 'BETA ' + String.fromCharCode(183) + ' open to everyone while Platform is built out. Some parts are still coming.'));
     if (PL.editing) { renderEdit(host, p); return; }
-    host.append(el('div', 'pl-avatar', (p.name || 'You').trim().charAt(0).toUpperCase() || 'Y'), el('div', 'pl-name', p.name || 'Add your name'), el('div', 'pl-head', p.headline || 'Add a headline'));
+    host.append(avatarNode(p), el('div', 'pl-name', p.name || 'Add your name'), el('div', 'pl-head', p.headline || 'Add a headline'));
     if (p.location) host.append(el('div', 'pl-loc', p.location));
     const ab = el('div', 'pl-sec'); ab.append(el('h3', '', 'About'), el('p', '', p.about || 'Tell people who you are and what you build.')); host.append(ab);
     const ln = el('div', 'pl-sec'); ln.append(el('h3', '', 'Links')); (p.links || []).forEach(u => { const q = el('p'); q.append(link(u)); ln.append(q); }); if (!(p.links || []).length) ln.append(el('p', 'pl-note', 'No links yet.')); host.append(ln);
@@ -11423,7 +11451,8 @@ async function skBuild() {
     else if (ev.type === 'comment') { const p = find(ev.post_id); if (p && !p.comments.some(c => c.id === ev.comment.id)) { p.comments.push(ev.comment); upsertPost(p); } }
     else if (ev.type === 'comment_deleted') { const p = find(ev.post_id); if (p) { p.comments = p.comments.filter(c => c.id !== ev.id); upsertPost(p); } }
     else if (ev.type === 'rating') { const p = find(ev.post_id); if (p) { p.rating = ev.rating; upsertPost(p); } }
-    else if (ev.type === 'profile') { PL.state.profile = ev.profile; if (!PL.editing) renderLeft(); }
+    else if (ev.type === 'profile') { PL.state.profile = ev.profile; if (!PL.editing) renderLeft(); if (PL.view === 'wall' && !PL.wallEdit) renderWall(); }
+    else if (ev.type === 'vault_added' || ev.type === 'vault_deleted') { if (PL.view === 'vault') loadVault(); else PL.vault = []; }
     else if (ev.type === 'viewers') { PL.viewers = ev.viewers; liveLabel(true); }
   }
   function liveLabel(on) { const l = $('plLive'); if (!l) return; l.classList.toggle('on', !!on); l.textContent = on ? 'Live · ' + (PL.viewers || 1) + (PL.viewers === 1 ? ' viewport' : ' viewports') : 'reconnecting'; }
@@ -11435,6 +11464,152 @@ async function skBuild() {
     es.onerror = () => liveLabel(false);
   }
   function streamClose() { if (PL.es) { PL.es.close(); PL.es = null; } PL.wasLive = false; }
+
+  // ---------- profile photo (used by the left wall and the profile wall) ----------
+  function avatarNode(p, big) {
+    const a = el('div', 'pl-avatar' + (big ? ' big' : ''));
+    if (p && p.avatar) { const i = el('img'); i.src = BASE + '/api/platform/media/' + p.avatar; i.alt = ''; a.append(i); } else a.textContent = ((p && p.name) || 'You').trim().charAt(0).toUpperCase() || 'Y';
+    return a;
+  }
+
+  // ---------- views: Floor | Profile wall | Image vault ----------
+  PL.view = 'floor'; PL.wallEdit = null; PL.asVisitor = false; PL.vault = [];
+  function setView(v) {
+    PL.view = v; if (v !== 'wall') { PL.wallEdit = null; PL.asVisitor = false; }
+    $('plFeed').hidden = v !== 'floor'; $('plWallView').hidden = v !== 'wall'; $('plVaultView').hidden = v !== 'vault';
+    document.querySelectorAll('#plViews button').forEach(b => { const on = b.dataset.v === v; b.classList.toggle('on', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); });
+    if (v === 'wall') renderWall(); else if (v === 'vault') loadVault(); else { const f = $('plFeed'); f.scrollTop = f.scrollHeight; }
+  }
+  $('plViews').addEventListener('click', e => { const b = e.target.closest('button[data-v]'); if (b) setView(b.dataset.v); });
+
+  // ---------- the profile wall ----------
+  const SEC_TITLE = { about: 'About', experience: 'Experience', projects: 'Projects', skills: 'Skills', featured: 'Featured', links: 'Links' };
+  function saveProfile(patch) {
+    return api('profile', patch).then(d => { if (d && d.status === 'success') { PL.state.profile = d.profile; PL.wallEdit = null; renderLeft(); if (PL.view === 'wall') renderWall(); } return d; });
+  }
+  function inp(name, ph, val, max) { const i = el('input'); i.name = name; i.placeholder = ph; i.value = val || ''; i.maxLength = max; i.setAttribute('aria-label', ph); return i; }
+  function postById(id) { return find(id); }
+  function featuredItems(prof) { return (prof.featured || []).map(x => typeof x === 'string' ? postById(x) : x).filter(Boolean); }
+
+  function sectionBody(key, prof) {
+    const b = el('div');
+    if (key === 'about') b.append(el('p', '', prof.about));
+    else if (key === 'skills') { const c = el('div', 'pw-chips'); (prof.skills || []).forEach(s => c.append(el('span', 'pw-chip', s))); b.append(c); }
+    else if (key === 'experience') (prof.experience || []).forEach(x => { const j = el('div', 'pw-job'); j.append(el('b', '', x.title || ''), el('div', 'pw-sub', [x.org, x.period].filter(Boolean).join('  ·  '))); if (x.desc) j.append(el('p', '', x.desc)); b.append(j); });
+    else if (key === 'projects') { const g = el('div', 'pw-cards'); (prof.projects || []).forEach(x => { const c = el('div', 'pw-card'); c.append(el('b', '', x.name || '')); if (x.desc) c.append(el('p', 'pw-sub', x.desc)); if (x.url) { const q = el('p'); q.append(link(x.url)); c.append(q); } g.append(c); }); b.append(g); }
+    else if (key === 'links') (prof.links || []).forEach(u => { const q = el('p'); q.append(link(u)); b.append(q); });
+    else if (key === 'featured') { const g = el('div', 'pw-feat'); featuredItems(prof).forEach(x => { const m = el('div', 'pl-msg'); if (x.media) { const i = el('img'); i.src = BASE + '/api/platform/media/' + x.media; i.alt = x.text || 'Featured photo'; i.addEventListener('click', () => lightbox(i.src, i.alt)); m.append(i); } if (x.text) m.append(el('div', '', x.text)); g.append(m); }); b.append(g); }
+    return b;
+  }
+  const hasContent = (key, prof) => Array.isArray(prof[key]) ? (key === 'featured' ? featuredItems(prof).length > 0 : prof[key].length > 0) : !!prof[key];
+
+  function sectionEditor(key, prof) {
+    const f = el('form', 'pw-form'), actions = el('div'); const save = el('button', 'pl-btn', 'Save'); save.type = 'submit'; const cancel = el('button', 'pl-btn ghost', 'Cancel'); cancel.type = 'button'; cancel.style.marginLeft = '8px'; actions.append(save, cancel);
+    cancel.addEventListener('click', () => { PL.wallEdit = null; renderWall(); });
+    let collect;
+    if (key === 'about') { const t = el('textarea'); t.rows = 5; t.maxLength = 600; t.value = prof.about || ''; t.setAttribute('aria-label', 'About'); f.append(t); collect = () => ({ about: t.value }); }
+    else if (key === 'skills') { const i = inp('skills', 'Comma-separated, e.g. Python, video editing, sales', (prof.skills || []).join(', '), 800); f.append(i); collect = () => ({ skills: i.value.split(',').map(s => s.trim()).filter(Boolean) }); }
+    else if (key === 'links') { const t = el('textarea'); t.rows = 4; t.placeholder = 'One link per line (https://...)'; t.value = (prof.links || []).join('\n'); t.setAttribute('aria-label', 'Links, one per line'); f.append(t); collect = () => ({ links: t.value.split('\n').map(s => s.trim()).filter(Boolean) }); }
+    else if (key === 'experience' || key === 'projects') {
+      const exp = key === 'experience', rows = el('div', 'pw-form'), max = 10; const rowEls = [];
+      const add = (v) => { const r = el('div', 'pw-row'); const a = inp('a', exp ? 'Role' : 'Project name', exp ? v.title : v.name, exp ? 80 : 80), b2 = inp('b', exp ? 'Organisation' : 'Link (https://...)', exp ? v.org : v.url, exp ? 80 : 300);
+        const c = exp ? inp('c', 'Period, e.g. 2024 - now', v.period, 40) : null; const d = el('textarea'); d.rows = 2; d.maxLength = 300; d.placeholder = 'What you did'; d.value = v.desc || ''; d.setAttribute('aria-label', 'Description');
+        const x = el('button', 'pw-x', 'remove'); x.type = 'button'; x.addEventListener('click', () => { r.remove(); rowEls.splice(rowEls.indexOf(r), 1); }); r.append(a, b2); if (c) r.append(c); r.append(d, x); r._get = () => exp ? { title: a.value, org: b2.value, period: c.value, desc: d.value } : { name: a.value, url: b2.value, desc: d.value }; rowEls.push(r); rows.append(r); };
+      (prof[key] || []).forEach(add); const more = el('button', 'pl-btn ghost', '+ Add ' + (exp ? 'a role' : 'a project')); more.type = 'button'; more.addEventListener('click', () => { if (rowEls.length < max) add({}); }); f.append(rows, more);
+      collect = () => ({ [key]: rowEls.map(r => r._get()) });
+    }
+    else if (key === 'featured') {
+      const posts = ((PL.state && PL.state.floor) || []).slice().reverse(), chosen = new Set(prof.featured || []), box = el('div', 'pw-form');
+      if (!posts.length) box.append(el('div', 'pw-hint', 'Post something on the floor first, then pick up to 3 posts to feature here.'));
+      posts.forEach(x => { const l = el('label', 'pw-hint'); const c = el('input'); c.type = 'checkbox'; c.value = x.id; c.checked = chosen.has(x.id); c.style.width = 'auto'; c.style.marginRight = '8px'; c.addEventListener('change', () => { const n = box.querySelectorAll('input:checked').length; if (n > 3) c.checked = false; }); l.append(c, document.createTextNode((x.media ? '[photo] ' : '') + (x.text || '(photo)').slice(0, 70))); box.append(l); });
+      f.append(el('div', 'pw-hint', 'Pick up to 3.'), box); collect = () => ({ featured: [...box.querySelectorAll('input:checked')].map(c => c.value) });
+    }
+    f.append(actions);
+    f.addEventListener('submit', async e => { e.preventDefault(); await saveProfile(collect()); });
+    return f;
+  }
+  function basicsEditor(prof) {
+    const f = el('form', 'pw-form'), name = inp('name', 'Name', prof.name, 60), head = inp('headline', 'Headline, e.g. Builder of local-first tools', prof.headline, 120), loc = inp('location', 'Location', prof.location, 60);
+    const pick = el('div', 'pw-pick'); let chosen = prof.avatar || '';
+    (PL.vault || []).forEach(v => { const l = el('label'); const r = el('input'); r.type = 'radio'; r.name = 'avatar'; r.value = v.id; r.checked = v.id === chosen; r.addEventListener('change', () => { chosen = v.id; }); const i = el('img'); i.src = BASE + '/api/platform/media/' + v.id; i.alt = v.name || 'Photo'; l.append(r, i); pick.append(l); });
+    const none = el('label', 'pw-hint'); const nr = el('input'); nr.type = 'radio'; nr.name = 'avatar'; nr.value = ''; nr.checked = !chosen; nr.style.width = 'auto'; nr.addEventListener('change', () => { chosen = ''; }); none.append(nr, document.createTextNode(' No profile photo'));
+    const actions = el('div'), save = el('button', 'pl-btn', 'Save'), cancel = el('button', 'pl-btn ghost', 'Cancel'); save.type = 'submit'; cancel.type = 'button'; cancel.style.marginLeft = '8px'; actions.append(save, cancel);
+    cancel.addEventListener('click', () => { PL.wallEdit = null; renderWall(); });
+    f.append(name, head, loc, el('div', 'pw-hint', 'Profile photo (choose from your image vault):'), (PL.vault || []).length ? pick : el('div', 'pw-hint', 'Your vault is empty. Add photos in the Image vault tab first.'), none, actions);
+    f.addEventListener('submit', async e => { e.preventDefault(); await saveProfile({ name: name.value, headline: head.value, location: loc.value, avatar: chosen }); });
+    return f;
+  }
+  function visToggle(key, prof) {
+    const l = el('label', 'pw-vis'); const c = el('input'); c.type = 'checkbox'; c.checked = !!(prof.visible || {})[key]; c.style.width = 'auto'; c.addEventListener('change', () => saveProfile({ visible: { [key]: c.checked } }));
+    l.append(c, document.createTextNode(' Visible to visitors')); return l;
+  }
+  function renderVisitor(host, prof) {
+    const bar = el('div', 'pw-visitor'); bar.append(el('span', '', 'Visitor preview: this is exactly what people who visit your profile see. Hidden sections do not appear at all.'));
+    const back = el('button', 'pl-btn ghost', 'Back to editing'); back.type = 'button'; back.addEventListener('click', () => { PL.asVisitor = false; renderWall(); }); bar.append(back); host.append(bar);
+    host.append(el('div', 'pw-banner'));
+    const head = el('div', 'pw-head'); head.append(avatarNode(prof, true), el('div', 'pl-name', prof.name || 'Unnamed builder'), el('div', 'pl-head', prof.headline || ''));
+    if (prof.location) head.append(el('div', 'pl-loc', prof.location)); host.append(head);
+    ['about', 'experience', 'projects', 'skills', 'featured', 'links'].forEach(k => { if (!hasContent(k, prof)) return; const s = el('section', 'pw-sec'); const h = el('div', 'pw-sh'); h.append(el('h4', '', SEC_TITLE[k])); s.append(h, sectionBody(k, prof)); host.append(s); });
+    if (!prof.sections || !prof.sections.length) host.append(el('div', 'pl-empty', 'Visitors would see only your name and headline. Fill in sections and keep them visible to show more.'));
+  }
+  async function renderWall() {
+    const host = $('plWallView'); host.replaceChildren();
+    if (!PL.state) return;
+    if (PL.asVisitor) { const d = await api('profile/public', null, 'GET'); if (d && d.status === 'success') renderVisitor(host, d.profile); else host.append(el('div', 'pl-empty', 'Could not load the visitor view.')); return; }
+    if (!PL.vault.length) { const d = await api('vault', null, 'GET'); if (d && d.status === 'success') PL.vault = d.items; }
+    const prof = PL.state.profile, tools = el('div', 'pw-tools'); const vb = el('button', 'pl-btn ghost', 'View as visitor'); vb.type = 'button'; vb.addEventListener('click', () => { PL.asVisitor = true; PL.wallEdit = null; renderWall(); }); tools.append(vb); host.append(tools);
+    host.append(el('div', 'pw-banner'));
+    const head = el('div', 'pw-head');
+    if (PL.wallEdit === 'basics') head.append(avatarNode(prof, true), basicsEditor(prof));
+    else {
+      head.append(avatarNode(prof, true), el('div', 'pl-name', prof.name || 'Add your name'), el('div', 'pl-head', prof.headline || 'Add a headline'));
+      if (prof.location) { const l = el('div', 'pl-loc', prof.location + (prof.visible.location ? '' : '  (hidden from visitors)')); head.append(l); }
+      const row = el('div'); row.style.cssText = 'display:flex;gap:12px;align-items:center;margin-top:8px'; const eb = el('button', 'pw-edit', 'Edit name, headline, photo'); eb.type = 'button'; eb.addEventListener('click', () => { PL.wallEdit = 'basics'; renderWall(); }); row.append(eb, visToggleLoc(prof)); head.append(row);
+    }
+    host.append(head);
+    ['about', 'experience', 'projects', 'skills', 'featured', 'links'].forEach(k => {
+      const s = el('section', 'pw-sec'), h = el('div', 'pw-sh'); h.append(el('h4', '', SEC_TITLE[k]));
+      if (PL.wallEdit !== k) { h.append(visToggle(k, prof)); const eb = el('button', 'pw-edit', hasContent(k, prof) ? 'Edit' : 'Add'); eb.type = 'button'; eb.addEventListener('click', () => { PL.wallEdit = k; renderWall(); }); h.append(eb); }
+      s.append(h);
+      if (PL.wallEdit === k) s.append(sectionEditor(k, prof)); else if (hasContent(k, prof)) s.append(sectionBody(k, prof)); else s.append(el('div', 'pw-hint', ({ about: 'Tell visitors who you are and what you build.', experience: 'Add roles, ventures or things you have built.', projects: 'Show what you are working on, with a link.', skills: 'List what you are good at.', featured: 'Pin up to 3 of your floor posts or photos.', links: 'Your site, channel or store. Links start hidden from visitors until you switch them on.' })[k]));
+      host.append(s);
+    });
+  }
+  function visToggleLoc(prof) { const l = visToggle('location', prof); l.lastChild.textContent = ' Show location to visitors'; return l; }
+
+  // ---------- the image vault ----------
+  async function loadVault() { const d = await api('vault', null, 'GET'); PL.vault = d && d.status === 'success' ? d.items : []; if (PL.view === 'vault') renderVault(); }
+  async function uploadToVault(files) {
+    for (const f of [...files]) {
+      if (!/^image\/(jpeg|png|gif|webp)$/.test(f.type) || f.size > 6 * 1024 * 1024) { PL.vaultMsg = f.name + ': only JPEG, PNG, GIF or WebP up to 6 MB.'; continue; }
+      const fd = new FormData(); fd.append('image', f, f.name || 'photo');
+      try { const d = await (await fetch(BASE + '/api/platform/vault', { method: 'POST', headers: authHeaders(), body: fd, cache: 'no-store' })).json(); PL.vaultMsg = d.status === 'success' ? '' : (d.message || 'Could not add that photo.'); } catch (_) { PL.vaultMsg = 'Could not reach NEXXUS.'; }
+    }
+    await loadVault();
+  }
+  function renderVault() {
+    const host = $('plVaultView'); host.replaceChildren();
+    const top = el('div', 'pv-top'); top.append(el('h3', '', 'Image vault · ' + PL.vault.length + (PL.vault.length === 1 ? ' photo' : ' photos')));
+    const add = el('button', 'pl-btn', 'Add photos'); add.type = 'button'; const fi = el('input'); fi.type = 'file'; fi.multiple = true; fi.accept = 'image/jpeg,image/png,image/gif,image/webp'; fi.hidden = true; add.addEventListener('click', () => fi.click()); fi.addEventListener('change', () => uploadToVault(fi.files)); top.append(add, fi); host.append(top);
+    host.append(el('div', 'pw-hint', 'Every photo you add or post is kept here, private to you. Photos are cleaned of location and camera data when they are stored. Drop photos anywhere on this view to add them.'));
+    if (PL.vaultMsg) host.append(el('div', 'pw-visitor', PL.vaultMsg));
+    if (!PL.vault.length) { host.append(el('div', 'pl-empty', 'Your vault is empty. Add a photo, or post one on the floor and it will be saved here.')); return; }
+    const grid = el('div', 'pv-grid');
+    PL.vault.slice().reverse().forEach(v => {
+      const it = el('figure', 'pv-item'); it.style.margin = '0'; const img = el('img'); img.src = BASE + '/api/platform/media/' + v.id; img.alt = v.name || 'Vault photo'; img.decoding = 'async'; img.addEventListener('click', () => lightbox(img.src, img.alt));
+      const meta = el('div', 'pv-meta'); meta.append(el('span', 'pv-name', v.name || new Date(v.t * 1000).toLocaleDateString()));
+      const tags = []; if (v.avatar) tags.push('profile photo'); if ((v.posts || []).length) tags.push('in ' + v.posts.length + (v.posts.length === 1 ? ' post' : ' posts')); if (tags.length) meta.append(el('span', 'pv-tag', tags.join(' · ')));
+      const act = el('div', 'pv-act'); const post = el('button', '', 'Post'); post.type = 'button'; post.addEventListener('click', async () => { post.disabled = true; const d = await api('vault/' + v.id + '/post', { text: '' }); post.textContent = d && d.status === 'success' ? 'Posted' : 'Failed'; });
+      const av = el('button', '', v.avatar ? 'Remove as photo' : 'Profile photo'); av.type = 'button'; av.addEventListener('click', async () => { await saveProfile({ avatar: v.avatar ? '' : v.id }); await loadVault(); });
+      const del = el('button', 'danger', 'Delete'); del.type = 'button'; let armed = false; del.addEventListener('click', async () => { if (!armed) { armed = true; del.textContent = 'Sure?'; setTimeout(() => { armed = false; del.textContent = 'Delete'; }, 3000); return; } await api('vault/' + v.id, null, 'DELETE'); });
+      act.append(post, av, del); meta.append(act); it.append(img, meta); grid.append(it);
+    });
+    host.append(grid);
+  }
+  { const vv = $('plVaultView');
+    ['dragenter', 'dragover'].forEach(n => vv.addEventListener(n, e => { if ([...(e.dataTransfer || {}).types || []].includes('Files')) { e.preventDefault(); vv.classList.add('drop'); } }));
+    ['dragleave', 'drop'].forEach(n => vv.addEventListener(n, () => vv.classList.remove('drop')));
+    vv.addEventListener('drop', e => { if ((e.dataTransfer.files || []).length) { e.preventDefault(); uploadToVault(e.dataTransfer.files); } }); }
 
   async function load() { const d = await api('state', null, 'GET'); if (d && d.status === 'success') { PL.state = d; PL.viewers = d.viewers; renderLeft(); renderRight(); renderFeed(); } else if (d && d.status === 'locked') { await setOperatingMode('conversation'); window.plGateOpen(); } }
   // ---------- the command bar: text, links and photos ----------
@@ -11474,7 +11649,7 @@ async function skBuild() {
   window.plSync = function (mode, changed) {
     const on = mode === 'platform';
     space.classList.toggle('open', on); PL.open = on; document.body.classList.toggle('pl-on', on); document.body.style.overflow = on ? 'hidden' : '';
-    if (on) { PL.editing = false; load().then(streamOpen); setTimeout(() => $('plInput') && $('plInput').focus(), 50); } else { streamClose(); setFile && setFile(null); }
+    if (on) { PL.editing = false; PL.vault = []; setView('floor'); load().then(streamOpen); setTimeout(() => $('plInput') && $('plInput').focus(), 50); } else { streamClose(); setFile && setFile(null); setView('floor'); }
     loadOffer();                                   // keeps the lock mark on the Modes menu honest (a monthly key can lapse)
   };
   loadOffer();
