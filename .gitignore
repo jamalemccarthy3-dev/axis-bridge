@@ -160,3 +160,6 @@ relay/.wrangler/
 
 # ---- Platform mode: your profile and posts (private) and the local license ----
 nexxus_data/platform/
+
+# ---- private conversations (DMs, group chats, rooms): never committed, never read by any public module ----
+nexxus_data/private/

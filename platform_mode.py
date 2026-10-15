@@ -12,6 +12,7 @@ claims to be an image cannot be served as anything else. SVG is refused. Images 
 Honest about what is not here: there is no network of other people yet, so the right wall shows only what other people have really shared with you, which today is nothing. "Viewports" are the places
 that open this same NEXXUS (your own devices); comments and ratings are yours. Connecting people is a server-side feature that does not exist in this build.
 """
+import hashlib
 import io
 import json
 import os
@@ -22,6 +23,9 @@ import time
 import uuid
 
 import entitlements
+import github_sync
+import privacy
+import ranks
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(HERE, "nexxus_data", "platform")
@@ -232,6 +236,8 @@ def _norm(p):
     p.setdefault("media", "")
     p.setdefault("rating", 0)
     p.setdefault("comments", [])
+    p.setdefault("public", False)
+    p.setdefault("gh", None)
     return p
 
 
@@ -420,7 +426,7 @@ def add_post(text, media_id=""):
         return None
     m = _URL.search(text)
     post = {"id": uuid.uuid4().hex[:12], "t": int(time.time()), "text": text, "kind": "link" if m else ("photo" if media_id else "post"),
-            "url": _safe_url(m.group(0)) if m else "", "media": media_id, "rating": 0, "comments": []}
+            "url": _safe_url(m.group(0)) if m else "", "media": media_id, "rating": 0, "comments": [], "public": False, "gh": None}
     with _LOCK:
         posts = _read_posts()
         posts.append(post)
@@ -501,10 +507,123 @@ def delete_comment(pid, cid):
     return bool(res)
 
 
+# ---------------------------------------------------------------- public wall, ranks, GitHub sync
+_gh_transport = None            # tests inject a fake GitHub here; None means the real API
+_gh_last_pull = [0.0]
+
+
+def set_public(pid, flag):
+    """Mark a post public (it may then appear on the public wall, be offered to the GitHub sync and earn rank points) or private again.
+    -> "ok", "mirrored" (already a GitHub Discussion: it cannot be taken back from here) or None (no such post)."""
+    flag = bool(flag)
+
+    def go(post):
+        if post.get("gh") and not flag:
+            return "mirrored"
+        post["public"] = flag
+        return "ok"
+    res, p = _update(pid, go)
+    if p is None:
+        return None
+    if res == "ok":
+        if flag:
+            ranks.award("public_post", p["id"], (p.get("text") or "photo")[:40])
+        else:
+            ranks.revoke("public_post", p["id"])
+        publish({"type": "public", "post_id": p["id"], "public": flag})
+    return res
+
+
+def public_wall():
+    """Everything shared publicly, built only through the privacy gate. Never includes ratings, the vault, hidden profile sections or any private conversation."""
+    out = []
+    for p in _read_posts():
+        if not p.get("public"):
+            continue
+        pub = privacy.require_public(privacy.as_public_post(p), "the public wall")
+        pub["comments"] = [privacy.require_public(privacy.as_public_comment(p["id"], c), "the public wall") for c in p["comments"]]
+        out.append(pub)
+    return {"posts": out[-100:], "statement": privacy.PRIVATE_STATEMENT}
+
+
+def github_status():
+    return {"configured": github_sync.configured(), "repo": github_sync.repo(), "category": github_sync.category()}
+
+
+def github_plan():
+    """Public posts not yet on GitHub, with exactly what each would post. Nothing is sent."""
+    items = []
+    for p in _read_posts():
+        if p.get("public") and not p.get("gh"):
+            items.append(dict(github_sync.preview(p), id=p["id"]))
+    return dict(github_status(), items=items)
+
+
+def github_publish(pid):
+    """Create the Discussion for ONE public post (the caller has already shown the preview and got a confirmation). -> the gh link."""
+    post = next((x for x in _read_posts() if x.get("id") == str(pid)), None)
+    if not post:
+        raise github_sync.GitHubError("No such post.")
+    if post.get("gh"):
+        raise github_sync.GitHubError("That post is already on GitHub.")
+    gh = github_sync.publish_post(post, _gh_transport)                  # raises PrivacyViolation if the post is not public
+    _update(pid, lambda x: x.__setitem__("gh", gh))
+    publish({"type": "github", "post_id": str(pid), "gh": gh})
+    return gh
+
+
+def github_pull():
+    """Bring other people's public comments from the mirrored Discussions onto the wall, and award the (visible) rank points for them. -> {"new": n}."""
+    now = time.time()
+    if now - _gh_last_pull[0] < 10:
+        raise github_sync.GitHubError("Pulled a moment ago; wait a few seconds.")
+    _gh_last_pull[0] = now
+    me = github_sync.viewer_login(_gh_transport).lower()
+    new = 0
+    for post in _read_posts():
+        if not post.get("gh") or not post.get("public"):
+            continue
+        for c in github_sync.pull_comments(post["gh"]["id"], _gh_transport):
+            lid = "gh" + hashlib.sha1(c["id"].encode()).hexdigest()[:8]
+            if any(x.get("id") == lid for x in post["comments"]):
+                continue
+            entry = {"id": lid, "t": int(time.time()), "text": _clean(c["text"], MAX_COMMENT), "author": _clean(c["author"], 40), "source": "github", "url": c["url"] if str(c["url"]).startswith("https://github.com/") else ""}
+            if not entry["text"]:
+                continue
+
+            def add(pp, e=entry):
+                if len(pp["comments"]) >= MAX_COMMENTS:
+                    return None
+                pp["comments"].append(e)
+                return e
+            res, pp = _update(post["id"], add)
+            if res:
+                new += 1
+                publish({"type": "comment", "post_id": post["id"], "comment": res})
+                if res["author"].lower() != me:                          # no points for talking to yourself
+                    ranks.award("peer_comment_received", c["id"], res["author"])
+    return {"new": new}
+
+
+def github_push_comment(pid, cid):
+    """Post one of YOUR comments on a mirrored public post to its Discussion. -> {"url"}."""
+    post = next((x for x in _read_posts() if x.get("id") == str(pid)), None)
+    if not post or not post.get("gh") or not post.get("public"):
+        raise github_sync.GitHubError("That post is not a public post mirrored on GitHub.")
+    c = next((x for x in post["comments"] if x.get("id") == str(cid)), None)
+    if not c or c.get("source") == "github":
+        raise github_sync.GitHubError("Only your own comments can be posted to GitHub.")
+    if c.get("pushed"):
+        raise github_sync.GitHubError("That comment is already on GitHub.")
+    r = github_sync.push_comment(post["gh"]["id"], privacy.as_public_comment(post["id"], c), _gh_transport)
+    _update(pid, lambda x: [cc.update(pushed=True, url=r["url"]) for cc in x["comments"] if cc.get("id") == str(cid)])
+    return {"url": r["url"]}
+
+
 def state():
     posts = _read_posts()[-200:]
     return {"profile": get_profile(), "floor": posts, "shared_links": [p for p in posts if p.get("kind") == "link"][-20:],
-            "viewers": viewers(), "vault_count": len(vault_list()),
+            "viewers": viewers(), "vault_count": len(vault_list()), "rank": {k: v for k, v in ranks.status().items() if k in ("points", "tier", "next_tier", "to_next")},
             "network": {"connections": 0, "feed": [], "note": "No network yet: connections and posts from other people will appear here once networking exists. Nothing is invented."}}
 
 
@@ -595,6 +714,74 @@ def register_routes(app, is_viewer, respond):
             return respond({"status": "error", "message": "Slow down: too many posts in a minute."}, 429)
         post = add_post((request.get_json(silent=True) or {}).get("text", ""), mid)
         return respond({"status": "success", "post": post}) if post else respond({"status": "error", "message": "Could not post that photo."}, 400)
+
+    @app.route("/api/platform/post/<pid>/public", methods=["POST", "OPTIONS"], endpoint="platform_public_flag")
+    def public_flag_route(pid):
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        flag = bool((request.get_json(silent=True) or {}).get("public"))
+        res = set_public(pid, flag)
+        if res == "ok":
+            return respond({"status": "success", "public": flag, "ranks": {"points": ranks.status()["points"], "tier": ranks.status()["tier"]}})
+        if res == "mirrored":
+            return respond({"status": "error", "message": "This post is already a GitHub Discussion, so it cannot be made private from here. Delete the Discussion on GitHub first."}, 409)
+        return respond({"status": "error", "message": "No such post."}, 404)
+
+    @app.route("/api/platform/public", methods=["GET", "OPTIONS"], endpoint="platform_public_wall")
+    def public_wall_route():
+        if request.method == "OPTIONS":
+            return respond({})
+        return guard() or respond({"status": "success", **public_wall()})
+
+    @app.route("/api/platform/ranks", methods=["GET", "OPTIONS"], endpoint="platform_ranks")
+    def ranks_route():
+        if request.method == "OPTIONS":
+            return respond({})
+        return guard() or respond({"status": "success", **ranks.status()})
+
+    @app.route("/api/platform/github/plan", methods=["GET", "OPTIONS"], endpoint="platform_github_plan")
+    def github_plan_route():
+        if request.method == "OPTIONS":
+            return respond({})
+        return guard() or respond({"status": "success", **github_plan()})
+
+    def _gh(fn, *args):
+        try:
+            return respond({"status": "success", **fn(*args)})
+        except (github_sync.GitHubError, privacy.PrivacyViolation) as e:
+            return respond({"status": "error", "message": str(e)}, 400)
+
+    @app.route("/api/platform/github/publish", methods=["POST", "OPTIONS"], endpoint="platform_github_publish")
+    def github_publish_route():
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        d = request.get_json(silent=True) or {}
+        if d.get("confirm") is not True:
+            return respond({"status": "error", "message": "Publishing puts this post on GitHub for everyone to read. Send confirm: true after showing the preview."}, 400)
+        return _gh(lambda pid: {"gh": github_publish(pid)}, str(d.get("id", "")))
+
+    @app.route("/api/platform/github/pull", methods=["POST", "OPTIONS"], endpoint="platform_github_pull")
+    def github_pull_route():
+        if request.method == "OPTIONS":
+            return respond({})
+        return guard() or _gh(github_pull)
+
+    @app.route("/api/platform/post/<pid>/comment/<cid>/github", methods=["POST", "OPTIONS"], endpoint="platform_github_comment")
+    def github_comment_route(pid, cid):
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        if (request.get_json(silent=True) or {}).get("confirm") is not True:
+            return respond({"status": "error", "message": "This comment becomes public on GitHub. Send confirm: true after showing it."}, 400)
+        return _gh(github_push_comment, pid, cid)
 
     @app.route("/api/platform/profile/public", methods=["GET", "OPTIONS"], endpoint="platform_profile_public")
     def profile_public_route():

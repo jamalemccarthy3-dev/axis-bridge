@@ -1305,6 +1305,17 @@ body.pl-on #axisDock { display:none !important; }          /* the desktop contro
 .pv-meta { padding:6px 8px; font-size:.72rem; color:#94a3b8; display:grid; gap:4px; } .pv-meta .pv-name { color:#e2e8f0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; } .pv-tag { color:#86efac; }
 .pv-act { display:flex; gap:4px; flex-wrap:wrap; } .pv-act button { background:rgba(56,189,248,0.12); border:1px solid rgba(56,189,248,0.4); color:#bae6fd; border-radius:6px; padding:2px 7px; font:inherit; font-size:.7rem; cursor:pointer; } .pv-act button.danger { border-color:rgba(251,113,133,0.6); color:#fda4af; background:rgba(244,63,94,0.1); } .pv-act button:hover { background:rgba(56,189,248,0.3); }
 .pl-view.drop { outline:2px dashed #38bdf8; outline-offset:-6px; }
+.pl-views { flex-wrap:wrap; }
+.pl-meta button.pl-pub { background:none; border:1px solid rgba(148,163,184,0.45); color:#94a3b8; border-radius:999px; padding:0 8px; font:inherit; font-size:.68rem; cursor:pointer; } .pl-meta button.pl-pub.on { border-color:#34d399; color:#86efac; background:rgba(52,211,153,0.1); }
+.pl-rank { margin:10px 0; padding:8px 10px; border:1px solid rgba(251,191,36,0.4); border-radius:10px; background:rgba(251,191,36,0.07); } .pl-rank b { color:#fde68a; } .pl-rank .bar { height:6px; border-radius:999px; background:rgba(148,163,184,0.25); margin:6px 0; overflow:hidden; } .pl-rank .bar i { display:block; height:100%; background:linear-gradient(90deg,#34d399,#fbbf24); }
+.pl-rank button, .pu-act button { background:none; border:0; color:#7dd3fc; cursor:pointer; font:inherit; font-size:.75rem; padding:0; } .pl-priv { margin-top:12px; font-size:.7rem; color:#94a3b8; border-top:1px solid rgba(148,163,184,0.2); padding-top:8px; }
+.pu-post { border:1px solid rgba(148,163,184,0.3); border-radius:12px; padding:10px 12px; margin-bottom:10px; background:rgba(15,23,42,0.6); overflow-wrap:anywhere; } .pu-post img { max-width:100%; max-height:220px; border-radius:8px; display:block; margin-bottom:6px; cursor:zoom-in; }
+.pu-act { display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-top:6px; font-size:.75rem; color:#94a3b8; } .pu-act a { color:#86efac; }
+.pu-comment { margin-top:6px; padding:6px 10px; border-left:2px solid rgba(56,189,248,0.5); font-size:.85rem; } .pu-comment .who { color:#bae6fd; font-weight:600; } .pu-comment .src { font-size:.65rem; border:1px solid rgba(134,239,172,0.6); color:#86efac; border-radius:999px; padding:0 6px; margin-left:6px; } .pu-comment a { color:#7dd3fc; font-size:.72rem; margin-left:8px; }
+#plDialog { position:fixed; inset:0; z-index:9640; display:none; align-items:center; justify-content:center; background:rgba(2,6,14,0.8); padding:16px; } #plDialog.open { display:flex; }
+.pd-box { width:min(620px,100%); max-height:90vh; overflow-y:auto; background:rgba(8,12,20,0.99); border:1px solid rgba(56,189,248,0.5); border-radius:14px; padding:18px; color:#cbd5e1; font:14px/1.5 system-ui,-apple-system,Segoe UI,sans-serif; } .pd-box h3 { margin:0 0 8px; color:#e0f2fe; }
+.pd-box pre { white-space:pre-wrap; overflow-wrap:anywhere; background:#05080f; border:1px solid rgba(148,163,184,0.35); border-radius:8px; padding:8px 10px; max-height:200px; overflow-y:auto; font:12px ui-monospace,Consolas,monospace; } .pd-warn { border-left:3px solid #fbbf24; background:rgba(251,191,36,0.08); padding:6px 10px; margin:8px 0; font-size:.85rem; }
+.pd-box table { width:100%; border-collapse:collapse; font-size:.82rem; margin:6px 0; } .pd-box th, .pd-box td { text-align:left; padding:4px 6px; border-bottom:1px solid rgba(255,255,255,0.1); vertical-align:top; } .pd-box .na { color:#94a3b8; }
 .pl-chip { display:none; align-items:center; gap:8px; padding:6px 12px; border-top:1px solid rgba(56,189,248,0.25); background:rgba(2,6,14,0.7); font-size:.8rem; color:#bae6fd; } .pl-chip.on { display:flex; } .pl-chip img { height:44px; width:44px; object-fit:cover; border-radius:8px; } .pl-chip button { margin-left:auto; background:none; border:0; color:#fda4af; cursor:pointer; font:inherit; }
 .pl-feed.drop { outline:2px dashed #38bdf8; outline-offset:-6px; }
 #plLightbox { position:absolute; inset:0; z-index:5; display:none; align-items:center; justify-content:center; background:rgba(2,6,14,0.92); cursor:zoom-out; padding:20px; } #plLightbox.open { display:flex; } #plLightbox img { max-width:100%; max-height:100%; border-radius:10px; }
@@ -11303,9 +11314,10 @@ async function skBuild() {
 <div class="pl-stage" id="plStage" data-tab="floor">
 <aside class="pl-wall left" id="plLeft" aria-label="Your profile"></aside>
 <main class="pl-floor" aria-label="The floor">
-<div class="pl-views" id="plViews" role="tablist" aria-label="Floor views"><button type="button" role="tab" data-v="floor" class="on">Floor</button><button type="button" role="tab" data-v="wall">Profile wall</button><button type="button" role="tab" data-v="vault">Image vault</button></div>
+<div class="pl-views" id="plViews" role="tablist" aria-label="Floor views"><button type="button" role="tab" data-v="floor" class="on">Floor</button><button type="button" role="tab" data-v="wall">Profile wall</button><button type="button" role="tab" data-v="public">Public wall</button><button type="button" role="tab" data-v="vault">Image vault</button></div>
 <div class="pl-feed" id="plFeed" aria-live="polite"></div>
 <div class="pl-view" id="plWallView" hidden aria-label="Your profile wall"></div>
+<div class="pl-view" id="plPublicView" hidden aria-label="The public wall"></div>
 <div class="pl-view" id="plVaultView" hidden aria-label="Your image vault"></div>
 <div class="pl-chip" id="plChip"><img id="plChipImg" alt="Photo to post"><span id="plChipName"></span><button type="button" id="plChipX" aria-label="Remove the photo">remove</button></div>
 <form class="pl-bar" id="plBar" autocomplete="off"><button class="pl-attach" type="button" id="plAttach" aria-label="Attach a photo" title="Attach a photo (or paste or drop one)">&#128247;</button><input type="file" id="plFile" accept="image/jpeg,image/png,image/gif,image/webp" hidden><input id="plInput" maxlength="500" placeholder="Say something, share a link or drop a photo on the floor..." aria-label="Command bar: post or chat on the floor"><button class="pl-btn" type="submit">Send</button></form>
@@ -11314,6 +11326,7 @@ async function skBuild() {
 </main>
 <aside class="pl-wall right" id="plRight" aria-label="Your network and friends"></aside>
 </div></div>
+<div id="plDialog" role="dialog" aria-modal="true" aria-label="Confirm"><div class="pd-box" id="plDialogBox"></div></div>
 <div id="platformGate" role="dialog" aria-modal="true" aria-labelledby="pgTitle"><div class="pg-box">
 <h2 id="pgTitle">Unlock Platform mode</h2>
 <p>Platform is a locked mode. Until you unlock it, NEXXUS stays in the standard desktop view with telemetry, the workstation and the shop.</p>
@@ -11376,11 +11389,13 @@ async function skBuild() {
     if (PL.editing) { renderEdit(host, p); return; }
     host.append(avatarNode(p), el('div', 'pl-name', p.name || 'Add your name'), el('div', 'pl-head', p.headline || 'Add a headline'));
     if (p.location) host.append(el('div', 'pl-loc', p.location));
+    host.append(rankCard());
     const ab = el('div', 'pl-sec'); ab.append(el('h3', '', 'About'), el('p', '', p.about || 'Tell people who you are and what you build.')); host.append(ab);
     const ln = el('div', 'pl-sec'); ln.append(el('h3', '', 'Links')); (p.links || []).forEach(u => { const q = el('p'); q.append(link(u)); ln.append(q); }); if (!(p.links || []).length) ln.append(el('p', 'pl-note', 'No links yet.')); host.append(ln);
     const sh = el('div', 'pl-sec'); sh.append(el('h3', '', 'Links you shared')); const sl = (PL.state && PL.state.shared_links) || [];
     sl.slice().reverse().forEach(x => { const q = el('p'); q.append(link(x.url, x.text.length > 60 ? x.text.slice(0, 57) + '...' : x.text)); sh.append(q); }); if (!sl.length) sh.append(el('p', 'pl-note', 'Paste a link in the command bar to share it.')); host.append(sh);
     const b = el('button', 'pl-btn ghost', 'Edit profile'); b.type = 'button'; b.style.marginTop = '12px'; b.addEventListener('click', () => { PL.editing = true; renderLeft(); }); host.append(b);
+    host.append(el('div', 'pl-priv', 'Your private conversations stay private: direct messages, group chats and live rooms are never collected, never shown on the public wall, never sent to GitHub and never counted for ranks.'));
   }
   function renderEdit(host, p) {
     const f = el('form', 'pl-form'); const mk = (name, ph, val, max) => { const i = el('input'); i.name = name; i.placeholder = ph; i.value = val || ''; i.maxLength = max; i.setAttribute('aria-label', ph); return i; };
@@ -11416,7 +11431,9 @@ async function skBuild() {
       s.addEventListener('click', () => api('post/' + x.id + '/rating', { rating: x.rating === n ? 0 : n })); stars.append(s); }
     const cm = el('button', 'pl-cm', 'comments (' + (x.comments || []).length + ')'); cm.type = 'button'; cm.addEventListener('click', () => { PL.openComments.has(x.id) ? PL.openComments.delete(x.id) : PL.openComments.add(x.id); upsertPost(x); });
     const del = el('button', 'pl-del', 'delete'); del.type = 'button'; del.addEventListener('click', () => api('post/' + x.id, null, 'DELETE'));
-    meta.append(stars, cm, del); m.append(meta);
+    const pub = el('button', 'pl-pub' + (x.public ? ' on' : ''), x.public ? 'public' : 'private'); pub.type = 'button'; pub.title = x.public ? 'Shown on the public wall. Press to make it private.' : 'Private to you. Press to share it on the public wall.';
+    pub.addEventListener('click', async () => { const d = await api('post/' + x.id + '/public', { public: !x.public }); if (d && d.status === 'error') { pub.title = d.message; pub.textContent = 'on GitHub'; } });
+    meta.append(stars, cm, pub, del); m.append(meta);
     if (PL.openComments.has(x.id)) {
       const box = el('div', 'pl-comments');
       (x.comments || []).forEach(c => { const r = el('div', 'pl-comment'); r.append(el('span', '', c.text)); const d = el('button', '', 'delete'); d.type = 'button'; d.addEventListener('click', () => api('post/' + x.id + '/comment/' + c.id, null, 'DELETE')); r.append(d); box.append(r); });
@@ -11448,11 +11465,13 @@ async function skBuild() {
     if (!PL.state) return;
     if (ev.type === 'post') { if (!find(ev.post.id)) { PL.state.floor.push(ev.post); if (ev.post.kind === 'link') PL.state.shared_links.push(ev.post); renderLeft(); } upsertPost(find(ev.post.id)); }
     else if (ev.type === 'post_deleted') { PL.state.floor = PL.state.floor.filter(p => p.id !== ev.id); PL.state.shared_links = (PL.state.shared_links || []).filter(p => p.id !== ev.id); const n = $('plFeed').querySelector('.pl-msg[data-id="' + ev.id + '"]'); if (n) n.remove(); if (!PL.state.floor.length) renderFeed(false); renderLeft(); }
-    else if (ev.type === 'comment') { const p = find(ev.post_id); if (p && !p.comments.some(c => c.id === ev.comment.id)) { p.comments.push(ev.comment); upsertPost(p); } }
+    else if (ev.type === 'comment') { const p = find(ev.post_id); if (p && !p.comments.some(c => c.id === ev.comment.id)) { p.comments.push(ev.comment); upsertPost(p); if (p.public && PL.view === 'public') loadPublic(); } }
     else if (ev.type === 'comment_deleted') { const p = find(ev.post_id); if (p) { p.comments = p.comments.filter(c => c.id !== ev.id); upsertPost(p); } }
     else if (ev.type === 'rating') { const p = find(ev.post_id); if (p) { p.rating = ev.rating; upsertPost(p); } }
     else if (ev.type === 'profile') { PL.state.profile = ev.profile; if (!PL.editing) renderLeft(); if (PL.view === 'wall' && !PL.wallEdit) renderWall(); }
     else if (ev.type === 'vault_added' || ev.type === 'vault_deleted') { if (PL.view === 'vault') loadVault(); else PL.vault = []; }
+    else if (ev.type === 'public') { const p = find(ev.post_id); if (p) { p.public = ev.public; upsertPost(p); } refreshRank(); if (PL.view === 'public') loadPublic(); }
+    else if (ev.type === 'github') { const p = find(ev.post_id); if (p) { p.gh = ev.gh; upsertPost(p); } if (PL.view === 'public') loadPublic(); }
     else if (ev.type === 'viewers') { PL.viewers = ev.viewers; liveLabel(true); }
   }
   function liveLabel(on) { const l = $('plLive'); if (!l) return; l.classList.toggle('on', !!on); l.textContent = on ? 'Live · ' + (PL.viewers || 1) + (PL.viewers === 1 ? ' viewport' : ' viewports') : 'reconnecting'; }
@@ -11476,9 +11495,9 @@ async function skBuild() {
   PL.view = 'floor'; PL.wallEdit = null; PL.asVisitor = false; PL.vault = [];
   function setView(v) {
     PL.view = v; if (v !== 'wall') { PL.wallEdit = null; PL.asVisitor = false; }
-    $('plFeed').hidden = v !== 'floor'; $('plWallView').hidden = v !== 'wall'; $('plVaultView').hidden = v !== 'vault';
+    $('plFeed').hidden = v !== 'floor'; $('plWallView').hidden = v !== 'wall'; $('plPublicView').hidden = v !== 'public'; $('plVaultView').hidden = v !== 'vault';
     document.querySelectorAll('#plViews button').forEach(b => { const on = b.dataset.v === v; b.classList.toggle('on', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); });
-    if (v === 'wall') renderWall(); else if (v === 'vault') loadVault(); else { const f = $('plFeed'); f.scrollTop = f.scrollHeight; }
+    if (v === 'wall') renderWall(); else if (v === 'vault') loadVault(); else if (v === 'public') loadPublic(); else { const f = $('plFeed'); f.scrollTop = f.scrollHeight; }
   }
   $('plViews').addEventListener('click', e => { const b = e.target.closest('button[data-v]'); if (b) setView(b.dataset.v); });
 
@@ -11611,7 +11630,91 @@ async function skBuild() {
     ['dragleave', 'drop'].forEach(n => vv.addEventListener(n, () => vv.classList.remove('drop')));
     vv.addEventListener('drop', e => { if ((e.dataTransfer.files || []).length) { e.preventDefault(); uploadToVault(e.dataTransfer.files); } }); }
 
-  async function load() { const d = await api('state', null, 'GET'); if (d && d.status === 'success') { PL.state = d; PL.viewers = d.viewers; renderLeft(); renderRight(); renderFeed(); } else if (d && d.status === 'locked') { await setOperatingMode('conversation'); window.plGateOpen(); } }
+  // ---------- dialogs (confirmations and the rank rules) ----------
+  function dialogClose() { $('plDialog').classList.remove('open'); }
+  $('plDialog').addEventListener('mousedown', e => { if (e.target === $('plDialog')) dialogClose(); });
+  function dialog(build) { const box = $('plDialogBox'); box.replaceChildren(); build(box); $('plDialog').classList.add('open'); }
+  function closeBtn(label) { const b = el('button', 'pl-btn ghost', label || 'Close'); b.type = 'button'; b.addEventListener('click', dialogClose); return b; }
+
+  // ---------- rank: the whole formula and your ledger, in the open ----------
+  function rankCard() {
+    const r = PL.rank || { points: 0, tier: 'Newcomer', next_tier: 'Apprentice', to_next: 10 }, c = el('div', 'pl-rank');
+    const top = el('div'); top.append(el('b', '', r.tier), document.createTextNode('  ·  ' + r.points + (r.points === 1 ? ' point' : ' points'))); c.append(top);
+    const total = r.points + (r.to_next || 0), bar = el('div', 'bar'), fill = el('i'); fill.style.width = (r.next_tier ? Math.min(100, Math.round(100 * r.points / Math.max(1, total))) : 100) + '%'; bar.append(fill); c.append(bar);
+    c.append(el('div', 'pw-sub', r.next_tier ? r.to_next + ' to ' + r.next_tier : 'Top rank reached'));
+    const how = el('button', '', 'How ranks work'); how.type = 'button'; how.addEventListener('click', openRankPanel); c.append(how);
+    return c;
+  }
+  async function refreshRank() { const d = await api('ranks', null, 'GET'); if (d && d.status === 'success') { PL.rank = d; renderLeft(); } return d; }
+  async function openRankPanel() {
+    const d = await refreshRank(); if (!d || d.status !== 'success') return;
+    dialog(box => {
+      box.append(el('h3', '', 'How ranks work'), el('p', '', d.note));
+      const t1 = el('table'); t1.append(Object.assign(el('tr'), {})); t1.firstChild.append(el('th', '', 'What earns points'), el('th', '', 'Points'), el('th', '', 'Daily cap'));
+      Object.values(d.rules).forEach(r => { const row = el('tr', r.available ? '' : 'na'); row.append(el('td', '', r.text + (r.available ? '' : ' (not available yet)')), el('td', '', String(r.points)), el('td', '', String(r.daily_cap))); t1.append(row); });
+      box.append(t1);
+      box.append(el('p', 'pw-sub', 'Tiers: ' + d.tiers.map(x => x.name + ' from ' + x.from).join(', ') + '.'));
+      box.append(el('h3', '', 'Your ledger (' + d.points + ' points)'));
+      if (!d.ledger.length) box.append(el('div', 'pl-empty', 'Nothing yet. Share a post publicly from the floor to earn your first points.'));
+      else { const t2 = el('table'); const h = el('tr'); h.append(el('th', '', 'When'), el('th', '', 'Why'), el('th', '', 'Points')); t2.append(h); d.ledger.forEach(e => { const row = el('tr'); row.append(el('td', '', new Date(e.t * 1000).toLocaleDateString()), el('td', '', (d.rules[e.rule] ? e.rule.replace(/_/g, ' ') : e.rule) + (e.note ? ': ' + e.note : '')), el('td', '', '+' + e.points)); t2.append(row); }); box.append(t2); }
+      box.append(el('div', 'pd-warn', 'Private messages, group chats and live rooms are never collected and never count. Only what you make public can earn points.'), closeBtn());
+    });
+  }
+
+  // ---------- the public wall ----------
+  PL.pub = { posts: [], statement: '' }; PL.gh = { configured: false, repo: '', category: '', items: [] };
+  async function loadPublic() {
+    const [w, g] = await Promise.all([api('public', null, 'GET'), api('github/plan', null, 'GET')]);
+    PL.pub = w && w.status === 'success' ? w : { posts: [], statement: '' }; PL.gh = g && g.status === 'success' ? g : PL.gh;
+    if (PL.view === 'public') renderPublic();
+  }
+  function ghNote(msg, ok) { const n = $('plPublicView').querySelector('.pu-note'); if (n) { n.textContent = msg; n.style.color = ok ? '#86efac' : '#fda4af'; } }
+  function confirmPublish(post) {
+    const plan = (PL.gh.items || []).find(i => i.id === post.id);
+    dialog(box => {
+      box.append(el('h3', '', 'Publish to GitHub?'), el('p', '', 'This posts the text below to ' + PL.gh.repo + ' (Discussions, "' + PL.gh.category + '") under your GitHub account.'));
+      box.append(el('pre', '', plan ? plan.title + '\n\n' + plan.body : post.text));
+      box.append(el('div', 'pd-warn', 'Everyone can read it, and it cannot be taken back from here: delete the Discussion on GitHub if you change your mind, and GitHub may keep cached copies. Photos are not uploaded. Keep it PG-13.'));
+      const lab = el('label', 'pw-hint'), ck = el('input'); ck.type = 'checkbox'; ck.style.width = 'auto'; ck.style.marginRight = '8px'; lab.append(ck, document.createTextNode('I understand this becomes public on GitHub.'));
+      const msg = el('div', 'pw-hint'); const go = el('button', 'pl-btn', 'Publish'); go.type = 'button'; go.disabled = true;
+      if (!PL.gh.configured) { msg.textContent = 'GitHub sync is not set up: start NEXXUS with NEXXUS_GITHUB_TOKEN set (see docs/PLATFORM.md).'; ck.disabled = true; }
+      ck.addEventListener('change', () => { go.disabled = !ck.checked || !PL.gh.configured; });
+      go.addEventListener('click', async () => { go.disabled = true; msg.textContent = 'Publishing...'; const d = await api('github/publish', { id: post.id, confirm: true }); if (d && d.status === 'success') { dialogClose(); await loadPublic(); ghNote('Published: ' + d.gh.url, true); } else { msg.textContent = (d && d.message) || 'Could not reach NEXXUS.'; go.disabled = false; } });
+      const row = el('div'); row.style.cssText = 'display:flex;gap:8px;justify-content:flex-end;margin-top:10px'; row.append(closeBtn('Cancel'), go); box.append(lab, msg, row);
+    });
+  }
+  function confirmCommentPush(post, c) {
+    dialog(box => {
+      box.append(el('h3', '', 'Post this comment to GitHub?'), el('pre', '', c.text), el('div', 'pd-warn', 'It becomes a public comment on the GitHub Discussion for this post, under your account.'));
+      const msg = el('div', 'pw-hint'), go = el('button', 'pl-btn', 'Post comment'); go.type = 'button'; if (!PL.gh.configured) { go.disabled = true; msg.textContent = 'GitHub sync is not set up (NEXXUS_GITHUB_TOKEN).'; }
+      go.addEventListener('click', async () => { go.disabled = true; const d = await api('post/' + post.id + '/comment/' + c.id + '/github', { confirm: true }); if (d && d.status === 'success') { dialogClose(); await loadPublic(); } else { msg.textContent = (d && d.message) || 'Could not reach NEXXUS.'; go.disabled = false; } });
+      const row = el('div'); row.style.cssText = 'display:flex;gap:8px;justify-content:flex-end;margin-top:10px'; row.append(closeBtn('Cancel'), go); box.append(msg, row);
+    });
+  }
+  function renderPublic() {
+    const host = $('plPublicView'); host.replaceChildren();
+    host.append(el('div', 'pw-visitor', PL.pub.statement || 'Private conversations stay private.'));
+    const top = el('div', 'pv-top'); top.append(el('h3', '', 'Public wall · ' + PL.pub.posts.length + (PL.pub.posts.length === 1 ? ' post' : ' posts')));
+    const pull = el('button', 'pl-btn ghost', 'Pull GitHub comments'); pull.type = 'button'; pull.disabled = !PL.gh.configured; pull.title = PL.gh.configured ? 'Bring other people\'s comments from GitHub onto the wall' : 'Needs NEXXUS_GITHUB_TOKEN';
+    pull.addEventListener('click', async () => { pull.disabled = true; const d = await api('github/pull', {}); ghNote(d && d.status === 'success' ? (d.new + ' new comment' + (d.new === 1 ? '' : 's')) : ((d && d.message) || 'Could not reach NEXXUS.'), d && d.status === 'success'); await loadPublic(); await refreshRank(); });
+    top.append(pull); host.append(top, Object.assign(el('div', 'pw-hint pu-note'), {}));
+    host.append(el('div', 'pw-hint', 'Posts you mark public on the floor appear here. GitHub: ' + (PL.gh.configured ? 'connected to ' + PL.gh.repo : 'not connected (set NEXXUS_GITHUB_TOKEN to publish and pull comments)') + '. Each post is published only when you confirm it.'));
+    if (!PL.pub.posts.length) { host.append(el('div', 'pl-empty', 'Nothing is public yet. On the floor, press "private" under a post to make it public.')); return; }
+    PL.pub.posts.slice().reverse().forEach(x => {
+      const card = el('div', 'pu-post');
+      if (x.media) { const i = el('img'); i.src = BASE + '/api/platform/media/' + x.media; i.alt = x.text || 'Public photo'; i.addEventListener('click', () => lightbox(i.src, i.alt)); card.append(i); }
+      if (x.text) card.append(el('div', '', x.text));
+      const act = el('div', 'pu-act'); act.append(el('span', '', new Date(x.t * 1000).toLocaleString()));
+      if (x.gh) { const a = link(x.gh.url, 'On GitHub (#' + x.gh.number + ')'); act.append(a); }
+      else { const b = el('button', '', 'Publish to GitHub'); b.type = 'button'; b.addEventListener('click', () => confirmPublish(x)); act.append(b); }
+      card.append(act);
+      (x.comments || []).forEach(c => { const q = el('div', 'pu-comment'); const who = el('span', 'who', c.author === 'you' ? 'You' : c.author); q.append(who); if (c.source === 'github') { q.append(el('span', 'src', 'GitHub')); if (c.url) q.append(link(c.url, 'view')); } q.append(el('div', '', c.text));
+        if (x.gh && c.source !== 'github') { if (c.pushed) { q.append(el('span', 'src', 'on GitHub')); if (c.url) q.append(link(c.url, 'view')); } else { const b = el('button', 'pw-edit', 'Post to GitHub'); b.type = 'button'; b.addEventListener('click', () => confirmCommentPush(x, c)); q.append(b); } } card.append(q); });
+      host.append(card);
+    });
+  }
+
+  async function load() { const d = await api('state', null, 'GET'); if (d && d.status === 'success') { PL.state = d; PL.rank = d.rank; PL.viewers = d.viewers; renderLeft(); renderRight(); renderFeed(); } else if (d && d.status === 'locked') { await setOperatingMode('conversation'); window.plGateOpen(); } }
   // ---------- the command bar: text, links and photos ----------
   PL.file = null;
   function setFile(f) {
@@ -11643,7 +11746,7 @@ async function skBuild() {
   });
   $('plTabs').addEventListener('click', e => { const b = e.target.closest('button[data-t]'); if (!b) return; $('plStage').dataset.tab = b.dataset.t; document.querySelectorAll('#plTabs button').forEach(x => x.classList.toggle('on', x === b)); });
   $('plExit').addEventListener('click', () => { setOperatingMode('conversation'); });
-  document.addEventListener('keydown', e => { if (e.key !== 'Escape' || !PL.open || gate.classList.contains('open')) return; e.preventDefault(); const lb = $('plLightbox'); if (lb.classList.contains('open')) lb.classList.remove('open'); else setOperatingMode('conversation'); });
+  document.addEventListener('keydown', e => { if (e.key !== 'Escape' || !PL.open || gate.classList.contains('open')) return; e.preventDefault(); const lb = $('plLightbox'); if ($('plDialog').classList.contains('open')) dialogClose(); else if (lb.classList.contains('open')) lb.classList.remove('open'); else setOperatingMode('conversation'); });
 
   // called by applyOperatingMode on every mode change: the layout exists only while the mode is Platform
   window.plSync = function (mode, changed) {
