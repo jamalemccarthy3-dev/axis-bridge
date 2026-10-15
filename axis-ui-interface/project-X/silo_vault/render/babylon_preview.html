@@ -1247,6 +1247,9 @@ body.pl-on #axisDock { display:none !important; }          /* the desktop contro
 .pl-top { display:flex; align-items:center; gap:12px; padding:10px 16px; border-bottom:1px solid rgba(148,163,184,0.2); }
 .pl-top h2 { margin:0; flex:1; font-size:1rem; color:#bae6fd; letter-spacing:.06em; } .pl-top .pl-note { font-size:.78rem; color:#94a3b8; }
 .pl-beta { display:inline-block; vertical-align:middle; margin-left:8px; padding:2px 9px; border-radius:999px; font-size:.68rem; font-weight:800; letter-spacing:.14em; color:#052e1b; background:linear-gradient(135deg,#34d399,#fbbf24); box-shadow:0 0 14px rgba(52,211,153,0.45); }
+.nx-sub { display:inline-flex; align-items:center; gap:7px; padding:3px 4px 3px 10px; border:1px solid #2a2f3a; border-radius:7px; background:#0d1117; font:600 .72rem/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; letter-spacing:.04em; color:#e6edf3; vertical-align:middle; }
+.nx-sub .nx-sub-tier { text-transform:none; font-weight:500; }
+.nx-sub .nx-sub-alpha { padding:3px 7px; border-radius:5px; border:1px solid #ff3333; background:rgba(255,51,51,.12); color:#ff3333; text-transform:uppercase; letter-spacing:.1em; box-shadow:0 0 8px rgba(255,51,51,.35); }
 .pl-beta-note { font-size:.75rem; color:#fde68a; border:1px solid rgba(251,191,36,0.45); background:rgba(251,191,36,0.08); border-radius:8px; padding:5px 9px; margin-bottom:10px; }
 .pl-exit { background:rgba(244,63,94,0.18); border:1px solid rgba(251,113,133,0.7); color:#ffe4e6; border-radius:8px; padding:6px 14px; font:inherit; font-weight:600; cursor:pointer; }
 .pl-exit:hover { background:rgba(244,63,94,0.35); }
@@ -11451,12 +11454,19 @@ async function skBuild() {
 
   // ---------- the spatial layout ----------
   function when(t) { const d = new Date(t * 1000); return d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); }
+  // Subscriber badge: "Platform" + red "Alpha". Shown only for a verified paid licence (monthly or lifetime); never during open Beta, when locked, or for a lapsed key. Built with textContent only.
+  function subscriberBadge(ent) {
+    const e = ent && ent.entitlement; if (!e || !e.unlocked || e.beta || (e.plan !== 'monthly' && e.plan !== 'lifetime')) return null;
+    const b = el('span', 'nx-sub'); b.setAttribute('role', 'img'); b.setAttribute('aria-label', 'Platform Alpha subscriber, ' + e.plan + ' plan'); b.title = (e.plan === 'lifetime' ? 'Lifetime pass' : 'Monthly subscription') + ' - license verified on this computer';
+    b.append(el('span', 'nx-sub-tier', 'Platform'), el('span', 'nx-sub-alpha', 'Alpha')); return b;
+  }
   function renderLeft() {
     const host = $('plLeft'), p = (PL.state && PL.state.profile) || {}; host.replaceChildren();
     host.append(el('h3', '', 'Profile hub'));
     if (PL.ent && PL.ent.beta) host.append(el('div', 'pl-beta-note', 'BETA ' + String.fromCharCode(183) + ' open to everyone while Platform is built out. Some parts are still coming.'));
     if (PL.editing) { renderEdit(host, p); return; }
     host.append(avatarNode(p), el('div', 'pl-name', p.name || 'Add your name'), el('div', 'pl-head', p.headline || 'Add a headline'));
+    const sb = subscriberBadge(PL.ent); if (sb) { const w = el('div'); w.style.margin = '6px 0'; w.append(sb); host.append(w); }
     if (p.location) host.append(el('div', 'pl-loc', p.location));
     host.append(rankCard());
     const ab = el('div', 'pl-sec'); ab.append(el('h3', '', 'About'), el('p', '', p.about || 'Tell people who you are and what you build.')); host.append(ab);

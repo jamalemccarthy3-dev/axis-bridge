@@ -247,6 +247,14 @@ class WorkerSuiteTest(unittest.TestCase):
         self.assertEqual(out.returncode, 0, out.stdout + out.stderr)
 
 
+class BadgeTest(unittest.TestCase):
+    def test_subscriber_badge_is_paid_only_and_uses_the_alpha_red(self):
+        html = open(os.path.join(HERE, "axis-ui-interface", "project-X", "silo_vault", "render", "babylon_preview.html"), encoding="utf-8").read()
+        self.assertIn("#ff3333", html)
+        self.assertIn("e.beta || (e.plan !== 'monthly' && e.plan !== 'lifetime')", html, "no badge during Beta, when locked, or without a paid plan")
+        self.assertNotIn("innerHTML = ent", html)
+
+
 class HygieneTest(unittest.TestCase):
     def test_no_placeholder_handlers_or_secrets_in_the_billing_code(self):
         for rel in ("billing.py", os.path.join("relay", "billing", "worker.js"), os.path.join("tools", "stripe_setup.py")):
