@@ -107,12 +107,10 @@ class EntitlementTest(Base):
         self.assertTrue(ent.status()["unlocked"])
         self.assertFalse(ent.status(now=time.time() + 1000)["unlocked"])
 
-    def test_checkout_links_must_be_https(self):
-        os.environ["NEXXUS_CHECKOUT_MONTHLY"], os.environ["NEXXUS_CHECKOUT_LIFETIME"] = "http://insecure.example", "https://buy.example/x"
-        try:
-            self.assertEqual(ent.checkout_links(), {"monthly": None, "lifetime": "https://buy.example/x"})
-        finally:
-            del os.environ["NEXXUS_CHECKOUT_MONTHLY"], os.environ["NEXXUS_CHECKOUT_LIFETIME"]
+    def test_offer_carries_no_hard_coded_checkout_links(self):
+        offer = ent.offer()
+        self.assertTrue(all("checkout_url" not in p for p in offer["plans"]), "buying goes through billing.py, never a static link")
+        self.assertFalse(hasattr(ent, "checkout_links"))
 
 
 class BetaTest(Base):

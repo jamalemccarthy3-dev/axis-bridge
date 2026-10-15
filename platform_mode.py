@@ -23,6 +23,7 @@ import time
 import uuid
 
 import academy
+import billing
 import entitlements
 import github_sync
 import market_social
@@ -680,6 +681,29 @@ def register_routes(app, is_viewer, respond, is_admin=None):
             return respond({"status": "success", "entitlement": entitlements.remove()})
         ok, st = entitlements.activate((request.get_json(silent=True) or {}).get("token", ""))
         return respond({"status": "success" if ok else "error", "entitlement": st, "message": "Platform unlocked." if ok else st["reason"]}, 200 if ok else 400)
+
+    @app.route("/api/platform/billing", methods=["GET", "OPTIONS"], endpoint="platform_billing")
+    def billing_route():
+        if request.method == "OPTIONS":
+            return respond({})
+        return guard(False) or respond({"status": "success", **billing.summary(), **entitlements.offer()})
+
+    @app.route("/api/platform/billing/<action>", methods=["POST", "OPTIONS"], endpoint="platform_billing_action")
+    def billing_action(action):
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard(False)           # billing must work while locked: it is how a person unlocks (and never blocks NEXXUS core)
+        if g:
+            return g
+        if action == "checkout":
+            out = billing.start_checkout(str((request.get_json(silent=True) or {}).get("plan", "")))
+        elif action == "refresh":
+            out = billing.refresh()
+        elif action == "portal":
+            out = billing.portal()
+        else:
+            return respond({"status": "error", "message": "Unknown billing action."}, 404)
+        return respond({"status": "success" if out.get("ok") else "error", **out}, 200 if out.get("ok") else 400)
 
     @app.route("/api/platform/state", methods=["GET", "OPTIONS"], endpoint="platform_state")
     def state_route():

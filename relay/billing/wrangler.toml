@@ -1,0 +1,35 @@
+name = "nexxus-billing"
+main = "worker.js"
+compatibility_date = "2026-01-01"
+
+[vars]
+# Stripe price ids from tools/stripe_setup.py (test mode ids start price_..., same shape in live mode)
+PRICE_MONTHLY = "REPLACE_WITH_MONTHLY_PRICE_ID"
+PRICE_LIFETIME = "REPLACE_WITH_LIFETIME_PRICE_ID"
+# Pages you host (for example on GitHub Pages): what the buyer sees after paying, and after cancelling
+SUCCESS_URL = "https://jamalemccarthy3-dev.github.io/axis-bridge/billing/success.html"
+CANCEL_URL = "https://jamalemccarthy3-dev.github.io/axis-bridge/billing/cancel.html"
+# Set to "1" only after Stripe Tax is configured for your account
+AUTOMATIC_TAX = "0"
+
+# npx wrangler kv namespace create BILLING_KV   (then paste the id)
+[[kv_namespaces]]
+binding = "BILLING_KV"
+id = "REPLACE_WITH_YOUR_KV_NAMESPACE_ID"
+
+[[unsafe.bindings]]
+name = "CHECKOUT_LIMITER"
+type = "ratelimit"
+namespace_id = "2001"
+simple = { limit = 10, period = 60 }
+
+[[unsafe.bindings]]
+name = "CLAIM_LIMITER"
+type = "ratelimit"
+namespace_id = "2002"
+simple = { limit = 60, period = 60 }
+
+# Secrets (never put these in this file). Set each with:  npx wrangler secret put <NAME>
+#   STRIPE_SECRET_KEY        a RESTRICTED key (Checkout Sessions: write, Customer portal: write, Customers: read)
+#   STRIPE_WEBHOOK_SECRET    the whsec_... signing secret of the webhook endpoint you add in Stripe
+#   LICENSE_PRIVATE_KEY_B64  base64 of the PKCS8 DER of your licence signing key (see docs/BILLING.md)

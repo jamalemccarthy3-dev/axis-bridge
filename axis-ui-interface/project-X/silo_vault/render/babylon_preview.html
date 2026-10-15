@@ -11384,7 +11384,7 @@ async function skBuild() {
 <p><b>Already bought?</b> Paste your license key:</p>
 <textarea id="pgKey" rows="3" placeholder="NXP1...." aria-label="License key" spellcheck="false"></textarea>
 <div class="pg-msg" id="pgMsg" role="status"></div>
-<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px"><button type="button" class="pl-btn ghost" id="pgClose">Not now</button><button type="button" class="pl-btn" id="pgActivate">Activate key</button></div>
+<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px;flex-wrap:wrap"><button type="button" class="pl-btn ghost" id="pgClose">Not now</button><button type="button" class="pl-btn ghost" id="pgPortal">Manage billing</button><button type="button" class="pl-btn ghost" id="pgCheck">Check my subscription</button><button type="button" class="pl-btn" id="pgActivate">Activate key</button></div>
 <p class="pl-note" style="font-size:.78rem;color:#94a3b8;margin-top:10px">NEXXUS never sees your card. You pay on the checkout page; the key it gives you is checked on this computer and saved here.</p>
 </div></div>
 <script>
@@ -11413,14 +11413,33 @@ async function skBuild() {
     ((PL.ent && PL.ent.plans) || []).forEach(p => {
       const card = el('div', 'pg-plan' + (p.id === 'lifetime' ? ' best' : ''));
       card.append(el('b', '', p.label), el('div', 'pg-price', p.price_text), el('div', 'pl-note', p.id === 'lifetime' ? 'Pay once, keep Platform for good.' : 'Renews monthly; cancel any time.'));
-      const b = el('button', 'pl-btn', p.checkout_url ? 'Buy ' + (p.id === 'lifetime' ? 'lifetime pass' : 'monthly') : 'Checkout not set up yet'); b.type = 'button';
-      if (p.checkout_url) b.addEventListener('click', () => window.open(p.checkout_url, '_blank', 'noopener,noreferrer')); else { b.disabled = true; b.title = 'The owner has not added a checkout link for this plan yet.'; }
+      const b = el('button', 'pl-btn', 'Buy ' + (p.id === 'lifetime' ? 'lifetime pass' : 'monthly')); b.type = 'button';
+      b.addEventListener('click', async () => {      // Stripe's own hosted page takes the payment; a failure here never affects the rest of NEXXUS
+        b.disabled = true; setMsg('Opening Stripe checkout...');
+        const d = await api('billing/checkout', { plan: p.id }, 'POST');
+        b.disabled = false;
+        if (d && d.status === 'success' && d.url) { setMsg('Checkout opened in a new tab. When you have paid, come back and press "Check my subscription".', 'ok'); window.open(d.url, '_blank', 'noopener,noreferrer'); }
+        else setMsg((d && d.message) || 'Could not reach the NEXXUS server. Nothing was charged.', 'bad');
+      });
       card.append(b); host.append(card);
     });
   }
+  async function checkSubscription(quiet) {
+    if (!quiet) setMsg('Checking with the billing server...');
+    const d = await api('billing/refresh', null, 'POST');
+    if (!d) { if (!quiet) setMsg('Could not reach the NEXXUS server.', 'bad'); return; }
+    if (d.entitlement && d.entitlement.unlocked && !d.entitlement.beta) { setMsg('Subscription found. Platform is unlocked.', 'ok'); await loadOffer(); return; }
+    if (!quiet || d.state === 'past_due' || d.state === 'canceled') setMsg(d.message || 'Nothing to report yet.', d.ok ? '' : 'bad');
+  }
+  window.addEventListener('focus', () => { if (gate.classList.contains('open')) checkSubscription(true); });     // returning from the checkout tab picks the payment up by itself
   window.plGateOpen = async function () { setMsg(''); await loadOffer(); renderPlans(); gate.classList.add('open'); $('pgKey').focus(); };
   function plGateClose() { gate.classList.remove('open'); }
   $('pgClose').addEventListener('click', plGateClose);
+  $('pgCheck').addEventListener('click', () => checkSubscription(false));
+  $('pgPortal').addEventListener('click', async () => {
+    const d = await api('billing/portal', null, 'POST');
+    if (d && d.status === 'success' && d.url) window.open(d.url, '_blank', 'noopener,noreferrer'); else setMsg((d && d.message) || 'Could not reach the NEXXUS server.', 'bad');
+  });
   gate.addEventListener('mousedown', e => { if (e.target === gate) plGateClose(); });
   $('pgActivate').addEventListener('click', async () => {
     const token = $('pgKey').value.trim(); if (!token) { setMsg('Paste your license key first.', 'bad'); return; }

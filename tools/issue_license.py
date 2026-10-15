@@ -56,15 +56,25 @@ def issue(plan, days):
     return entitlements.PREFIX + "." + _b64(body) + "." + _b64(key.sign(entitlements.PREFIX.encode() + b"." + body))
 
 
+def export_b64():
+    """Base64 of the key's PKCS8 DER: the form the billing Worker's LICENSE_PRIVATE_KEY_B64 secret takes. Pipe it straight into `npx wrangler secret put`; do not paste it anywhere else."""
+    with open(PRIVATE_PATH, "rb") as f:
+        key = serialization.load_pem_private_key(f.read(), password=None)
+    return base64.b64encode(key.private_bytes(serialization.Encoding.DER, serialization.PrivateFormat.PKCS8, serialization.NoEncryption())).decode()
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
     sub.add_parser("keygen")
+    sub.add_parser("export-b64", help="print the private key in the form the billing Worker secret needs (secret!)")
     i = sub.add_parser("issue"); i.add_argument("plan", choices=list(entitlements.PLANS)); i.add_argument("--days", type=int, default=31)
     c = sub.add_parser("check"); c.add_argument("token")
     a = ap.parse_args()
     if a.cmd == "keygen":
         keygen()
+    elif a.cmd == "export-b64":
+        print(export_b64())
     elif a.cmd == "issue":
         print(issue(a.plan, a.days))
     else:

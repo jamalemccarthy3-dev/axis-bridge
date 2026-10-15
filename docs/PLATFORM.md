@@ -97,11 +97,7 @@ Everything on the walls and the floor is **real and local**: your own profile, p
 | Monthly subscription | **$9.99 / month** |
 | Lifetime Access Pass | **$199 one-time** |
 
-NEXXUS never handles payments or card details. The flow is:
-
-1. The owner creates two checkout links with a payment provider (for example two Stripe Payment Links) and sets them before starting the server: `NEXXUS_CHECKOUT_MONTHLY` and `NEXXUS_CHECKOUT_LIFETIME` (https only). A plan with no link shows "Checkout not set up yet".
-2. The buyer pays on that page and the owner sends them a **license key**.
-3. The buyer pastes the key into the unlock dialog (it opens when Platform is picked while locked). The key is checked **on the buyer's computer** against `license_public_key.pem`, then saved locally. A monthly key stops working on its expiry date and the mode falls back to the desktop view; renewing means a new key. A lifetime key never expires.
+NEXXUS never handles payments or card details. Buying runs through Stripe Checkout (see [BILLING.md](BILLING.md)): the Buy button opens Stripe's own page, Stripe's signed webhooks tell a small hosted Worker what happened, and NEXXUS pulls the resulting **license key**, which it checks **on your computer** against `license_public_key.pem` and saves locally. A monthly key lasts to the end of the paid period (plus a short grace); renewals extend it automatically and a lapsed subscription simply stops working. A lifetime key never expires. A key can still be issued by hand and pasted in. While Beta is open none of this is needed.
 
 ### Issuing keys (owner only)
 
