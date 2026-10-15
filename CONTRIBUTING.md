@@ -31,6 +31,10 @@ It should end with `ALL GREEN`. If you changed a sealed item, say so; the axis g
 
 By contributing you agree that your contribution is licensed under the project's license (PolyForm Noncommercial 1.0.0, see [LICENSE](LICENSE)).
 
+## Conduct
+
+Be respectful; see [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+
 ## Security
 
 Do not report vulnerabilities in public issues. See [SECURITY.md](SECURITY.md).

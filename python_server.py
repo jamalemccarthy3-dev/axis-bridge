@@ -655,6 +655,37 @@ try:
 except Exception:
     pass
 
+import watchers as _watchers
+
+def _watch_notify(f):
+    """Watcher findings become notifications. Observe and flag only: nothing is blocked or stopped (see watchers.py)."""
+    if _notes is not None:
+        _notes.add("watch", "Watcher: " + f["rule"].replace("_", " "), f["summary"] + " " + f["suggestion"], level="fail" if f["severity"] == "alert" else "warn",
+                   ref={"rule": f["rule"], "dedupe": "watch:%s:%s:%d" % (f["rule"], f["subject"], f["t"] // 3600)}, dedupe_key="watch:%s:%s:%d" % (f["rule"], f["subject"], f["t"] // 3600))
+
+@app.route("/api/watch/findings", methods=["GET", "OPTIONS"])
+def watch_findings():
+    """What the watcher bots flagged in the last 24 hours (counts and short random ids only). Local machine only."""
+    if request.method == "OPTIONS":
+        return handle_action_response()
+    if not _is_local():
+        return make_response(jsonify({"status": "error", "message": "local machine only"}), 403)
+    return handle_action_response({"status": "success", "findings": _watchers.recent()})
+
+@app.route("/api/watch/scan", methods=["POST", "OPTIONS"])
+def watch_scan():
+    """Run every watcher once now. Local machine only."""
+    if request.method == "OPTIONS":
+        return handle_action_response()
+    if not _is_local():
+        return make_response(jsonify({"status": "error", "message": "local machine only"}), 403)
+    return handle_action_response({"status": "success", "new": _watchers.scan(notifier=_watch_notify)})
+
+try:
+    _watchers.start(60, _watch_notify)
+except Exception:
+    pass
+
 import operator_scope as _op_scope
 
 @app.route("/api/operator/grants", methods=["GET", "POST", "DELETE", "OPTIONS"])

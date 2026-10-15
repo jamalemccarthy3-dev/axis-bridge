@@ -107,6 +107,12 @@ def pull_once():
             _append(good)
         if keys:
             _call("/ack", {"keys": keys})
+        if items:
+            try:
+                with open(os.path.join(STORE_DIR, "pull_stats.jsonl"), "a", encoding="utf-8") as f:
+                    f.write(json.dumps({"t": int(time.time()), "received": len(items), "dropped": len(items) - len(good)}) + "\n")
+            except OSError:
+                pass
         return {"received": len(items), "stored": len(good), "dropped": len(items) - len(good)}
 
 

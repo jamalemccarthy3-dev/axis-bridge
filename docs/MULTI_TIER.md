@@ -44,3 +44,14 @@ Raw events are stored in `nexxus_data/telemetry/` (gitignored). The summary retu
 ## Taking a break
 
 Set `PAUSE = "1"` under `[vars]` in `relay/wrangler.toml` and run `npx wrangler deploy`. The relay answers 503 to sandbox pages (they ignore it and carry on working), while your desktop can still pull what is already queued. Remove the line and redeploy to resume.
+
+## Watcher bots (observe and flag, never kill)
+
+`watchers.py` runs five read-only bots every minute on the desktop: `relay_flood` (one install sending far too much), `id_churn` (a burst of brand-new install ids), `reject_rate` (many events failing the schema, i.e. probing), `operator_probing` (repeated refused operator-mode requests) and `capture_probing` (repeated refused capture attempts).
+
+* A finding becomes a notification in the dashboard with the evidence and a suggestion. **Nothing is blocked, stopped or deleted**; Hard Lock, Quarantine and the relay's `PAUSE` stay your own switches.
+* Findings contain counts and short random ids only. Each fires once an hour per rule and subject.
+* `GET /api/watch/findings` lists the last 24 hours and `POST /api/watch/scan` runs them now (local machine only); `python watchers.py` does the same from a terminal.
+* Thresholds can be tuned with `NEXXUS_WATCH_FLOOD`, `_CHURN`, `_REJECT_RATIO`, `_OPERATOR_REFUSALS` and `_CAPTURE_REFUSALS`.
+* The rules of conduct for the bots are in [CODE_OF_CONDUCT.md](../CODE_OF_CONDUCT.md), and a test fails if the module can ever end a process or block anyone.
+
