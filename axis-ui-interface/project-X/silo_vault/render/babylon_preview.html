@@ -11913,7 +11913,16 @@ async function skBuild() {
       const row = el('div'); row.style.cssText = 'display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:10px';
       const cc = link('https://github.com/jamalemccarthy3-dev/axis-bridge/blob/main/CODE_OF_CONDUCT.md', 'Read the Code of Conduct'); cc.style.alignSelf = 'center';
       const go = el('button', 'pl-btn', 'Start the Academy'); go.type = 'button';
-      go.addEventListener('click', async () => { if (markSeen) await api('academy/welcome', {}); dialogClose(); PL.acView = { mode: 'home' }; setView('academy'); });
+      go.addEventListener('click', async () => { if (markSeen && (!agree || agree.checked)) await api('academy/welcome', {}); dialogClose(); PL.acView = { mode: 'home' }; setView('academy'); });
+      const tm = w.terms; let agree = null;
+      if (tm) {
+        const tb = el('div', 'wl-terms'); tb.append(el('div', 'ac-h', tm.title));
+        tm.sections.forEach(x => { const i = el('div', 'wl-item'); i.append(el('b', '', x.title), el('div', '', x.text), el('div', 'pw-sub', 'Today: ' + x.today)); tb.append(i); });
+        tb.append(el('div', '', tm.closing)); box.append(tb);
+        if (!w.terms_accepted) { const lab = el('label'); lab.style.cssText = 'display:flex;gap:8px;align-items:center;margin-top:8px'; agree = el('input'); agree.type = 'checkbox'; agree.id = 'plAgree'; lab.append(agree, el('span', '', 'I have read and agree to the Platform Alpha terms above.')); box.append(lab); go.disabled = true; agree.addEventListener('change', () => { go.disabled = !agree.checked; }); }
+        else box.append(el('div', 'pw-sub', 'You agreed to these terms (version ' + tm.version + ').'));
+      }
+      go.addEventListener('click', async () => { if (agree && agree.checked) await api('academy/terms', { version: tm.version }); });
       row.append(cc, closeBtn('Close'), go); box.append(row);
     });
   }

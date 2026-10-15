@@ -15,6 +15,7 @@ says exactly that.
 Content lives in academy/curriculum/*.json and is validated on load; a video can be attached to a step only from an allow-listed host and is click-to-load (see academy/README.md).
 """
 import glob
+import hashlib
 import json
 import os
 import re
@@ -347,8 +348,46 @@ def welcome():
             {"title": "Team automation bots and storefront connections", "needs": "integration work not yet built", "text": "Bots that run your team's tasks and storefronts managed from the workspace."},
         ],
         "planned_label": "Not available yet",
+        "terms": terms(), "terms_accepted": terms_accepted(),
         "privacy": "Your private conversations stay private.",
     }
+
+
+TERMS_VERSION = "alpha-1"
+TERMS_TITLE = "Platform Alpha: Terms of Engagement"
+TERMS = [
+    {"title": "1. Solo freedom",
+     "text": "Working as an individual builder, you are free to create, manage and scale multiple companies, projects and portals within your account. Nothing here limits your individual hustle.",
+     "today": "A local workspace limit of %d applies today (it protects the files on your computer, not your ambition)." % 10},
+    {"title": "2. Team collaboration and active clustering",
+     "text": "Partnerships on Platform Alpha are built on real, verified contribution. If you form a team or collaborate with others, your accounts formally cluster within the system. Real collaboration requires active "
+             "synchronization: passive passengers and uncommitted participants are not maintained within active team structures. If you are not clustering and building with your unit, you are not on the team.",
+     "today": "Teams across accounts are not built yet; a workspace has one member, you. No one can be removed for inactivity because nothing measures it yet. When teams exist, the contribution rule will be shown here first."},
+]
+TERMS_CLOSING = "By activating your account and entering Platform Alpha, you agree to uphold these standards of real-world value, accountability and mutual growth."
+
+
+def terms():
+    """The terms shown at onboarding, with a hash of the exact text so an acceptance is tied to the words that were on screen."""
+    body = json.dumps([TERMS_VERSION, TERMS_TITLE, TERMS, TERMS_CLOSING], sort_keys=True)
+    return {"version": TERMS_VERSION, "title": TERMS_TITLE, "sections": TERMS, "closing": TERMS_CLOSING, "sha256": hashlib.sha256(body.encode()).hexdigest()}
+
+
+def accept_terms(version):
+    """Record that this person agreed to the current terms (a stale or unknown version is refused, so an old screen cannot accept new words). -> the acceptance record."""
+    t = terms()
+    if version != t["version"]:
+        raise ValueError("These terms changed. Reload and read the current version.")
+    with _LOCK:
+        d = _read()
+        d["state"]["terms"] = {"version": t["version"], "sha256": t["sha256"], "t": int(time.time())}
+        _write(d)
+    return d["state"]["terms"]
+
+
+def terms_accepted():
+    rec = _read()["state"].get("terms")
+    return bool(rec) and rec.get("sha256") == terms()["sha256"]
 
 
 def mark_welcomed():

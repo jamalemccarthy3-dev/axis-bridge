@@ -169,6 +169,20 @@ class AcademyRouteTest(Base):
         r = self.c.post("/api/platform/academy/step", json={"track": "operate-nexxus", "step": "modes", "evidence": "I opened the Modes menu and read each entry."})
         self.assertEqual(r.status_code, 200)
 
+    def test_terms_acceptance_is_versioned_and_recorded(self):
+        w = self.c.get("/api/platform/academy").get_json()["welcome"]
+        self.assertFalse(w["terms_accepted"])
+        self.assertEqual([x["title"][:2] for x in w["terms"]["sections"]], ["1.", "2."])
+        self.assertTrue(all(x["today"] for x in w["terms"]["sections"]), "every promise says what is true today")
+        self.assertEqual(self.c.post("/api/platform/academy/terms", json={"version": "old"}).status_code, 409, "an old screen cannot accept new words")
+        r = self.c.post("/api/platform/academy/terms", json={"version": w["terms"]["version"]}).get_json()
+        self.assertEqual(r["accepted"]["sha256"], w["terms"]["sha256"])
+        self.assertTrue(self.c.get("/api/platform/academy").get_json()["welcome"]["terms_accepted"])
+
+    def test_terms_workspace_limit_matches_the_code(self):
+        import teams
+        self.assertIn("limit of %d" % teams.MAX_TEAMS, academy.TERMS[0]["today"])
+
     def test_closed_when_the_beta_ends_without_a_license(self):
         open(pm.entitlements.BETA_PATH, "w").write('{"beta_open": false}')
         self.assertEqual(self.c.get("/api/platform/academy").status_code, 402)

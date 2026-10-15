@@ -968,6 +968,19 @@ def register_routes(app, is_viewer, respond, is_admin=None):
         publish({"type": "academy"})
         return respond({"status": "success", "welcomed": academy.mark_welcomed()})
 
+    @app.route("/api/platform/academy/terms", methods=["POST", "OPTIONS"], endpoint="platform_academy_terms")
+    def academy_terms_route():
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        try:
+            rec = academy.accept_terms(str((request.get_json(silent=True) or {}).get("version", "")))
+        except ValueError as e:
+            return respond({"status": "error", "message": str(e)}, 409)
+        return respond({"status": "success", "accepted": rec})
+
     # ---------------- Marketplace: the storefront (buyers) and the vetting pipeline (creators and the administrator)
     def _admin_only():
         if not is_admin():
