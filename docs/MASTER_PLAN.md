@@ -38,7 +38,7 @@ This page maps every part of the master specification to the software as it stan
 
 | Spec | Status |
 |---|---|
-| 10 dashboards, 10 autonomous bots, 10 profiles per bot | **Decided, not yet enforced.** "Profiles per bot" means the person's own real management profiles linked to their node; NEXXUS never generates accounts. Counting dashboards and bots per account waits until they are per-account objects. |
+| 10 dashboards, 10 autonomous bots, 10 profiles per bot | **Built for dashboards and bot setups** (`dashboard_hub.py`, the Workspace tab): 10 active slots each, a Work Safe vault for resting items, and permanent purge (exact name to confirm). Slots count Academy workspace records only and never limit what runs on your own NEXXUS. A record can name the local engine it belongs to (checked against the engines your NEXXUS reports); public items show name, kind and engine on your visitor profile. "Profiles per bot" means your own real management profiles; NEXXUS never generates accounts, and it is not enforced yet. |
 | Strict 1-company limit | **Built.** One formal company per person (`teams.MAX_COMPANIES = 1`). Solo workspaces (team / pod) are separate, up to 10. |
 | Company creation gate | **Built.** Needs Track A complete. |
 | Every team member must participate and prove work | **Needs network.** Teams across accounts do not exist; a workspace has one member. The terms say so in plain words. |

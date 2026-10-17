@@ -70,6 +70,10 @@ class Base(unittest.TestCase):
         _social.REVIEWS_PATH, _social.COMMENTS_PATH, _social.INTERACTIONS_PATH = os.path.join(_market.DATA_DIR, "reviews.json"), os.path.join(_market.DATA_DIR, "comments.json"), os.path.join(_market.DATA_DIR, "interactions.jsonl")
         _social._recent.clear()
         _teams.TEAMS_PATH = os.path.join(pm.DATA_DIR, "teams.json")
+        import dashboard_hub as _hub
+        _hub.STORE_PATH = os.path.join(pm.DATA_DIR, "hub.json")
+        self.assertTrue(_hub.STORE_PATH.startswith(pm.DATA_DIR), "the workspace store is not redirected to the temp folder")
+        _hub.set_engine_provider(lambda: ["axis-core", "axis-link"])
         _teams.set_company_gate(lambda: (True, ""))          # the Track A gate is tested in test_academy.py
         _academy.PROGRESS_PATH, _academy.BADGES_PATH = os.path.join(pm.DATA_DIR, "academy.json"), os.path.join(pm.DATA_DIR, "badges.jsonl")
         os.environ.pop("NEXXUS_GITHUB_TOKEN", None)

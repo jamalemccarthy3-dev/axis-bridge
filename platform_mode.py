@@ -24,6 +24,7 @@ import uuid
 
 import academy
 import billing
+import dashboard_hub
 import entitlements
 import github_sync
 import market_social
@@ -234,7 +235,10 @@ def visitor_view():
     if v["featured"] and p["featured"]:
         by_id = {x.get("id"): x for x in _read_posts()}
         out["featured"] = [{"id": x, "text": by_id[x].get("text", ""), "url": by_id[x].get("url", ""), "media": by_id[x].get("media", ""), "t": by_id[x].get("t", 0)} for x in p["featured"] if x in by_id]
-    out["sections"] = [k for k in ("about", "experience", "projects", "skills", "featured", "links", "location") if k in out]
+    pub = dashboard_hub.public_items()
+    if pub:
+        out["dashboards"] = pub
+    out["sections"] = [k for k in ("about", "experience", "projects", "skills", "featured", "links", "location", "dashboards") if k in out]
     return out
 
 
@@ -654,6 +658,14 @@ def set_system_provider(fn):
     """The server gives teams a read-only way to see this NEXXUS's engines and hub (real telemetry, never invented)."""
     teams.set_providers(system=fn)
 
+    def engine_names():
+        try:
+            d = fn()
+        except Exception:
+            return None
+        return list(((d or {}).get("engines") or {}).keys()) if d else None
+    dashboard_hub.set_engine_provider(engine_names)
+
 
 def state():
     posts = _read_posts()[-200:]
@@ -716,6 +728,61 @@ def register_routes(app, is_viewer, respond, is_admin=None):
         else:
             return respond({"status": "error", "message": "Unknown billing action."}, 404)
         return respond({"status": "success" if out.get("ok") else "error", **out}, 200 if out.get("ok") else 400)
+
+    @app.route("/api/platform/hub", methods=["GET", "POST", "OPTIONS"], endpoint="platform_hub")
+    def hub_route():
+        """GET the workspace (slots, active items, the Work Safe vault); POST {kind, name, ...} to add an item."""
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        if request.method == "GET":
+            return respond({"status": "success", **dashboard_hub.snapshot()})
+        d = request.get_json(silent=True) or {}
+        try:
+            item = dashboard_hub.create(str(d.get("kind", "")), d.get("name", ""), d.get("note", ""), d.get("engine", ""), d.get("config"), bool(d.get("public")))
+        except dashboard_hub.HubError as e:
+            return respond({"status": "error", "message": str(e)}, 400)
+        publish({"type": "hub"})
+        return respond({"status": "success", "item": item, "slots": dashboard_hub.slots()})
+
+    @app.route("/api/platform/hub/<hid>", methods=["POST", "DELETE", "OPTIONS"], endpoint="platform_hub_item")
+    def hub_item_route(hid):
+        """POST edits an item; DELETE purges it for good (body: {"confirm_name": the exact name})."""
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        d = request.get_json(silent=True) or {}
+        try:
+            if request.method == "DELETE":
+                out = dashboard_hub.purge(hid, d.get("confirm_name", ""))
+            else:
+                out = {"item": dashboard_hub.update(hid, d.get("name"), d.get("note"), d.get("engine"), d.get("config"), d.get("public"))}
+        except dashboard_hub.HubError as e:
+            return respond({"status": "error", "message": str(e)}, 400)
+        publish({"type": "hub"})
+        return respond({"status": "success", **out, "slots": dashboard_hub.slots()})
+
+    @app.route("/api/platform/hub/<hid>/<action>", methods=["POST", "OPTIONS"], endpoint="platform_hub_action")
+    def hub_action_route(hid, action):
+        """action: shelve (move to the Work Safe vault) or restore (back into an active slot)."""
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        fn = {"shelve": dashboard_hub.shelve, "restore": dashboard_hub.restore}.get(action)
+        if not fn:
+            return respond({"status": "error", "message": "Unknown action."}, 404)
+        try:
+            item = fn(hid)
+        except dashboard_hub.HubError as e:
+            return respond({"status": "error", "message": str(e)}, 400)
+        publish({"type": "hub"})
+        return respond({"status": "success", "item": item, "slots": dashboard_hub.slots()})
 
     @app.route("/api/platform/state", methods=["GET", "OPTIONS"], endpoint="platform_state")
     def state_route():

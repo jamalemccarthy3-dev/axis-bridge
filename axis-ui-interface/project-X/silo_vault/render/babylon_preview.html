@@ -11376,7 +11376,7 @@ async function skBuild() {
 <div class="pl-stage" id="plStage" data-tab="floor">
 <aside class="pl-wall left" id="plLeft" aria-label="Your profile"></aside>
 <main class="pl-floor" aria-label="The floor">
-<div class="pl-views" id="plViews" role="tablist" aria-label="Floor views"><button type="button" role="tab" data-v="academy" class="on">Academy</button><button type="button" role="tab" data-v="teams">Teams</button><button type="button" role="tab" data-v="market">Marketplace</button><button type="button" role="tab" data-v="floor">Floor</button><button type="button" role="tab" data-v="wall">Profile wall</button><button type="button" role="tab" data-v="public">Public wall</button><button type="button" role="tab" data-v="vault">Image vault</button></div>
+<div class="pl-views" id="plViews" role="tablist" aria-label="Floor views"><button type="button" role="tab" data-v="academy" class="on">Academy</button><button type="button" role="tab" data-v="teams">Teams</button><button type="button" role="tab" data-v="market">Marketplace</button><button type="button" role="tab" data-v="floor">Floor</button><button type="button" role="tab" data-v="wall">Profile wall</button><button type="button" role="tab" data-v="public">Public wall</button><button type="button" role="tab" data-v="vault">Image vault</button><button type="button" role="tab" data-v="hub">Workspace</button></div>
 <div class="pl-view" id="plAcademyView" aria-label="The Academy"></div>
 <div class="pl-view" id="plTeamsView" hidden aria-label="Team workspaces"></div>
 <div class="pl-view" id="plMarketView" hidden aria-label="Marketplace"></div>
@@ -11385,6 +11385,7 @@ async function skBuild() {
 <div class="pl-view" id="plWallView" hidden aria-label="Your profile wall"></div>
 <div class="pl-view" id="plPublicView" hidden aria-label="The public wall"></div>
 <div class="pl-view" id="plVaultView" hidden aria-label="Your image vault"></div>
+<div class="pl-view" id="plHubView" hidden aria-label="Your dashboards and bot setups"></div>
 <div class="pl-mode m-private" id="plMode" role="group" aria-label="What the command bar does"><div class="seg main"><button type="button" data-m="talk">Talk to NEXXUS</button><button type="button" data-m="post" class="on">Post &amp; Publish</button></div><div class="seg sub" id="plAudience"><button type="button" data-a="private" class="on">Private note</button><button type="button" data-a="shared">Shared post</button></div><span class="cue" id="plCue" role="status"></span></div>
 <div class="pl-chip" id="plChip"><img id="plChipImg" alt="Photo to post"><span id="plChipName"></span><button type="button" id="plChipX" aria-label="Remove the photo">remove</button></div>
 <form class="pl-bar private" id="plBar" autocomplete="off"><button class="pl-attach" type="button" id="plAttach" aria-label="Attach a photo" title="Attach a photo (or paste or drop one)">&#128247;</button><input type="file" id="plFile" accept="image/jpeg,image/png,image/gif,image/webp" hidden><input id="plInput" maxlength="500" placeholder="Say something, share a link or drop a photo on the floor..." aria-label="Command bar: post or chat on the floor"><button class="pl-btn" type="submit" id="plSend">Save note</button></form>
@@ -11589,16 +11590,47 @@ async function skBuild() {
 
   // ---------- views: Floor | Profile wall | Image vault ----------
   PL.view = 'floor'; PL.wallEdit = null; PL.asVisitor = false; PL.vault = [];
-  const VIEWS = { academy: 'plAcademyView', teams: 'plTeamsView', market: 'plMarketView', talk: 'plTalkView', floor: 'plFeed', wall: 'plWallView', public: 'plPublicView', vault: 'plVaultView' };
+  const VIEWS = { academy: 'plAcademyView', teams: 'plTeamsView', market: 'plMarketView', talk: 'plTalkView', floor: 'plFeed', wall: 'plWallView', public: 'plPublicView', vault: 'plVaultView', hub: 'plHubView' };
   function setView(v) {
     if (v !== 'talk') PL.lastView = v;
     PL.view = v; if (v !== 'wall') { PL.wallEdit = null; PL.asVisitor = false; }
     Object.keys(VIEWS).forEach(k => { $(VIEWS[k]).hidden = k !== v; });
     document.querySelectorAll('#plViews button').forEach(b => { const on = b.dataset.v === v; b.classList.toggle('on', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); });
     if (v !== 'talk' && PL.cmd && PL.cmd.mode === 'talk') setComposer('post', PL.cmd.audience, true);          // leaving the talk view puts the command bar back to posting, so the cue is always true
-    if (v === 'academy') loadAcademy(); else if (v === 'teams') loadTeams(); else if (v === 'market') loadMarket(); else if (v === 'talk') renderTalk(); else if (v === 'wall') renderWall(); else if (v === 'vault') loadVault(); else if (v === 'public') loadPublic(); else { const f = $('plFeed'); f.scrollTop = f.scrollHeight; }
+    if (v === 'academy') loadAcademy(); else if (v === 'teams') loadTeams(); else if (v === 'market') loadMarket(); else if (v === 'talk') renderTalk(); else if (v === 'wall') renderWall(); else if (v === 'vault') loadVault(); else if (v === 'hub') loadHub(); else if (v === 'public') loadPublic(); else { const f = $('plFeed'); f.scrollTop = f.scrollHeight; }
   }
   $('plViews').addEventListener('click', e => { const b = e.target.closest('button[data-v]'); if (b) setView(b.dataset.v); });
+
+  // ---------- the workspace: 10 active slots, the Work Safe vault, and a real delete ----------
+  PL.hub = null;
+  async function loadHub() { const d = await api('hub', null, 'GET'); PL.hub = d && d.status === 'success' ? d : null; if (PL.view === 'hub') renderHub(); }
+  function hubCard(x, hub) {
+    const c = el('div', 'ac-card'); c.style.marginBottom = '8px'; c.append(el('h4', '', x.name + '  ·  ' + x.kind), el('div', 'pw-sub', x.note || 'No note.'));
+    if (x.engine) c.append(el('div', 'pw-sub', 'Runs on your NEXXUS engine: ' + x.engine));
+    c.append(el('div', 'pw-sub', x.public && x.state === 'active' ? 'Shown on your visitor profile (name, kind and engine only)' : 'Private'));
+    const row = el('div'); row.style.cssText = 'display:flex;gap:6px;flex-wrap:wrap;margin-top:6px'; const msg = el('div', 'pw-hint');
+    const btn = (label, fn, cls) => { const b = el('button', 'pl-btn ' + (cls || 'ghost'), label); b.type = 'button'; b.addEventListener('click', async () => { const r = await fn(); if (r && r.status === 'success') loadHub(); else { msg.textContent = (r && r.message) || 'Could not reach NEXXUS.'; msg.style.color = '#fda4af'; } }); row.append(b); };
+    if (x.state === 'active') { btn('Move to Work Safe', () => api('hub/' + x.id + '/shelve', {})); btn(x.public ? 'Make private' : 'Show on my profile', () => api('hub/' + x.id, { public: !x.public })); }
+    else btn('Restore to an active slot', () => api('hub/' + x.id + '/restore', {}));
+    btn('Delete for good', async () => { const t = prompt('Deleting is permanent and cannot be undone. Type the exact name to confirm:\n\n' + x.name); if (t === null) return { status: 'success' }; return api('hub/' + x.id, { confirm_name: t }, 'DELETE'); }, 'rep');
+    c.append(row, msg); return c;
+  }
+  function renderHub() {
+    const host = $('plHubView'); host.replaceChildren(); const h = PL.hub; if (!h) { host.append(el('div', 'pl-empty', 'The workspace could not be loaded.')); return; }
+    const hero = el('div', 'ac-hero'); hero.append(el('h3', '', 'Your workspace'), el('div', '', 'Your Academy dashboards and bot setups. Keep up to 10 of each active, rest the others in the Work Safe vault, and delete what you no longer need.')); h.rules.forEach(r => hero.append(el('div', 'pw-sub', r))); host.append(hero);
+    const f = el('form', 'pw-form'), kind = el('select'); [['dashboard', 'Dashboard'], ['bot', 'Bot setup']].forEach(([v, n]) => { const o = el('option', '', n); o.value = v; kind.append(o); }); kind.style.cssText = 'background:#05080f;color:#e2e8f0;border:1px solid rgba(148,163,184,0.45);border-radius:8px;padding:7px 10px;font:inherit';
+    const nm = inp('name', 'Name', '', 60), nt = inp('note', 'What it is for', '', 300), eng = el('select'); const none = el('option', '', 'No engine linked'); none.value = ''; eng.append(none); h.engines.forEach(e => { const o = el('option', '', 'Engine: ' + e); o.value = e; eng.append(o); }); eng.style.cssText = kind.style.cssText;
+    const go = el('button', 'pl-btn', 'Add to active slots'); go.type = 'submit'; const msg = el('div', 'pw-hint'); f.append(kind, nm, nt, eng, go, msg);
+    f.addEventListener('submit', async e => { e.preventDefault(); const r = await api('hub', { kind: kind.value, name: nm.value, note: nt.value, engine: eng.value }); if (r && r.status === 'success') loadHub(); else { msg.textContent = (r && r.message) || 'Could not reach NEXXUS.'; msg.style.color = '#fda4af'; } });
+    const add = el('section', 'pw-sec'); add.append(Object.assign(el('div', 'pw-sh'), {})); add.firstChild.append(el('h4', '', 'Add')); add.append(f); host.append(add);
+    [['dashboard', 'Dashboards'], ['bot', 'Bot setups']].forEach(([k, label]) => {
+      const sl = h.slots[k], act = h.items.filter(x => x.kind === k && x.state === 'active'), safe = h.items.filter(x => x.kind === k && x.state === 'safe');
+      const s = el('section', 'pw-sec'); s.append(Object.assign(el('div', 'pw-sh'), {})); s.firstChild.append(el('h4', '', label + ' · ' + sl.active + ' of ' + sl.max + ' active slots'));
+      const bar = el('div', 'ac-bar'), fill = el('i'); fill.style.width = Math.round(100 * sl.active / sl.max) + '%'; bar.append(fill); s.append(bar);
+      if (!act.length) s.append(el('div', 'pl-empty', 'Nothing active yet.')); act.forEach(x => s.append(hubCard(x, h)));
+      s.append(el('div', 'ac-h', 'Work Safe vault · ' + sl.safe + ' resting')); if (!safe.length) s.append(el('div', 'pw-hint', 'Nothing resting. Moving something here frees its slot and keeps it intact.')); safe.forEach(x => s.append(hubCard(x, h)));
+      host.append(s); });
+  }
 
   // ---------- the profile wall ----------
   const SEC_TITLE = { about: 'About', experience: 'Experience', projects: 'Projects', skills: 'Skills', featured: 'Featured', links: 'Links' };
