@@ -1,5 +1,7 @@
 {
   "id": "content-pipeline",
+  "path": "B",
+  "category": "money",
   "title": "Run a content pipeline",
   "badge": "Pipeline Builder",
   "summary": "Turn making content from a scramble into a repeatable pipeline: capture ideas, batch the work, check quality, repurpose and review. Process, not promises.",

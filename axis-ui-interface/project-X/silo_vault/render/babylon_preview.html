@@ -1256,6 +1256,13 @@ body.pl-on #axisDock { display:none !important; }          /* the desktop contro
 .pl-stage { flex:1; min-height:0; display:grid; grid-template-columns:minmax(220px,1fr) minmax(300px,1.7fr) minmax(220px,1fr); perspective:1500px; perspective-origin:50% 40%; padding:14px 18px 0; gap:0; }
 .pl-wall { min-height:0; overflow-y:auto; background:linear-gradient(180deg, rgba(30,41,59,0.78), rgba(15,23,42,0.88)); border:1px solid rgba(56,189,248,0.28); padding:14px; box-shadow:0 0 40px rgba(2,6,14,0.7); }
 .pl-wall.left { transform-origin:100% 50%; transform:rotateY(14deg); border-radius:12px 0 0 12px; } .pl-wall.right { transform-origin:0% 50%; transform:rotateY(-14deg); border-radius:0 12px 12px 0; }
+/* Safe zone: nothing in the Platform panels may bleed past the screen edge (links, share lines, buttons, borders) */
+#platformSpace, #platformSpace *, .pd-box, .pg-box { box-sizing:border-box; }
+.pl-wall, .pl-view, .pd-box, .pg-box { max-width:95vw; min-width:0; overflow-wrap:anywhere; word-break:break-word; }
+.pl-wall a, .pl-view a, .pd-box a, .pl-wall pre, .pl-view pre { max-width:100%; overflow-wrap:anywhere; word-break:break-word; }
+.pl-wall button, .pl-view button, .pd-box button, .pg-box button { max-width:100%; white-space:normal; }
+@media (max-width:820px) { .pl-wall, .pl-view { padding-left:12px; padding-right:12px; } }
+@media (max-width:640px) { .pl-top { flex-wrap:wrap; gap:6px 8px; padding:8px 12px; } .pl-top h2 { flex:1 1 100%; } .pl-top .pl-note { flex:1 1 100%; } .pl-exit { margin-left:auto; } }
 .pl-wall h3 { margin:0 0 8px; font-size:.78rem; text-transform:uppercase; letter-spacing:.1em; color:#7dd3fc; }
 .pl-floor { min-height:0; display:flex; flex-direction:column; background:linear-gradient(180deg, rgba(8,12,22,0.95), rgba(14,22,38,0.98)); border:1px solid rgba(56,189,248,0.4); border-radius:6px; transform-origin:50% 100%; transform:rotateX(3deg); z-index:1; }
 .pl-feed { flex:1; min-height:0; overflow-y:auto; padding:14px; display:flex; flex-direction:column; gap:8px; scroll-behavior:smooth; }
@@ -1475,6 +1482,7 @@ body.demo-mode .saved-hub-title, body.demo-mode .saved-hub-meta, body.demo-mode 
 .sk-thesis { padding:12px; border-radius:8px; border:1px solid rgba(74,222,128,0.55); background:rgba(22,101,52,0.18); white-space:pre-wrap; overflow-wrap:anywhere; font-size:0.88rem; }
 .sk-thesis h4 { margin:0 0 6px; font-size:0.72rem; letter-spacing:0.07em; text-transform:uppercase; color:#86efac; }
 .sk-rail { display:flex; flex-direction:column; gap:8px; min-height:0; overflow:auto; }
+#skClose { padding:4px 9px; border-radius:7px; border:1px solid rgba(248,113,113,0.6); background:rgba(127,29,29,0.35); color:#fecaca; font-size:0.72rem; text-transform:none; letter-spacing:0; cursor:pointer; min-height:28px; }
 .sk-rail-h { font-size:0.68rem; text-transform:uppercase; letter-spacing:0.07em; color:#94a3b8; }
 .sk-pills { display:flex; flex-wrap:wrap; gap:6px; }
 .sk-pill { cursor:pointer; padding:6px 11px; border-radius:999px; font-size:0.74rem; border:1px solid rgba(250,204,21,0.5); background:rgba(250,204,21,0.1); color:#fef9c3; text-align:left; min-height:30px; }
@@ -11182,6 +11190,7 @@ async function skBuild() {
         on('skNew', async () => { const d = await skDo('api/sketch/new'); if (d) skRender(d.view, d.reply); });
         on('skThesisBtn', async () => { const d = await skDo('api/sketch/thesis'); if (d) skRender(d.view, d.reply); });
         on('skBuild', skBuild);
+        on('skClose', async () => { skMsg(''); await setOperatingMode('conversation'); });      // the sketch stays on the server; this only closes the board
         window.addEventListener('resize', skPlace);
         const mw = document.getElementById('main-workspace-screen');
         if (mw && window.ResizeObserver) new ResizeObserver(skPlace).observe(mw);
@@ -11202,7 +11211,7 @@ async function skBuild() {
     </div>
   </div>
   <aside class="sk-rail">
-    <div class="sk-rail-h">Suggestions (click any, any time)</div>
+    <div class="sk-rail-h" style="display:flex;justify-content:space-between;align-items:center"><span>Suggestions (click any, any time)</span><button type="button" id="skClose" title="Close the sketch board and go back to the standard view. Your sketch is kept." aria-label="Close sketch mode">Close &times;</button></div>
     <div class="sk-pills" id="skPills"></div>
     <div class="sk-actions">
       <button type="button" id="skNew">New sketch</button>
@@ -11838,7 +11847,8 @@ async function skBuild() {
     host.append(ps);
     // tracks
     const ts = el('section', 'pw-sec'); ts.append(Object.assign(el('div', 'pw-sh'), {})); ts.firstChild.append(el('h4', '', 'Tracks'));
-    ac.tracks.forEach(tr => { const c = el('div', 'ac-card' + (st.track === tr.id ? ' on' : '')); c.style.marginBottom = '8px'; c.setAttribute('role', 'button'); c.tabIndex = 0; c.append(el('h4', '', tr.title + (st.track === tr.id ? '  (your track)' : '')), el('div', 'pw-sub', tr.summary));
+    { const ta = ac.track_a || { done: 0, total: 0 }; ts.append(el('div', 'pw-hint', 'Track A is the core foundation (' + ta.done + ' of ' + ta.total + ' core steps done). Finishing it, with the Code of Conduct and your profile, opens company creation. Track B is practical work you can do in any order, and new lessons are released weekly. You can browse everything from day one.')); }
+    ac.tracks.forEach(tr => { const c = el('div', 'ac-card' + (st.track === tr.id ? ' on' : '')); c.style.marginBottom = '8px'; c.setAttribute('role', 'button'); c.tabIndex = 0; c.append(el('h4', '', 'Track ' + tr.path + ' \u00b7 ' + tr.title + (st.track === tr.id ? '  (your track)' : '')), el('div', 'pw-sub', tr.summary));
       const bar = el('div', 'ac-bar'), fill = el('i'); fill.style.width = Math.round(100 * tr.done / Math.max(1, tr.steps)) + '%'; bar.append(fill); c.append(bar, el('div', 'pw-sub', tr.done + ' of ' + tr.steps + ' steps · badge: ' + tr.badge));
       const go = () => { PL.acView = { mode: 'track', track: tr.id, step: null }; renderAcademy(); }; c.addEventListener('click', go); c.addEventListener('keydown', e => { if (e.key === 'Enter') go(); }); ts.append(c); });
     host.append(ts);
@@ -11869,6 +11879,8 @@ async function skBuild() {
     const tr = d.track, flat = tr.modules.flatMap(m => m.steps.map(s => Object.assign({ module: m.title }, s))), idx = flat.findIndex(s => s.id === PL.acView.step), s = flat[idx]; if (!s) { PL.acView = { mode: 'home' }; return renderAcademy(); }
     const back = el('button', 'ac-crumb', '← ' + tr.title); back.type = 'button'; back.addEventListener('click', () => { PL.acView = { mode: 'track', track: tr.id }; renderAcademy(); }); host.append(back);
     const hero = el('div', 'ac-hero'); hero.append(el('h3', '', s.title), el('div', 'pw-sub', s.module + '  ·  step ' + (idx + 1) + ' of ' + flat.length)); host.append(hero);
+    if (!s.done) { const fo = PL.ac && PL.ac.focus, locked = !!(fo && fo.track === tr.id && fo.step === s.id), fb = el('button', 'pl-btn', locked ? 'NEXXUS is focused on this task' : 'Work on this with NEXXUS'); fb.type = 'button'; fb.style.marginTop = '8px'; fb.title = 'NEXXUS keeps to this task until you finish it or leave it.';
+      fb.addEventListener('click', async () => { const r = await api('academy/focus', { track: tr.id, step: s.id }); if (r && r.status === 'success') { await loadAcademy(); setComposer('talk', null); } else fb.textContent = (r && r.message) || 'Could not lock the task.'; }); hero.append(fb); }
     { const tn = toastNode(); if (tn) host.append(tn); }
     host.append(el('div', 'ac-h', 'Why it matters'), el('p', '', s.why), el('div', 'ac-h', 'Do this'));
     const ol = el('ol', 'ac-list'); s.do.forEach(x => ol.append(el('li', '', x))); host.append(ol);
@@ -11940,6 +11952,7 @@ async function skBuild() {
     const host = $('plTeamsView'); host.replaceChildren();
     if (PL.team.mode === 'list') {
       const hero = el('div', 'ac-hero'); hero.append(el('h3', '', 'Team workspaces'), el('div', '', 'A workspace is where a team, pod or company plans and tracks its work: a task board, Academy blueprints and a control center with real telemetry. It is private to you.'), el('div', 'pw-sub', 'Today a workspace has one member, you. Inviting teammates, live rooms and a company phone line need the network and a telephony provider, which do not exist yet, so they are shown as not available instead of faked.'));
+      { const ta = (PL.ac && PL.ac.track_a) || null; hero.append(el('div', 'pw-sub', 'A formal company (one per person) opens after Track A' + (ta ? ': ' + ta.done + ' of ' + ta.total + ' core steps done.' : '.') + ' Teams and pods are solo workspaces and are always open.')); }
       host.append(hero);
       const f = el('form', 'pw-form'); const nm = inp('name', 'Team name', '', 60), ms = inp('mission', 'Mission, in one line', '', 200), kind = el('select'); ['team', 'pod', 'company'].forEach(k => { const o = el('option', '', k); o.value = k; kind.append(o); }); kind.style.cssText = 'background:#05080f;color:#e2e8f0;border:1px solid rgba(148,163,184,0.45);border-radius:8px;padding:7px 10px;font:inherit'; kind.setAttribute('aria-label', 'Kind of workspace');
       const go = el('button', 'pl-btn', 'Create workspace'); go.type = 'submit'; const msg = el('div', 'pw-hint'); f.append(nm, ms, kind, go, msg);
@@ -12001,8 +12014,9 @@ async function skBuild() {
   function renderTalk() {
     const host = $('plTalkView'); host.replaceChildren();
     host.append(el('div', 'tk-banner', 'Private line to NEXXUS. This conversation is between you and the NEXXUS on this computer: it is never posted, never public, never sent to GitHub and never counted for ranks. Ask, debug, get guidance. To build, exit Platform and pick a build mode.'));
+    { const fo = PL.ac && PL.ac.focus; if (fo) { const fb = el('div', 'tk-banner'); fb.append(document.createTextNode('Task focus: ' + fo.title + '. NEXXUS keeps to this task until you finish it or leave it. ')); const lv = el('button', 'pl-btn ghost', 'Leave task'); lv.type = 'button'; lv.addEventListener('click', async () => { await api('academy/focus', null, 'DELETE'); await loadAcademy(); renderTalk(); }); fb.append(lv); host.append(fb); } }
     const log = el('div', 'tk-log'); log.id = 'tkLog';
-    if (!PL.talk.length) log.append(el('div', 'pl-empty', 'Ask NEXXUS anything: how a step works, why a command failed, what to try next.'));
+    if (!PL.talk.length) { const g = PL.ac && PL.ac.welcome && PL.ac.welcome.greeting; if (g) { const b = el('div', 'tk-msg ai'); b.append(el('div', 'tk-who', 'NEXXUS'), document.createTextNode(g)); log.append(b); } else log.append(el('div', 'pl-empty', 'Ask NEXXUS anything: how a step works, why a command failed, what to try next.')); }
     PL.talk.forEach(m => { const b = el('div', 'tk-msg ' + m.who + (m.cls ? ' ' + m.cls : '')); b.append(el('div', 'tk-who', m.who === 'me' ? 'You' : 'NEXXUS'), document.createTextNode(m.text)); log.append(b); });
     host.append(log); host.scrollTop = host.scrollHeight;
   }
@@ -12010,7 +12024,8 @@ async function skBuild() {
     PL.talk.push({ who: 'me', text }); const waiting = { who: 'ai', text: 'thinking...', cls: 'wait' }; PL.talk.push(waiting); PL.talking = true; $('plSend').disabled = true; if (PL.view === 'talk') renderTalk();
     const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 600000);
     try {
-      const r = await fetch(BASE + '/bridge', { method: 'POST', headers: Object.assign({ 'Content-Type': 'application/json' }, authHeaders()), body: JSON.stringify({ message: text }), cache: 'no-store', signal: ctl.signal }); const d = await r.json();
+      let pre = ''; try { const f = await api('academy/focus', null, 'GET'); if (f && f.status === 'success') pre = f.preamble || ''; } catch (_) {}      // a locked task scopes the conversation
+      const r = await fetch(BASE + '/bridge', { method: 'POST', headers: Object.assign({ 'Content-Type': 'application/json' }, authHeaders()), body: JSON.stringify({ message: pre + text }), cache: 'no-store', signal: ctl.signal }); const d = await r.json();
       waiting.cls = d && d.error ? 'err' : ''; waiting.text = (d && (d.message || d.error)) || 'NEXXUS did not answer.';
     } catch (e) { waiting.cls = 'err'; waiting.text = e && e.name === 'AbortError' ? 'NEXXUS took too long to answer.' : 'Could not reach NEXXUS. Is it running?'; }
     clearTimeout(timer); PL.talking = false; $('plSend').disabled = false; if (PL.view === 'talk') renderTalk();

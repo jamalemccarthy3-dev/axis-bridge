@@ -636,6 +636,7 @@ def _academy_context():
 
 academy.set_context_provider(_academy_context)
 teams.set_providers(tracks=lambda: academy.overview()["tracks"])
+teams.set_company_gate(academy.company_gate)
 
 
 def set_system_provider(fn):
@@ -967,6 +968,26 @@ def register_routes(app, is_viewer, respond, is_admin=None):
             return g
         publish({"type": "academy"})
         return respond({"status": "success", "welcomed": academy.mark_welcomed()})
+
+    @app.route("/api/platform/academy/focus", methods=["GET", "POST", "DELETE", "OPTIONS"], endpoint="platform_academy_focus")
+    def academy_focus_route():
+        """Lock NEXXUS onto one task (POST {track, step}), read the lock and the instruction to send with each message (GET), or leave the task (DELETE)."""
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        if request.method == "DELETE":
+            academy.clear_focus()
+            return respond({"status": "success", "focus": None, "preamble": ""})
+        if request.method == "POST":
+            d = request.get_json(silent=True) or {}
+            try:
+                academy.set_focus(d.get("track", ""), d.get("step", ""))
+            except academy.AcademyError as e:
+                return respond({"status": "error", "message": str(e)}, 400)
+            publish({"type": "academy"})
+        return respond({"status": "success", "focus": academy.focus_info(), "preamble": academy.focus_preamble()})
 
     @app.route("/api/platform/academy/terms", methods=["POST", "OPTIONS"], endpoint="platform_academy_terms")
     def academy_terms_route():

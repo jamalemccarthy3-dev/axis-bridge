@@ -1,0 +1,142 @@
+{
+  "id": "first-principles",
+  "path": "A",
+  "category": "technical",
+  "title": "The Permanent Foundation",
+  "badge": "Foundations Holder",
+  "summary": "The hooks: engineering fundamentals that do not expire when a tool does. Clear logic, honest data flow, local safety and the habit of testing before trusting. You keep these skills on any system, with or without NEXXUS.",
+  "audience": "Everyone. This is part of the core foundation.",
+  "disclaimer": "A technical learning path only. Nothing here promises views, sales or income.",
+  "modules": [
+    {
+      "id": "logic",
+      "title": "Clean logic",
+      "badge": "Clear Thinker",
+      "goal": "Turn a vague goal into inputs, steps and outputs that anyone could check.",
+      "steps": [
+        {
+          "id": "io-map",
+          "title": "Break a goal into inputs, steps and outputs",
+          "why": "Every system, from a spreadsheet to a bot fleet, is the same three things: what goes in, what happens to it, what comes out. If you cannot say all three in plain words, the build will drift.",
+          "do": [
+            "Pick one small thing you want a system to do (for example: turn a list of links into a tidy reading list).",
+            "Write the inputs, the numbered steps and the exact output as three short lists.",
+            "Ask NEXXUS to find any step that depends on something you did not list."
+          ],
+          "prompts": [
+            {"label": "Find the hidden dependency", "text": "Here is my goal: <goal>. My inputs are <inputs>, my steps are <steps> and my output is <output>. Which step silently depends on something I have not listed? Ask me questions before you suggest anything."}
+          ],
+          "commands": [],
+          "tips": ["If a step needs the word 'somehow', it is not a step yet.", "Smaller is better: one input, one output, three steps."],
+          "video": null,
+          "check": "You can read your three lists aloud and a stranger could build from them.",
+          "proof": "note"
+        },
+        {
+          "id": "contract",
+          "title": "Write the contract before the code",
+          "why": "A contract says what a piece of work promises: what it accepts, what it returns and what it refuses. Writing it first is what lets you test it, replace it and trust it later.",
+          "do": [
+            "For the goal above, write: accepts, returns, refuses (three lines each at most).",
+            "Add two examples that must work and two that must be refused.",
+            "Keep this note: it becomes your test list in the last module."
+          ],
+          "prompts": [
+            {"label": "Pressure-test the contract", "text": "Here is my contract: <contract>. Give me five inputs designed to break it, including empty, huge and malformed ones, and tell me what each should do."}
+          ],
+          "commands": [],
+          "tips": ["Refusing clearly is a feature. A system that accepts everything cannot be trusted with anything."],
+          "video": null,
+          "check": "Your contract has at least two refusals and two examples.",
+          "proof": "note"
+        }
+      ]
+    },
+    {
+      "id": "data-flow",
+      "title": "Data flow and local safety",
+      "badge": "Data Steward",
+      "goal": "Know where your data goes and keep it inside the boundary you chose.",
+      "steps": [
+        {
+          "id": "trace",
+          "title": "Trace where your data travels",
+          "why": "Most leaks are not attacks, they are forgotten paths: a log, a cache, a cloud call you did not notice. Drawing the path once makes the boundary visible.",
+          "do": [
+            "Choose one thing you do in NEXXUS (a chat, a build, a post).",
+            "List every place its content can end up: screen, a file on disk, the model you chose, GitHub, a shared feed.",
+            "Mark each place as 'stays on this computer' or 'leaves this computer'."
+          ],
+          "prompts": [],
+          "commands": [
+            {"label": "Ask what leaves the machine", "text": "what do you send off this computer and when?", "where": "NEXXUS command bar"}
+          ],
+          "tips": ["Private notes and direct conversations are never meant to reach the public wall or GitHub.", "If a place is marked 'leaves', write who controls it."],
+          "video": null,
+          "check": "Your list names at least one place that leaves the computer and who controls it.",
+          "proof": "note"
+        },
+        {
+          "id": "guardrail",
+          "title": "Set one guardrail and prove it holds",
+          "why": "A guardrail is a rule the system enforces for you even when you are tired. A guardrail you never tested is a hope, not a rule.",
+          "do": [
+            "Pick one rule (for example: operator mode only touches folders you granted).",
+            "Write the rule and one action that should be blocked.",
+            "Try the blocked action and record what NEXXUS said."
+          ],
+          "prompts": [],
+          "commands": [],
+          "tips": ["Record the exact refusal message: it is your evidence."],
+          "video": null,
+          "check": "You tried something the rule should block and wrote down that it was blocked.",
+          "proof": "note"
+        }
+      ]
+    },
+    {
+      "id": "mindset",
+      "title": "The builder's mindset",
+      "badge": "Builder's Mind",
+      "goal": "Test before you trust, read failures, and keep what you learn.",
+      "steps": [
+        {
+          "id": "test-first",
+          "title": "Turn your contract into a test list",
+          "why": "Passing your own hard tests is the only grade that matters. Wishing a build works proves nothing; a list of checks that all pass proves something specific.",
+          "do": [
+            "Convert your contract examples into a numbered list of checks: input, expected result.",
+            "Run each check by hand or with NEXXUS and mark pass or fail honestly.",
+            "Fix one failure and run the whole list again."
+          ],
+          "prompts": [
+            {"label": "Make the tests harder", "text": "Here are my checks: <checks>. Add five harder ones that a careless builder would skip: edge cases, bad input, repeated runs. Do not give me the answers."}
+          ],
+          "commands": [],
+          "tips": ["Re-run everything after every fix; fixes break neighbours."],
+          "video": null,
+          "check": "You have a written list with at least one failure you found and fixed.",
+          "proof": "note"
+        },
+        {
+          "id": "read-failure",
+          "title": "Read a failure instead of fighting it",
+          "why": "An error message is the system telling you exactly where it disagrees with you. Builders who read it calmly fix things in minutes; the rest guess for hours.",
+          "do": [
+            "Take one real error from your tests or from NEXXUS.",
+            "Write: what I expected, what happened, the first line of the message, my best guess.",
+            "Ask NEXXUS to challenge the guess before you change anything."
+          ],
+          "prompts": [
+            {"label": "Challenge my guess", "text": "I expected <expected>. Instead <actual>. The first line of the error is <line>. My guess is <guess>. What evidence would prove or disprove my guess before I change any code?"}
+          ],
+          "commands": [],
+          "tips": ["Change one thing at a time, then re-run."],
+          "video": null,
+          "check": "You wrote expected, actual, first error line and a guess for a real failure.",
+          "proof": "note"
+        }
+      ]
+    }
+  ]
+}

@@ -18,6 +18,7 @@ TEAMS_PATH = os.path.join(HERE, "nexxus_data", "platform", "teams.json")
 KINDS = ("team", "pod", "company")
 STATUSES = ("todo", "doing", "done")
 MAX_TEAMS = 10
+MAX_COMPANIES = 1       # a formal, collaborative micro-company: one per person. Solo workspaces (kind team / pod) are separate and capped by MAX_TEAMS.
 MAX_TASKS = 200
 MAX_ACTIVITY = 200
 _LOCK = threading.RLock()
@@ -25,6 +26,12 @@ _CTRL = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]")
 _DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 
 _providers = {"tracks": lambda: [], "system": lambda: None}
+_company_gate = [lambda: (True, "")]       # replaced by platform_mode: a company needs Track A done first
+
+
+def set_company_gate(fn):
+    """fn() -> (ok, message). A formal company can only be created while it says ok."""
+    _company_gate[0] = fn
 
 
 def set_providers(tracks=None, system=None):
@@ -82,6 +89,12 @@ def create_team(name, mission="", kind="team", leader_name="You"):
         teams = _read()
         if len(teams) >= MAX_TEAMS:
             raise TeamError("That is the limit of %d workspaces." % MAX_TEAMS)
+        if kind == "company":
+            if sum(1 for x in teams if x["kind"] == "company") >= MAX_COMPANIES:
+                raise TeamError("You already have your company. One formal company per person; use solo workspaces for everything else.")
+            ok, why = _company_gate[0]()
+            if not ok:
+                raise TeamError(why)
         t = {"id": uuid.uuid4().hex[:10], "name": name, "mission": _clean(mission, 200), "kind": kind, "created": int(time.time()),
              "members": [{"id": "you", "name": _clean(leader_name, 40) or "You", "role": "leader"}], "tracks": [], "tasks": [], "activity": []}
         _log(t, "team", "Workspace created.")

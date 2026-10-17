@@ -222,6 +222,8 @@ def complete_step(track_id, step_id, evidence=""):
     tr, m, s = _find(tracks, str(track_id), str(step_id))
     if not s:
         raise AcademyError("No such step.")
+    if not module_released(m):
+        raise AcademyError("That lesson is released in week %d of your academy. It will open then." % int(m.get("week", 0)))
     key = "%s/%s" % (tr["id"], s["id"])
     evidence = str(evidence or "").strip()
     with _LOCK:
@@ -244,6 +246,9 @@ def complete_step(track_id, step_id, evidence=""):
                 raise AcademyError("Write a sentence or two about what you did (at least 10 characters). It is self-reported: NEXXUS cannot check it, and the badge will say so.")
             rec = {"t": int(time.time()), "proof": "note", "evidence": evidence[:300]}
         data["done"][key] = rec
+        fo = data["state"].get("focus")
+        if fo and fo.get("track") == tr["id"] and fo.get("step") == s["id"]:
+            data["state"].pop("focus", None)          # the locked task is finished: NEXXUS is free again
         _write(data)
         new = _award(tracks, data["done"])
     return {"step": dict(rec, id=s["id"]), "new_badges": new}
@@ -321,6 +326,115 @@ def group_checklist():
     return {"items": items, "pod_entry": "locked", "note": "Team pods open once these steps are done with real people. Pods are not built yet, so nothing here is faked."}
 
 
+# ---------------------------------------------------------------- weekly release, Track A / Track B, the company gate and the task focus
+WEEK_SECONDS = 7 * 86400
+
+
+def _started(now=None):
+    """When this learner's academy clock began (the first time the academy was read). Modules may carry a "week" number; week 0 is open from the start."""
+    with _LOCK:
+        d = _read()
+        if not d["state"].get("started"):
+            d["state"]["started"] = int(now or time.time())
+            _write(d)
+        return d["state"]["started"]
+
+
+def weeks_elapsed(now=None):
+    return max(0, int(((now or time.time()) - _started(now)) // WEEK_SECONDS))
+
+
+def module_released(module, now=None):
+    return int(module.get("week", 0) or 0) <= weeks_elapsed(now)
+
+
+def track_path(tr):
+    """"A" is the core foundation every operator completes; "B" is applied, practical work. A track says which in its file; anything unlabelled counts as B."""
+    return "A" if tr.get("path") == "A" else "B"
+
+
+def track_a_status():
+    """Whether Track A (all core tracks, the Code of Conduct and a filled-in profile) is complete. This is what opens company creation. Social steps that need other people are not required, because
+    nobody could ever finish them on a single computer."""
+    tracks, _ = load_curriculum()
+    data = _read()
+    a = [t for t in tracks if track_path(t) == "A"]
+    total = sum(len(m["steps"]) for t in a for m in t["modules"])
+    done = sum(1 for t in a for m in t["modules"] for s in m["steps"] if _step_done(data["done"], t["id"], s["id"]))
+    ctx = _context[0]()
+    missing = []
+    for t in a:
+        left = sum(1 for m in t["modules"] for s in m["steps"] if not _step_done(data["done"], t["id"], s["id"]))
+        if left:
+            missing.append("%s (%d steps left)" % (t["title"], left))
+    if (data["state"].get("conduct") or {}).get("version") != CONDUCT_VERSION:
+        missing.append("accept the Code of Conduct")
+    if not AUTO_CHECKS["profile_complete"][1](ctx):
+        missing.append("fill in your profile (name, headline, About)")
+    return {"complete": not missing, "done": done, "total": total, "missing": missing}
+
+
+def company_gate():
+    """-> (ok, message) for creating a formal company."""
+    st = track_a_status()
+    if st["complete"]:
+        return True, ""
+    return False, "Finish Track A first (%d of %d core steps done). Still to do: %s." % (st["done"], st["total"], "; ".join(st["missing"]))
+
+
+def set_focus(track_id, step_id):
+    """Lock NEXXUS onto one task until it is finished or you leave it."""
+    tracks, _ = load_curriculum()
+    tr, m, s = _find(tracks, str(track_id), str(step_id))
+    if not s:
+        raise AcademyError("No such task.")
+    if not module_released(m):
+        raise AcademyError("That lesson is not released yet.")
+    with _LOCK:
+        d = _read()
+        d["state"]["focus"] = {"track": tr["id"], "step": s["id"], "t": int(time.time())}
+        _write(d)
+    return focus_info()
+
+
+def clear_focus():
+    with _LOCK:
+        d = _read()
+        d["state"].pop("focus", None)
+        _write(d)
+
+
+def focus_info():
+    d = _read()
+    f = d["state"].get("focus")
+    if not f:
+        return None
+    tracks, _ = load_curriculum()
+    tr, m, s = _find(tracks, f.get("track"), f.get("step"))
+    if not s:
+        return None
+    return {"track": tr["id"], "track_title": tr["title"], "step": s["id"], "title": s["title"], "goal": s["check"], "do": list(s.get("do", [])), "done": _step_done(d["done"], tr["id"], s["id"])}
+
+
+def focus_preamble():
+    """The instruction placed in front of what you say to NEXXUS while a task is locked. It scopes the conversation; it is guidance to the model, not a technical wall, so a model can still drift."""
+    f = focus_info()
+    if not f or f["done"]:
+        return ""
+    steps = " ".join("%d) %s" % (i + 1, x) for i, x in enumerate(f["do"]))
+    return ("[Task focus] The operator is working on one task: \"%s\" (track: %s). Success looks like: %s. Steps: %s "
+            "Keep your whole answer about helping them finish this task. Do not start or switch to unrelated topics; if they ask something unrelated, answer in one sentence and steer back. "
+            "The task ends when they mark it done or leave it.\n\n") % (f["title"], f["track_title"], f["goal"], steps)
+
+
+def greeting():
+    """What NEXXUS says the first time a new person talks to it. Warm, short, no pressure."""
+    return ("Hey, welcome. Stepping into a sovereign system can feel like being dropped in the deep end, and that is normal: nobody expects you to know where anything is yet. "
+            "I'm NEXXUS: a workspace, an academy and a builder's ground where you keep control of your data, your tools and what you make. "
+            "If you ever want to learn how to use me and earn your operator rank, the Academy tracks are down on the platform hub, and they are completely optional. "
+            "There's no rush and nothing you have to do first. Talk to me, look around the walls, or poke at anything at your own pace. What are you curious about?")
+
+
 def welcome():
     """The orientation shown when someone first enters Platform mode (and from the "What is this?" button). It separates what works today from what is planned, so nobody is promised
     something that does not exist. test_academy.py checks that every planned item is marked not available."""
@@ -348,17 +462,17 @@ def welcome():
             {"title": "Team automation bots and storefront connections", "needs": "integration work not yet built", "text": "Bots that run your team's tasks and storefronts managed from the workspace."},
         ],
         "planned_label": "Not available yet",
-        "terms": terms(), "terms_accepted": terms_accepted(),
+        "terms": terms(), "terms_accepted": terms_accepted(), "greeting": greeting(),
         "privacy": "Your private conversations stay private.",
     }
 
 
-TERMS_VERSION = "alpha-1"
+TERMS_VERSION = "alpha-2"
 TERMS_TITLE = "Platform Alpha: Terms of Engagement"
 TERMS = [
     {"title": "1. Solo freedom",
      "text": "Working as an individual builder, you are free to create, manage and scale multiple companies, projects and portals within your account. Nothing here limits your individual hustle.",
-     "today": "A local workspace limit of %d applies today (it protects the files on your computer, not your ambition)." % 10},
+     "today": "Solo workspaces (teams and pods) are limited to %d on this computer to protect its files. A formal company is limited to one per person and opens after you finish Track A." % 10},
     {"title": "2. Team collaboration and active clustering",
      "text": "Partnerships on Platform Alpha are built on real, verified contribution. If you form a team or collaborate with others, your accounts formally cluster within the system. Real collaboration requires active "
              "synchronization: passive passengers and uncommitted participants are not maintained within active team structures. If you are not clustering and building with your unit, you are not on the team.",
@@ -406,13 +520,13 @@ def overview():
     for tr in tracks:
         steps = [s for m in tr["modules"] for s in m["steps"]]
         done = sum(1 for s in steps if _step_done(data["done"], tr["id"], s["id"]))
-        out_tracks.append({"id": tr["id"], "title": tr["title"], "badge": tr.get("badge"), "summary": tr.get("summary", ""), "audience": tr.get("audience", ""),
+        out_tracks.append({"id": tr["id"], "path": track_path(tr), "category": tr.get("category", "money"), "title": tr["title"], "badge": tr.get("badge"), "summary": tr.get("summary", ""), "audience": tr.get("audience", ""),
                            "disclaimer": tr.get("disclaimer", ""), "steps": len(steps), "done": done,
-                           "modules": [{"id": m["id"], "title": m["title"], "badge": m.get("badge"), "goal": m.get("goal", ""),
+                           "modules": [{"id": m["id"], "title": m["title"], "badge": m.get("badge"), "goal": m.get("goal", ""), "week": int(m.get("week", 0) or 0), "released": module_released(m),
                                         "steps": [_public(s, data, tr["id"]) for s in m["steps"]]} for m in tr["modules"]]})
     earned = {b["badge"] for b in badges}
     defs = [dict(d, earned=d["id"] in earned, earned_info=next((b for b in badges if b["badge"] == d["id"]), None)) for d in badge_definitions(tracks)]
-    return {"state": data["state"], "welcome": welcome(), "tracks": out_tracks, "badges": defs, "problems": problems, "quests": quests(), "group": group_checklist(),
+    return {"state": data["state"], "welcome": welcome(), "track_a": track_a_status(), "focus": focus_info(), "weeks_elapsed": weeks_elapsed(), "tracks": out_tracks, "badges": defs, "problems": problems, "quests": quests(), "group": group_checklist(),
             "leadership": {"mentor_ready": "mentor-ready" in earned,
                            "text": "The leadership loop: work through the system, master the tools, then guide others through the same path. Finish a whole track to become Mentor-ready. Mentoring itself needs other people on the platform and is not built yet."},
             "beta": "Open Beta: every track is open from day one. No payment, no prerequisites."}

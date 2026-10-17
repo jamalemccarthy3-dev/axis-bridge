@@ -22,6 +22,7 @@ TELEMETRY = {"hub": {"uptime_s": 12.5, "cpu_percent": 3.0, "rss_mb": 120.0, "thr
 class TeamBase(Base):
     def setUp(self):
         super().setUp()
+        teams.set_company_gate(lambda: (True, ""))          # the Track A gate has its own tests in test_academy.py
         teams.set_providers(tracks=lambda: [{"id": "operate-nexxus", "title": "Operate NEXXUS", "badge": "NEXXUS Operator", "steps": 8, "done": 2}], system=lambda: TELEMETRY)
 
 
@@ -224,6 +225,19 @@ class TalkPrivacyTest(unittest.TestCase):
     def test_public_modules_never_handle_the_talk_channel(self):
         for name in ("github_sync.py", "ranks.py", "teams.py", "academy.py", "telemetry_hub.py"):
             self.assertNotIn("nexxus_talk", open(os.path.join(HERE, name), encoding="utf-8").read(), name)
+
+
+class CompanyRulesTest(TeamBase):
+    def test_one_formal_company_and_a_gate_in_front_of_it(self):
+        teams.set_company_gate(lambda: (False, "Finish Track A first."))
+        with self.assertRaisesRegex(teams.TeamError, "Track A"):
+            teams.create_team("Co", kind="company")
+        teams.create_team("Solo work", kind="team")                    # solo workspaces are never gated
+        teams.set_company_gate(lambda: (True, ""))
+        teams.create_team("Co", kind="company")
+        with self.assertRaisesRegex(teams.TeamError, "formal company per person"):
+            teams.create_team("Co two", kind="company")
+        teams.create_team("More solo work", kind="pod")
 
 
 if __name__ == "__main__":

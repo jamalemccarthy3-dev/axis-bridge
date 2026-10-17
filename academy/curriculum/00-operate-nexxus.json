@@ -1,5 +1,7 @@
 {
   "id": "operate-nexxus",
+  "path": "A",
+  "category": "technical",
   "title": "Operate NEXXUS",
   "badge": "NEXXUS Operator",
   "summary": "Learn the control room itself: modes, the command bar, the guardrails and how to read what the system is doing. Every step uses something that really exists in NEXXUS.",

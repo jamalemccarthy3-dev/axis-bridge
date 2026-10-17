@@ -1,0 +1,134 @@
+{
+  "id": "translation-matrix",
+  "path": "A",
+  "category": "technical",
+  "title": "Industry to Sovereign: the Translation Matrix",
+  "badge": "Fluent Translator",
+  "summary": "Learn the buzzwords the industry uses, what they mean, and the local, sovereign equivalent you build with NEXXUS, so you can work in any ecosystem and know the honest trade-offs.",
+  "audience": "Everyone. Read the old way fairly before choosing the sovereign way.",
+  "disclaimer": "A technical learning path only. It compares approaches honestly, including where the hosted way is the better choice. Nothing here promises views, sales or income.",
+  "modules": [
+    {
+      "id": "buzzwords",
+      "title": "Five buzzwords, translated",
+      "badge": "Buzzword Cutter",
+      "goal": "Explain each term in one plain sentence and name the NEXXUS equivalent you can actually use.",
+      "steps": [
+        {
+          "id": "rag",
+          "title": "RAG: retrieval-augmented generation",
+          "why": "Industry meaning: the model is given documents found by a search step, usually through a hosted vector database and a cloud model. Sovereign equivalent: local context and knowledge vaults, where the retrieval step reads files on your own machine and you decide which model sees them. The advantage is control of the data boundary: content stays on your computer unless you choose to send it to a model.",
+          "do": [
+            "Write the old way in one sentence and the NEXXUS way in one sentence.",
+            "Open your Knowledge or vault notes in NEXXUS and find one thing it can retrieve for you.",
+            "Write which model would see the retrieved text and whether it runs on your machine."
+          ],
+          "prompts": [
+            {"label": "Check my translation", "text": "Explain RAG in one plain sentence. Then tell me how a local knowledge vault does the same job, and what I give up by doing it locally."}
+          ],
+          "commands": [],
+          "tips": ["If you send retrieved text to a hosted model, that text leaves your machine. Local retrieval does not change that by itself."],
+          "video": null,
+          "check": "Your two sentences are plain and you named what a local approach costs you.",
+          "proof": "note"
+        },
+        {
+          "id": "vector-db",
+          "title": "Vector database",
+          "why": "Industry meaning: a database that stores numeric fingerprints (embeddings) of text so a search can find similar meaning. Sovereign equivalent: structured local asset and vault indexing, files on your disk indexed by your own tools. It can work offline and carries no per-query fee, but you maintain it and it may not scale like a managed service.",
+          "do": [
+            "Describe an embedding in your own words.",
+            "List what you would index locally and how many items you expect.",
+            "Decide whether that size needs a managed database or whether local files are enough."
+          ],
+          "prompts": [
+            {"label": "Right-size it", "text": "I have about <number> documents of <size>. Would a local index be enough or would a managed vector database help? Explain the trade-off without hype."}
+          ],
+          "commands": [],
+          "tips": ["Size changes the answer. Be honest about yours."],
+          "video": null,
+          "check": "You gave a size and a reasoned local-or-managed decision.",
+          "proof": "note"
+        },
+        {
+          "id": "agents",
+          "title": "Agents and multi-agent systems",
+          "why": "Industry meaning: programs that let a model plan and call tools, often through framework wrappers and rented servers. Sovereign equivalent: the Triad Protocol and local node loops, small monitored scripts on hardware you control. The advantage is you can read every line and see every failure; the cost is you operate them.",
+          "do": [
+            "List what an agent must be allowed to do and what it must never do.",
+            "Say how you would see that it is stuck or failing.",
+            "Write the one action that always needs a human approval."
+          ],
+          "prompts": [
+            {"label": "Design the leash", "text": "I want a bot to <task>. List the actions it may take, the actions it must never take, how I will see a failure, and which step needs my approval."}
+          ],
+          "commands": [],
+          "tips": ["A bot that cannot be watched cannot be trusted."],
+          "video": null,
+          "check": "You have allowed, forbidden, failure signal and approval step written down.",
+          "proof": "note"
+        },
+        {
+          "id": "fine-tuning",
+          "title": "Fine-tuning and training",
+          "why": "Industry meaning: further training a model on your data, usually by uploading datasets to a provider. Sovereign equivalent: prompt scoping and pipeline routing, meaning you steer output with precise instructions and by routing each job to the right local or hosted model. It is cheap and instant to change, but it does not change what the model knows the way training does.",
+          "do": [
+            "Describe one job you thought needed training.",
+            "Try to solve it with a tighter prompt and a clear example instead.",
+            "Write whether it worked and, if not, what it really needs."
+          ],
+          "prompts": [
+            {"label": "Prompt before you train", "text": "My job is <job>. Write a tightly scoped prompt with two examples that might solve it without any training, and tell me honestly what would still need training."}
+          ],
+          "commands": [],
+          "tips": ["Most jobs that sound like training problems are instruction problems."],
+          "video": null,
+          "check": "You tested a scoped prompt and wrote an honest result.",
+          "proof": "note"
+        },
+        {
+          "id": "middleware",
+          "title": "API integration and middleware",
+          "why": "Industry meaning: hosted services that connect apps for a monthly fee. Sovereign equivalent: the Axis Bridge and local handlers, direct local connections and your own small automation scripts. You get flexibility and no platform fee; you own the maintenance and the security.",
+          "do": [
+            "Pick two apps you want connected.",
+            "Write what data crosses between them and what must be checked on the way.",
+            "Decide whether a local handler or a hosted connector is the right tool for this job and say why."
+          ],
+          "prompts": [
+            {"label": "Connector or handler", "text": "I need to connect <app A> to <app B> so that <result>. Compare a hosted connector with a small local handler: cost, effort, security and what happens when it breaks."}
+          ],
+          "commands": [],
+          "tips": ["Anything that touches an outside service needs its keys kept out of files you share."],
+          "video": null,
+          "check": "You compared both options and justified your choice.",
+          "proof": "note"
+        }
+      ]
+    },
+    {
+      "id": "judgment",
+      "title": "When the old way wins",
+      "badge": "Honest Judge",
+      "goal": "Choose the right approach for the job instead of the loyal one.",
+      "steps": [
+        {
+          "id": "fair-comparison",
+          "title": "Say where the hosted way is better",
+          "why": "Sovereign does not mean always local. Hosted services win on scale, uptime and effort for some jobs. A builder who can say when is trusted more than one who cannot.",
+          "do": [
+            "Choose one of the five terms above.",
+            "Write one situation where the hosted approach is clearly the better choice and why.",
+            "Write one situation where the local approach is clearly better and why."
+          ],
+          "prompts": [],
+          "commands": [],
+          "tips": ["If you cannot name a case for the other side, you have not understood it."],
+          "video": null,
+          "check": "You wrote one honest case for each side.",
+          "proof": "note"
+        }
+      ]
+    }
+  ]
+}

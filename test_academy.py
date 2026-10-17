@@ -17,7 +17,7 @@ class CurriculumTest(unittest.TestCase):
     def test_every_track_is_valid_and_complete(self):
         tracks, problems = academy.load_curriculum()
         self.assertEqual(problems, [])
-        self.assertEqual([t["id"] for t in tracks], ["operate-nexxus", "youtube-profile", "digital-storefront", "content-pipeline"])
+        self.assertEqual([t["id"] for t in tracks], ["operate-nexxus", "first-principles", "translation-matrix", "youtube-profile", "digital-storefront", "content-pipeline"])
         steps = [s for t in tracks for m in t["modules"] for s in m["steps"]]
         self.assertGreaterEqual(len(steps), 20)
         for s in steps:
@@ -147,6 +147,46 @@ class ProgressTest(Base):
         self.assertTrue({x["id"]: x for x in academy.quests()}["conduct"]["done"])
 
 
+    def test_company_gate_needs_all_of_track_a(self):
+        ok, why = academy.company_gate()
+        self.assertFalse(ok)
+        self.assertIn("Track A", why)
+        st = academy.track_a_status()
+        self.assertEqual((st["done"], st["total"]), (0, 20))
+        tracks, _ = academy.load_curriculum()
+        a = [t for t in tracks if academy.track_path(t) == "A"]
+        self.assertEqual([t["id"] for t in a], ["operate-nexxus", "first-principles", "translation-matrix"])
+        self.assertTrue(all(academy.track_path(t) == "B" for t in tracks if t not in a))
+
+    def test_weekly_release_holds_future_lessons_back(self):
+        import time as _t
+        tracks, _ = academy.load_curriculum()
+        late = {"id": "x", "week": 3, "steps": []}
+        self.assertTrue(academy.module_released({"id": "y"}), "week 0 is open from day one")
+        self.assertFalse(academy.module_released(late))
+        self.assertTrue(academy.module_released(late, now=_t.time() + 3 * academy.WEEK_SECONDS + 5))
+
+    def test_task_focus_scopes_nexxus_until_done_or_left(self):
+        self.assertEqual(academy.focus_preamble(), "")
+        academy.set_focus("operate-nexxus", "modes")
+        pre = academy.focus_preamble()
+        self.assertIn("Meet the Modes menu", pre)
+        self.assertIn("Do not start or switch to unrelated topics", pre)
+        academy.clear_focus()
+        self.assertEqual(academy.focus_preamble(), "")
+        academy.set_focus("operate-nexxus", "modes")
+        academy.complete_step("operate-nexxus", "modes", "I opened Diagnostic and read the engine lights.")
+        self.assertIsNone(academy.focus_info(), "finishing the task releases the lock")
+        with self.assertRaises(academy.AcademyError):
+            academy.set_focus("operate-nexxus", "nope")
+
+    def test_greeting_is_warm_optional_and_pressure_free(self):
+        g = academy.greeting().lower()
+        for word in ("welcome", "deep end", "academy", "optional", "no rush"):
+            self.assertIn(word, g)
+        self.assertEqual(academy.welcome()["greeting"], academy.greeting())
+
+
 class AcademyRouteTest(Base):
     def setUp(self):
         super().setUp()
@@ -158,7 +198,7 @@ class AcademyRouteTest(Base):
 
     def test_routes_roundtrip(self):
         ov = self.c.get("/api/platform/academy").get_json()
-        self.assertEqual((ov["status"], len(ov["tracks"])), ("success", 4))
+        self.assertEqual((ov["status"], len(ov["tracks"])), ("success", 6))
         self.assertEqual(self.c.get("/api/platform/academy/track/youtube-profile").get_json()["track"]["badge"], "Channel Builder")
         self.assertEqual(self.c.get("/api/platform/academy/track/nope").status_code, 404)
         self.assertEqual(self.c.post("/api/platform/academy/path", json={"path": "solo", "track": "operate-nexxus"}).status_code, 200)
@@ -181,7 +221,22 @@ class AcademyRouteTest(Base):
 
     def test_terms_workspace_limit_matches_the_code(self):
         import teams
-        self.assertIn("limit of %d" % teams.MAX_TEAMS, academy.TERMS[0]["today"])
+        self.assertIn("limited to %d" % teams.MAX_TEAMS, academy.TERMS[0]["today"])
+        self.assertIn("one per person", academy.TERMS[0]["today"])
+        self.assertEqual(teams.MAX_COMPANIES, 1)
+
+    def test_focus_and_company_gate_through_the_routes(self):
+        import teams
+        r = self.c.post("/api/platform/academy/focus", json={"track": "operate-nexxus", "step": "modes"}).get_json()
+        self.assertEqual(r["focus"]["step"], "modes")
+        self.assertIn("[Task focus]", r["preamble"])
+        self.assertEqual(self.c.post("/api/platform/academy/focus", json={"track": "x", "step": "y"}).status_code, 400)
+        self.assertEqual(self.c.delete("/api/platform/academy/focus").get_json()["preamble"], "")
+        teams.set_company_gate(academy.company_gate)                       # the real gate, not the test default
+        r = self.c.post("/api/platform/teams", json={"name": "Co", "kind": "company"})
+        self.assertGreaterEqual(r.status_code, 400)
+        self.assertIn("Track A", json.dumps(r.get_json()))
+        self.assertEqual(self.c.post("/api/platform/teams", json={"name": "Solo", "kind": "team"}).status_code, 200)
 
     def test_closed_when_the_beta_ends_without_a_license(self):
         open(pm.entitlements.BETA_PATH, "w").write('{"beta_open": false}')
