@@ -123,3 +123,9 @@ The private key never leaves your machine and is gitignored. If it is lost, no n
 ## Workspace: active slots, Work Safe and purge
 
 The **Workspace** tab holds your Academy dashboards and bot setups. Up to **10 of each** can be active at once. Resting work goes to the **Work Safe vault** (kept intact, no slot used) and comes back with Restore when a slot is free. **Delete for good** is permanent: you type the exact name, and the record and its configuration are removed from this computer (copies you exported or shared elsewhere are not touched). A record can name one of your own NEXXUS engines; it is private unless you choose to show it, and then only its name, kind and engine appear on your visitor profile. These slots never limit what you build and run on your own node.
+
+## The right-hand panel: public side vs private side
+
+The centre stage never moves when you change the command bar. **Post & Publish** shows **Network & friends** on the right, marked **Public side**: a Shared post goes on the public wall. **Talk to NEXXUS** swaps the right panel for a private board marked **Private**: your conversation with the local NEXXUS, saved automatically after every message, with an **Archive hub** grouped by Today, Yesterday, Earlier this week and Older (open, continue or delete any conversation for good). Switching back restores Network & friends. The **Messages** button at the top right of the panel opens the private **Messages & friends** hub. Conversations live in the private folder that no public module can read and are never posted, put on the public wall, sent to GitHub or counted for ranks.
+
+Honest limit: friends, direct messages, group chats and phone/video calls between people need the shared network, which does not exist yet. The hub shows them as "Not available yet" with the reason; nothing is faked. On a phone, the right panel is the Network/Talk tab, and choosing Talk opens it for you.

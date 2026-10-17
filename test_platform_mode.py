@@ -74,6 +74,9 @@ class Base(unittest.TestCase):
         _hub.STORE_PATH = os.path.join(pm.DATA_DIR, "hub.json")
         self.assertTrue(_hub.STORE_PATH.startswith(pm.DATA_DIR), "the workspace store is not redirected to the temp folder")
         _hub.set_engine_provider(lambda: ["axis-core", "axis-link"])
+        import private_hub as _ph
+        _ph.STORE_PATH = os.path.join(pm.DATA_DIR, "talk_sessions.json")
+        self.assertTrue(_ph.STORE_PATH.startswith(pm.DATA_DIR), "the private conversation store is not redirected to the temp folder")
         _teams.set_company_gate(lambda: (True, ""))          # the Track A gate is tested in test_academy.py
         _academy.PROGRESS_PATH, _academy.BADGES_PATH = os.path.join(pm.DATA_DIR, "academy.json"), os.path.join(pm.DATA_DIR, "badges.jsonl")
         os.environ.pop("NEXXUS_GITHUB_TOKEN", None)

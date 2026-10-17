@@ -1272,6 +1272,14 @@ body > div, body > main, body > section, body > header, body > footer { max-widt
 .pl-wall button, .pl-view button, .pd-box button, .pg-box button { max-width:100%; white-space:normal; }
 @media (max-width:820px) { .pl-wall, .pl-view { padding-left:12px; padding-right:12px; } }
 @media (max-width:640px) { .pl-top { flex-wrap:wrap; gap:6px 8px; padding:8px 12px; } .pl-top h2 { flex:1 1 100%; } .pl-top .pl-note { flex:1 1 100%; } .pl-exit { margin-left:auto; } }
+.pl-rhead { display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:8px; } .pl-rhead h3 { margin:0; }
+.pl-msgbtn { background:rgba(56,189,248,0.14); border:1px solid rgba(56,189,248,0.6); color:#e0f2fe; border-radius:8px; padding:4px 10px; font:inherit; font-size:.76rem; cursor:pointer; }
+.pl-badge { display:inline-block; border-radius:999px; padding:2px 9px; font-size:.66rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
+.pl-badge.priv { color:#bbf7d0; border:1px solid rgba(74,222,128,0.7); background:rgba(22,101,52,0.35); } .pl-badge.pub { color:#fde68a; border:1px solid rgba(251,191,36,0.6); background:rgba(120,53,15,0.35); }
+.tk-save { font-size:.72rem; color:#86efac; margin:2px 0 8px; } .tk-arch h4 { margin:12px 0 4px; font-size:.7rem; letter-spacing:.1em; text-transform:uppercase; color:#94a3b8; }
+.tk-arch .row { display:flex; gap:6px; align-items:center; margin-bottom:4px; } .tk-arch .row button.open { flex:1; text-align:left; background:rgba(15,23,42,0.8); border:1px solid rgba(148,163,184,0.3); color:#e2e8f0; border-radius:8px; padding:6px 8px; font:inherit; font-size:.78rem; cursor:pointer; overflow-wrap:anywhere; }
+.tk-arch .row button.open.on { border-color:rgba(56,189,248,0.8); } .tk-arch .row button.del { background:none; border:1px solid rgba(251,113,133,0.5); color:#fecdd3; border-radius:8px; padding:4px 8px; cursor:pointer; font-size:.72rem; }
+.hub-sec { border:1px solid rgba(148,163,184,0.25); border-radius:10px; padding:8px 10px; margin:8px 0; background:rgba(15,23,42,0.6); } .hub-sec b { color:#e2e8f0; } .hub-sec small { display:block; color:#94a3b8; margin-top:2px; }
 .pl-wall h3 { margin:0 0 8px; font-size:.78rem; text-transform:uppercase; letter-spacing:.1em; color:#7dd3fc; }
 .pl-floor { min-height:0; display:flex; flex-direction:column; background:linear-gradient(180deg, rgba(8,12,22,0.95), rgba(14,22,38,0.98)); border:1px solid rgba(56,189,248,0.4); border-radius:6px; transform-origin:50% 100%; transform:rotateX(3deg); z-index:1; }
 .pl-feed { flex:1; min-height:0; overflow-y:auto; padding:14px; display:flex; flex-direction:column; gap:8px; scroll-behavior:smooth; }
@@ -11384,7 +11392,6 @@ async function skBuild() {
 <div class="pl-view" id="plAcademyView" aria-label="The Academy"></div>
 <div class="pl-view" id="plTeamsView" hidden aria-label="Team workspaces"></div>
 <div class="pl-view" id="plMarketView" hidden aria-label="Marketplace"></div>
-<div class="pl-view" id="plTalkView" hidden aria-label="Talk to NEXXUS"></div>
 <div class="pl-feed" id="plFeed" aria-live="polite" hidden></div>
 <div class="pl-view" id="plWallView" hidden aria-label="Your profile wall"></div>
 <div class="pl-view" id="plPublicView" hidden aria-label="The public wall"></div>
@@ -11506,12 +11513,56 @@ async function skBuild() {
       if (d && d.status === 'success') { PL.state.profile = d.profile; PL.editing = false; renderLeft(); } });
     host.append(f);
   }
+  PL.right = 'network'; PL.talkSid = null; PL.talkArchive = null; PL.talkStatement = '';
+  function badge(kind, text) { return el('span', 'pl-badge ' + kind, text); }
+  function rightHead(host, title, kindBadge) {
+    const h = el('div', 'pl-rhead'), left = el('div'); left.style.cssText = 'display:flex;gap:8px;align-items:center;flex-wrap:wrap'; left.append(el('h3', '', title), kindBadge); h.append(left);
+    const b = el('button', 'pl-msgbtn', PL.right === 'msg' ? '\u2190 Back' : '\u2709 Messages'); b.type = 'button'; b.title = 'Private messages and friends';
+    b.addEventListener('click', () => { PL.right = PL.right === 'msg' ? (PL.cmd.mode === 'talk' ? 'talk' : 'network') : 'msg'; renderRight(); if (PL.right === 'msg') loadMsgHub(); });
+    h.append(b); host.append(h);
+  }
   function renderRight() {
-    const host = $('plRight'), n = (PL.state && PL.state.network) || {}; host.replaceChildren(); host.append(el('h3', '', 'Network & friends'));
+    const host = $('plRight'); host.replaceChildren();
+    if (PL.right === 'talk') renderTalkBoard(host); else if (PL.right === 'msg') renderMsgHub(host); else renderNetwork(host);
+  }
+  function renderNetwork(host) {
+    const n = (PL.state && PL.state.network) || {};
+    rightHead(host, 'Network & friends', badge('pub', 'Public side'));
+    host.append(el('div', 'pl-note', 'Post & Publish is the public side: a Shared post goes on the public wall. Private notes and everything in Messages and Talk to NEXXUS stay private.'));
     host.append(el('div', 'pl-name', (n.connections || 0) + ' connections'));
     if (!(n.feed || []).length) host.append(el('div', 'pl-empty', n.note || 'Nothing here yet.'));
     (n.feed || []).forEach(x => { const m = el('div', 'pl-msg', x.text || ''); host.append(m); });
   }
+  PL.msgHub = null;
+  async function loadMsgHub() { if (!PL.msgHub) { const d = await api('private/hub', null, 'GET'); if (d && d.status === 'success') PL.msgHub = d; } if (PL.right === 'msg') renderRight(); }
+  function renderMsgHub(host) {
+    rightHead(host, 'Messages & friends', badge('priv', 'Private'));
+    const h = PL.msgHub; if (!h) { host.append(el('div', 'pl-empty', 'Loading...')); return; }
+    host.append(el('div', 'tk-banner', h.statement));
+    h.sections.forEach(s => { const d = el('div', 'hub-sec'); const t = el('b', '', s.title); t.append(document.createTextNode('  ')); t.append(badge('pub', 'Not available yet')); d.append(t, el('small', '', s.text)); host.append(d); });
+    host.append(el('div', 'pl-note', h.now));
+  }
+  function renderTalkBoard(host) {
+    rightHead(host, 'Talk to NEXXUS', badge('priv', 'Private'));
+    host.append(el('div', 'tk-banner', PL.talkStatement || 'Private line to the NEXXUS on this computer. Saved automatically; never posted, never public, never sent to GitHub and never counted for ranks.'));
+    { const fo = PL.ac && PL.ac.focus; if (fo) { const fb = el('div', 'tk-banner'); fb.append(document.createTextNode('Task focus: ' + fo.title + '. NEXXUS keeps to this task until you finish it or leave it. ')); const lv = el('button', 'pl-btn ghost', 'Leave task'); lv.type = 'button'; lv.addEventListener('click', async () => { await api('academy/focus', null, 'DELETE'); await loadAcademy(); renderRight(); }); fb.append(lv); host.append(fb); } }
+    const bar = el('div'); bar.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:8px'; bar.append(el('span', 'tk-save', '\u2713 Saved automatically on this computer'));
+    const nw = el('button', 'pl-msgbtn', 'New conversation'); nw.type = 'button'; nw.addEventListener('click', async () => { const r = await api('private/talk', {}, 'POST'); if (r && r.status === 'success') { PL.talkSid = r.session.id; PL.talk = []; await loadTalk(); } }); bar.append(nw); host.append(bar);
+    const log = el('div', 'tk-log'); log.id = 'tkLog';
+    if (!PL.talk.length) { const g = PL.ac && PL.ac.welcome && PL.ac.welcome.greeting; if (g) { const b = el('div', 'tk-msg ai'); b.append(el('div', 'tk-who', 'NEXXUS'), document.createTextNode(g)); log.append(b); } else log.append(el('div', 'pl-empty', 'Ask NEXXUS anything: how a step works, why a command failed, what to try next.')); }
+    PL.talk.forEach(m => { const b = el('div', 'tk-msg ' + m.who + (m.cls ? ' ' + m.cls : '')); b.append(el('div', 'tk-who', m.who === 'me' ? 'You' : 'NEXXUS'), document.createTextNode(m.text)); log.append(b); });
+    host.append(log);
+    const arch = el('div', 'tk-arch'); arch.append(el('h3', '', 'Archive hub')); const a = PL.talkArchive;
+    if (!a || !a.groups.length) arch.append(el('div', 'pw-hint', 'Past conversations appear here, grouped by day.'));
+    else a.groups.forEach(g => { arch.append(el('h4', '', g.label)); g.items.forEach(it => { const row = el('div', 'row'); const o = el('button', 'open' + (it.id === PL.talkSid ? ' on' : ''), it.title + '  \u00b7  ' + it.count + ' msg'); o.type = 'button'; o.addEventListener('click', () => openTalk(it.id));
+      const x = el('button', 'del', 'Delete'); x.type = 'button'; x.title = 'Delete this conversation for good'; x.addEventListener('click', async () => { if (!confirm('Delete "' + it.title + '" for good? This cannot be undone.')) return; await api('private/talk/' + it.id, null, 'DELETE'); if (it.id === PL.talkSid) { PL.talkSid = null; PL.talk = []; } await loadTalk(); }); row.append(o, x); arch.append(row); }); });
+    host.append(arch); host.scrollTop = PL.talkStick === false ? host.scrollTop : host.scrollHeight;
+  }
+  async function loadTalk() {
+    const d = await api('private/talk', null, 'GET'); if (d && d.status === 'success') { PL.talkArchive = d; PL.talkStatement = d.statement || ''; if (!PL.talkSid && d.current && d.current.messages.length) { PL.talkSid = d.current.id; PL.talk = d.current.messages.map(m => ({ who: m.who, text: m.text, cls: m.cls || '' })); } }
+    if (PL.right === 'talk') renderRight();
+  }
+  async function openTalk(id) { const d = await api('private/talk/' + id, null, 'GET'); if (d && d.status === 'success') { PL.talkSid = id; PL.talk = d.session.messages.map(m => ({ who: m.who, text: m.text, cls: m.cls || '' })); PL.talkStick = true; renderRight(); } }
   // ---------- the floor: photos, ratings, comments ----------
   const BASE = (typeof PYTHON_SERVER_BASE_URL !== 'undefined') ? PYTHON_SERVER_BASE_URL : '';
   const authHeaders = () => (typeof recon !== 'undefined' && recon.adminToken) ? { 'X-Nexxus-Admin-Token': recon.adminToken } : {};
@@ -11594,14 +11645,13 @@ async function skBuild() {
 
   // ---------- views: Floor | Profile wall | Image vault ----------
   PL.view = 'floor'; PL.wallEdit = null; PL.asVisitor = false; PL.vault = [];
-  const VIEWS = { academy: 'plAcademyView', teams: 'plTeamsView', market: 'plMarketView', talk: 'plTalkView', floor: 'plFeed', wall: 'plWallView', public: 'plPublicView', vault: 'plVaultView', hub: 'plHubView' };
+  const VIEWS = { academy: 'plAcademyView', teams: 'plTeamsView', market: 'plMarketView', floor: 'plFeed', wall: 'plWallView', public: 'plPublicView', vault: 'plVaultView', hub: 'plHubView' };
   function setView(v) {
     if (v !== 'talk') PL.lastView = v;
     PL.view = v; if (v !== 'wall') { PL.wallEdit = null; PL.asVisitor = false; }
     Object.keys(VIEWS).forEach(k => { $(VIEWS[k]).hidden = k !== v; });
     document.querySelectorAll('#plViews button').forEach(b => { const on = b.dataset.v === v; b.classList.toggle('on', on); b.setAttribute('aria-selected', on ? 'true' : 'false'); });
-    if (v !== 'talk' && PL.cmd && PL.cmd.mode === 'talk') setComposer('post', PL.cmd.audience, true);          // leaving the talk view puts the command bar back to posting, so the cue is always true
-    if (v === 'academy') loadAcademy(); else if (v === 'teams') loadTeams(); else if (v === 'market') loadMarket(); else if (v === 'talk') renderTalk(); else if (v === 'wall') renderWall(); else if (v === 'vault') loadVault(); else if (v === 'hub') loadHub(); else if (v === 'public') loadPublic(); else { const f = $('plFeed'); f.scrollTop = f.scrollHeight; }
+    if (v === 'academy') loadAcademy(); else if (v === 'teams') loadTeams(); else if (v === 'market') loadMarket(); else if (v === 'wall') renderWall(); else if (v === 'vault') loadVault(); else if (v === 'hub') loadHub(); else if (v === 'public') loadPublic(); else { const f = $('plFeed'); f.scrollTop = f.scrollHeight; }
   }
   $('plViews').addEventListener('click', e => { const b = e.target.closest('button[data-v]'); if (b) setView(b.dataset.v); });
 
@@ -12052,24 +12102,17 @@ async function skBuild() {
 
   // ---------- Talk to NEXXUS: a private line to the local NEXXUS ----------
   PL.talk = []; PL.talking = false;
-  function renderTalk() {
-    const host = $('plTalkView'); host.replaceChildren();
-    host.append(el('div', 'tk-banner', 'Private line to NEXXUS. This conversation is between you and the NEXXUS on this computer: it is never posted, never public, never sent to GitHub and never counted for ranks. Ask, debug, get guidance. To build, exit Platform and pick a build mode.'));
-    { const fo = PL.ac && PL.ac.focus; if (fo) { const fb = el('div', 'tk-banner'); fb.append(document.createTextNode('Task focus: ' + fo.title + '. NEXXUS keeps to this task until you finish it or leave it. ')); const lv = el('button', 'pl-btn ghost', 'Leave task'); lv.type = 'button'; lv.addEventListener('click', async () => { await api('academy/focus', null, 'DELETE'); await loadAcademy(); renderTalk(); }); fb.append(lv); host.append(fb); } }
-    const log = el('div', 'tk-log'); log.id = 'tkLog';
-    if (!PL.talk.length) { const g = PL.ac && PL.ac.welcome && PL.ac.welcome.greeting; if (g) { const b = el('div', 'tk-msg ai'); b.append(el('div', 'tk-who', 'NEXXUS'), document.createTextNode(g)); log.append(b); } else log.append(el('div', 'pl-empty', 'Ask NEXXUS anything: how a step works, why a command failed, what to try next.')); }
-    PL.talk.forEach(m => { const b = el('div', 'tk-msg ' + m.who + (m.cls ? ' ' + m.cls : '')); b.append(el('div', 'tk-who', m.who === 'me' ? 'You' : 'NEXXUS'), document.createTextNode(m.text)); log.append(b); });
-    host.append(log); host.scrollTop = host.scrollHeight;
-  }
+  async function saveTalk(who, text, cls) { if (!PL.talkSid) { const r = await api('private/talk', {}, 'POST'); if (!r || r.status !== 'success') return; PL.talkSid = r.session.id; } await api('private/talk/' + PL.talkSid + '/message', { who, text, cls: cls || '' }, 'POST'); }      // auto-save: every message is stored the moment it exists
   async function askNexxus(text) {
-    PL.talk.push({ who: 'me', text }); const waiting = { who: 'ai', text: 'thinking...', cls: 'wait' }; PL.talk.push(waiting); PL.talking = true; $('plSend').disabled = true; if (PL.view === 'talk') renderTalk();
+    PL.talk.push({ who: 'me', text }); const waiting = { who: 'ai', text: 'thinking...', cls: 'wait' }; PL.talk.push(waiting); PL.talking = true; $('plSend').disabled = true; if (PL.right === 'talk') renderRight();
+    saveTalk('me', text);
     const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 600000);
     try {
       let pre = ''; try { const f = await api('academy/focus', null, 'GET'); if (f && f.status === 'success') pre = f.preamble || ''; } catch (_) {}      // a locked task scopes the conversation
       const r = await fetch(BASE + '/bridge', { method: 'POST', headers: Object.assign({ 'Content-Type': 'application/json' }, authHeaders()), body: JSON.stringify({ message: pre + text }), cache: 'no-store', signal: ctl.signal }); const d = await r.json();
       waiting.cls = d && d.error ? 'err' : ''; waiting.text = (d && (d.message || d.error)) || 'NEXXUS did not answer.';
     } catch (e) { waiting.cls = 'err'; waiting.text = e && e.name === 'AbortError' ? 'NEXXUS took too long to answer.' : 'Could not reach NEXXUS. Is it running?'; }
-    clearTimeout(timer); PL.talking = false; $('plSend').disabled = false; if (PL.view === 'talk') renderTalk();
+    clearTimeout(timer); PL.talking = false; $('plSend').disabled = false; await saveTalk('ai', waiting.text, waiting.cls); await loadTalk(); if (PL.right === 'talk') renderRight();
   }
 
   // ---------- the command bar: two modes, three destinations, drafts that survive switching ----------
@@ -12087,7 +12130,9 @@ async function skBuild() {
     document.querySelectorAll('#plMode .seg.main button').forEach(b => b.classList.toggle('on', b.dataset.m === mode));
     document.querySelectorAll('#plMode .seg.sub button').forEach(b => b.classList.toggle('on', b.dataset.a === PL.cmd.audience)); $('plAudience').hidden = mode === 'talk';
     $('plCue').textContent = CUES[k]; $('plInput').placeholder = HOLD[k]; $('plSend').textContent = SENDL[k]; $('plChip').style.display = mode === 'talk' ? 'none' : '';
-    if (!keepView) { if (mode === 'talk') setView('talk'); else if (PL.view === 'talk') setView(PL.lastView && PL.lastView !== 'talk' ? PL.lastView : 'floor'); }
+    PL.right = mode === 'talk' ? 'talk' : 'network'; renderRight(); if (mode === 'talk') loadTalk();          // the centre stage never moves: only the right-hand panel swaps
+    { const nt = document.querySelector('#plTabs button[data-t="right"]'); if (nt) nt.textContent = mode === 'talk' ? 'Talk' : 'Network';
+      if (!keepView && window.matchMedia('(max-width:820px)').matches) { const want = mode === 'talk' ? 'right' : 'floor', btn = document.querySelector('#plTabs button[data-t="' + want + '"]'); if (btn && $('plStage').dataset.tab !== want) btn.click(); } }          // on a phone the right panel is a tab: open it for Talk, go back to the floor after
     $('plInput').focus();
   }
   document.querySelectorAll('#plMode .seg.main button').forEach(b => b.addEventListener('click', () => setComposer(b.dataset.m, null)));

@@ -60,7 +60,7 @@ This page maps every part of the master specification to the software as it stan
 
 | Spec | Status |
 |---|---|
-| Private DM vault, groups, GIFs, voice/video (WebRTC), friends, FYP feed | **Needs network.** Encrypted messaging between accounts needs a server (or a peer relay with signalling), accounts and moderation. The local side keeps private notes private. |
+| Private DM vault, groups, GIFs, voice/video (WebRTC), friends, FYP feed | **Hub built, delivery needs network.** The private Messages & friends hub exists in the right panel with honest "Not available yet" sections; Talk to NEXXUS has auto-save and a day-grouped archive (`private_hub.py`). Messaging between people **needs network.** Encrypted messaging between accounts needs a server (or a peer relay with signalling), accounts and moderation. The local side keeps private notes private. |
 | Leadership roles (Scout, Promoter, Mentor), leader invitation, directory, mentor tagging | **Needs network.** Mentor-ready is the first local step and exists. |
 | Mentor revenue share, partner revenue structures, priority dispatch | **Needs payments** and legal terms. |
 | Partner Progression Threshold | **Needs network** for the metrics that come from other people; the local half (own badges, contributions) exists. |

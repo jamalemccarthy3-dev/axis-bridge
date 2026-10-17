@@ -30,6 +30,7 @@ import github_sync
 import market_social
 import marketplace
 import marketplace_export
+import private_hub
 import privacy
 import ranks
 import teams
@@ -687,6 +688,8 @@ def register_routes(app, is_viewer, respond, is_admin=None):
         if need_license and not entitlements.is_unlocked():
             return respond({"status": "locked", "message": "Platform mode is locked.", **entitlements.offer()}, 402)
         return None
+
+    private_hub.register_routes(app, guard, respond)          # the private side: Talk to NEXXUS archive and the messaging hub
 
     @app.route("/api/platform/entitlement", methods=["GET", "OPTIONS"], endpoint="platform_entitlement")
     def entitlement():
