@@ -222,7 +222,8 @@ class AcademyRouteTest(Base):
     def test_terms_workspace_limit_matches_the_code(self):
         import teams
         self.assertIn("limited to %d" % teams.MAX_TEAMS, academy.TERMS[0]["today"])
-        self.assertIn("one per person", academy.TERMS[0]["today"])
+        self.assertIn("ONE formal company", academy.TERMS[0]["text"])
+        self.assertIn("100% of Track A", academy.TERMS[0]["text"])
         self.assertEqual(teams.MAX_COMPANIES, 1)
 
     def test_focus_and_company_gate_through_the_routes(self):

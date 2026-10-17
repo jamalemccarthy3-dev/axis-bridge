@@ -193,6 +193,56 @@ class TransparentCodeTest(FreeBase):
         self.assertFalse(os.path.exists(marker))
 
 
+class EquipTest(FreeBase):
+    def test_preview_changes_nothing_and_equip_needs_the_exact_checksum(self):
+        sid = self.publish_free()
+        pre = mk.equip_preview(sid)
+        self.assertEqual(pre["permission_text"], "Asks for no special permissions.")
+        self.assertIn("does not run the package", pre["notice"])
+        self.assertEqual(mk.equipped(), {})
+        for bad in ("", "0" * 64, None):
+            with self.assertRaises(mk.MarketError):
+                mk.equip(sid, bad)
+        rec = mk.equip(sid, pre["sha256"])
+        self.assertEqual(rec["sha256"], pre["sha256"])
+        self.assertTrue(mk.equip_preview(sid)["equipped"])
+        mk.unequip(sid)
+        self.assertEqual(mk.equipped(), {})
+
+    def test_only_published_free_packages_can_be_equipped(self):
+        sid = self.make_free()                                   # uploaded but not approved
+        with self.assertRaises(mk.MarketError):
+            mk.equip_preview(sid)
+        with self.assertRaises(mk.MarketError):
+            mk.equip("nope", "x")
+
+
+class PublishGateTest(FreeBase):
+    PAID = {"title": "Paid Thing", "summary": "A paid product that is honest and useful.", "category": "Software", "price": 5}
+
+    def test_paid_publishing_needs_the_pass_and_track_a_but_free_sharing_never_does(self):
+        co = teams.create_team("Co", kind="company")
+        mk.set_publish_gate(lambda: (False, "Publishing paid products needs the $199 Lifetime Access Pass."))
+        with self.assertRaisesRegex(mk.MarketError, r"\$199"):
+            mk.create_submission(co["id"], self.PAID)
+        self.assertEqual(mk.create_submission("", FREE_LISTING, "Dev One", tier="free")["tier"], "free")
+        mk.set_publish_gate(lambda: (True, ""))
+        self.assertEqual(mk.create_submission(co["id"], self.PAID)["tier"], "commercial")
+
+    def test_the_real_gate_closes_beta_and_monthly_and_opens_for_a_lifetime_pass(self):
+        import platform_mode as pm
+        from test_platform_mode import token
+        open(pm.entitlements.BETA_PATH, "w").write('{"beta_open": true}')
+        ok, why = pm._publish_gate()
+        self.assertFalse(ok)
+        self.assertIn("Beta does not include it", why)
+        open(pm.entitlements.BETA_PATH, "w").write('{"beta_open": false}')
+        pm.entitlements.activate(token("monthly", exp=int(__import__("time").time()) + 3600))
+        self.assertFalse(pm._publish_gate()[0], "a monthly subscription is not the $199 pass")
+        pm.entitlements.activate(token("lifetime"))
+        self.assertFalse(pm._publish_gate()[0])
+
+
 class SeoTest(FreeBase):
     def listing(self, **kw):
         l = {"title": "Clean Product", "summary": "A tiny honest product that greets you politely.", "category": "Software"}
@@ -449,6 +499,17 @@ class OpenRoutesTest(FreeBase):
         self.assertEqual(page["social"]["comments"][0]["who"], "Reader")
         self.assertEqual(self.c.delete("/api/platform/marketplace/comment/" + c["id"]).status_code, 200)
         self.assertEqual(self.c.delete("/api/platform/marketplace/comment/nope").status_code, 404)
+
+    def test_equip_routes_preview_confirm_and_refuse_a_wrong_checksum(self):
+        base = "/api/platform/marketplace/free/%s/equip" % self.sid
+        pre = self.c.get(base).get_json()
+        self.assertEqual(pre["permission_text"], "Asks for no special permissions.")
+        self.assertEqual(self.c.post(base, json={"confirm_sha": "0" * 64}).status_code, 400)
+        r = self.c.post(base, json={"confirm_sha": pre["sha256"]})
+        self.assertEqual((r.status_code, r.get_json()["equipped"]["sha256"]), (200, pre["sha256"]))
+        self.assertTrue(self.c.get(base).get_json()["equipped"])
+        self.assertEqual(self.c.delete(base).status_code, 200)
+        self.assertFalse(self.c.get(base).get_json()["equipped"])
 
     def test_files_listing_and_file_reading_routes(self):
         self.assertIn("main.py", [f["name"] for f in self.c.get("/api/platform/marketplace/free/%s/files" % self.sid).get_json()["files"]])

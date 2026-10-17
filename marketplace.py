@@ -513,6 +513,9 @@ def create_submission(team_id, listing, creator="you", tier="commercial"):
         team = next((t for t in teams.list_teams() if t["id"] == str(team_id)), None)
         if not team or team["kind"] != "company":
             raise MarketError("Paid products are submitted by a micro-company: create a company workspace first.")
+        ok, why = _publish_gate[0]()
+        if not ok:
+            raise MarketError(why)
     lst = _listing(listing, tier)
     with _LOCK:
         subs = _read()
@@ -936,6 +939,70 @@ def free_download(sid):
     sub = _free_published(sid)
     data, v = _bundle_bytes(sub, sub["published"]["version"])
     return data, re.sub(r"[^A-Za-z0-9._-]+", "-", sub["listing"]["title"]).strip("-")[:40] + "-" + str((sub["published"].get("manifest") or {}).get("version", "x")) + ".zip", v["sha256"]
+
+
+# ---------------------------------------------------------------- the publishing gate and "Equip" (confirm first, then record)
+_publish_gate = [lambda: (True, "")]       # platform_mode installs the real one: the $199 pass and Track A
+
+
+def set_publish_gate(fn):
+    """fn() -> (ok, message). Publishing a PAID product needs it to say ok. Free and open sharing is never gated."""
+    _publish_gate[0] = fn
+
+
+def _equipped_path():
+    return os.path.join(DATA_DIR, "equipped.json")
+
+
+def _equipped_read():
+    try:
+        with open(_equipped_path(), encoding="utf-8") as f:
+            d = json.load(f)
+        return d if isinstance(d, dict) else {}
+    except (OSError, ValueError):
+        return {}
+
+
+def equip_preview(sid):
+    """What a person must see before equipping a Free and Open package: exactly which version, its checksum, and every permission it declares. Nothing is changed."""
+    sub = _free_published(sid)
+    data, v = _bundle_bytes(sub, sub["published"]["version"])
+    man = sub["published"].get("manifest") or {}
+    perms = [str(p) for p in (man.get("permissions") or [])]
+    return {"id": sub["id"], "title": sub["listing"]["title"], "creator": sub["creator"], "version": v["n"], "package_version": str(man.get("version", "")), "sha256": v["sha256"], "bytes": v["bytes"],
+            "files": len(read_bundle(data)), "permissions": perms, "permission_text": "Asks for no special permissions." if not perms else "Declares: " + ", ".join(perms) + ".",
+            "equipped": sub["id"] in _equipped_read(),
+            "notice": "Equipping records that you reviewed and confirmed this exact vetted version. It does not run the package. Binding it into a running container is done by the tool-ingestion pipeline, which asks for its own approval."}
+
+
+def equip(sid, confirm_sha):
+    """Record a confirmed equip. The checksum the person was shown must match the package as it is now, so a changed package cannot be equipped on an old confirmation."""
+    pre = equip_preview(sid)
+    if not confirm_sha or str(confirm_sha) != pre["sha256"]:
+        raise MarketError("Confirm the package exactly as shown: its checksum has changed or was not sent.")
+    with _LOCK:
+        d = _equipped_read()
+        d[pre["id"]] = {"title": pre["title"], "version": pre["version"], "sha256": pre["sha256"], "permissions": pre["permissions"], "t": int(time.time())}
+        os.makedirs(os.path.dirname(_equipped_path()), exist_ok=True)
+        tmp = _equipped_path() + ".tmp"
+        with open(tmp, "w", encoding="utf-8") as f:
+            json.dump(d, f)
+        os.replace(tmp, _equipped_path())
+    _audit(pre["id"], "you", "equipped", pre["sha256"][:12])
+    return d[pre["id"]]
+
+
+def unequip(sid):
+    with _LOCK:
+        d = _equipped_read()
+        d.pop(str(sid), None)
+        os.makedirs(os.path.dirname(_equipped_path()), exist_ok=True)
+        with open(_equipped_path(), "w", encoding="utf-8") as f:
+            json.dump(d, f)
+
+
+def equipped():
+    return _equipped_read()
 
 
 def product_page(sid, base_url="", today=None):

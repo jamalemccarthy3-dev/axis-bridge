@@ -38,22 +38,22 @@ This page maps every part of the master specification to the software as it stan
 
 | Spec | Status |
 |---|---|
-| 10 dashboards, 10 autonomous bots, 10 profiles per bot | **Decision / Not enforced.** These are limits on things (per-account dashboards and bots) that are not yet per-account objects in the Platform. Also "profiles per bot" must mean the person's own real accounts: NEXXUS will not create accounts or run fake audiences for you. |
+| 10 dashboards, 10 autonomous bots, 10 profiles per bot | **Decided, not yet enforced.** "Profiles per bot" means the person's own real management profiles linked to their node; NEXXUS never generates accounts. Counting dashboards and bots per account waits until they are per-account objects. |
 | Strict 1-company limit | **Built.** One formal company per person (`teams.MAX_COMPANIES = 1`). Solo workspaces (team / pod) are separate, up to 10. |
 | Company creation gate | **Built.** Needs Track A complete. |
 | Every team member must participate and prove work | **Needs network.** Teams across accounts do not exist; a workspace has one member. The terms say so in plain words. |
-| Terms of Engagement | **Built** (version `alpha-2`, hashed acceptance). Sections 1 and 2 carry a "Today" note for what is and is not true yet. Have a lawyer review before you rely on them. |
+| Terms of Engagement | **Built** (version `alpha-3`, hashed acceptance; one formal company per person after 100% of Track A). Sections 1 and 2 carry a "Today" note for what is and is not true yet. Have a lawyer review before you rely on them. |
 
 ## 5. Marketplace
 
 | Spec | Status |
 |---|---|
 | Vetting gauntlet, free and open tier, SEO, verified ratings | **Built.** See [MARKETPLACE.md](MARKETPLACE.md). |
-| $199 as a "publishing gate" | **Decision.** Today $199 is the Lifetime Access Pass; publishing a paid product needs a company, which needs Track A, plus the gauntlet and the 5% agreement. Tying "$199 = permission to publish" would need a tier check in `entitlements.TIERS` (the hook exists). |
+| $199 as the publishing gate | **Built.** Creating a paid submission needs the $199 Lifetime Access Pass and Track A (`platform_mode._publish_gate`). Open Beta and the monthly plan do not include paid publishing. Free and open sharing is never gated. |
 | Per-profile vendor stores, main-hub aggregation | **Partial.** Free and paid listings, creator names and a public export exist. Per-profile storefronts need per-account identity: **needs network**. |
 | B2B AI workforce exchange (Fiverr-style), client dispatch to leaders | **Needs network and payments.** |
 | Netflix-style carousels, App Store cards, skill key codes | **Not built yet.** Pure front-end work over the existing catalog; a good next build. |
-| Skill cards with one-click "Equip skill" auto-injection | **Needs a design decision.** Injecting a stranger's endpoints into a live node bypasses the review the marketplace exists to provide. Safer version: equip only vetted, signed packages, with a preview of every permission and a confirm step. |
+| "Equip" for vetted packages | **Built (confirm-and-record).** [Equip...] on a Free and Open package shows version, checksum and every declared permission; [Confirm & Equip] records the exact vetted version (a changed checksum is refused). It does not run the package: binding into a container stays with the tool-ingestion pipeline and its own approval. Skill-card styling and key codes are still to build. |
 | GitHub repo bridge for skills | **Partial.** A free listing can link its repository. Live commit sync needs a token and the same confirmation rules as the Discussions sync. |
 
 ## 6. Social, messaging, leadership

@@ -51,6 +51,10 @@ When a bundle is uploaded NEXXUS generates, deterministically from the listing, 
 
 A program running on one computer cannot be indexed by search engines, so the administrator can **export a static site** (Admin queue, "Export the storefront"): `index.html`, one page per product, `sitemap.xml` and `robots.txt`, written to `nexxus_data/marketplace/site/`. Pages have no scripts (apart from the structured-data block), no trackers and a strict content policy; everything is escaped, so a product cannot inject markup. **You publish the folder yourself** (for example to GitHub Pages); nothing is uploaded for you.
 
+## Publishing gate and Equip
+
+Creating a **paid** submission needs the **$199 Lifetime Access Pass** and finished Track A (a company needs Track A anyway). Open Beta and the monthly plan do not include paid publishing; Free and Open sharing never needs either. On a Free and Open package, **Equip...** shows the exact version, its SHA-256 and every permission it declares, and **Confirm & Equip** records that confirmation. It does not run the package; a changed checksum is refused.
+
 ## What is not here: payments
 
 NEXXUS never handles payment details. The **Buy** button opens a hosted checkout link that the administrator adds (for example a payment provider's checkout), after an "you are leaving NEXXUS" confirmation. The 5% revenue share is **recorded in the agreement but cannot be enforced by software**: payouts, tax and refunds need a payment provider that can split and settle funds, and a lawyer-reviewed agreement. The agreement text is a **draft template**. Do not take real money until both are in place, and check the rules where you and your buyers live.

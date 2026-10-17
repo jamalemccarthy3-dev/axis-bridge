@@ -467,12 +467,12 @@ def welcome():
     }
 
 
-TERMS_VERSION = "alpha-2"
+TERMS_VERSION = "alpha-3"
 TERMS_TITLE = "Platform Alpha: Terms of Engagement"
 TERMS = [
     {"title": "1. Solo freedom",
-     "text": "Working as an individual builder, you are free to create, manage and scale multiple companies, projects and portals within your account. Nothing here limits your individual hustle.",
-     "today": "Solo workspaces (teams and pods) are limited to %d on this computer to protect its files. A formal company is limited to one per person and opens after you finish Track A." % 10},
+     "text": "Working as an individual builder, you are free to create, manage and scale as many solo projects, workspaces and portals as the allowance gives you. Each person may form ONE formal company or team, unlocked only after completing 100% of Track A.",
+     "today": "Solo workspaces (teams and pods) are limited to %d on this computer to protect its files. The one formal company opens after Track A is complete: every core step, the Code of Conduct and your profile." % 10},
     {"title": "2. Team collaboration and active clustering",
      "text": "Partnerships on Platform Alpha are built on real, verified contribution. If you form a team or collaborate with others, your accounts formally cluster within the system. Real collaboration requires active "
              "synchronization: passive passengers and uncommitted participants are not maintained within active team structures. If you are not clustering and building with your unit, you are not on the team.",

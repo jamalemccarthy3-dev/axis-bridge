@@ -1256,6 +1256,11 @@ body.pl-on #axisDock { display:none !important; }          /* the desktop contro
 .pl-stage { flex:1; min-height:0; display:grid; grid-template-columns:minmax(220px,1fr) minmax(300px,1.7fr) minmax(220px,1fr); perspective:1500px; perspective-origin:50% 40%; padding:14px 18px 0; gap:0; }
 .pl-wall { min-height:0; overflow-y:auto; background:linear-gradient(180deg, rgba(30,41,59,0.78), rgba(15,23,42,0.88)); border:1px solid rgba(56,189,248,0.28); padding:14px; box-shadow:0 0 40px rgba(2,6,14,0.7); }
 .pl-wall.left { transform-origin:100% 50%; transform:rotateY(14deg); border-radius:12px 0 0 12px; } .pl-wall.right { transform-origin:0% 50%; transform:rotateY(-14deg); border-radius:0 12px 12px 0; }
+/* Strict containment: every root wrapper stays inside the viewport */
+html, body { width:100%; max-width:100vw; overflow-x:hidden; box-sizing:border-box; }
+body > div, body > main, body > section, body > header, body > footer { max-width:100vw; box-sizing:border-box; }
+#platformSpace { width:100%; max-width:100vw; overflow-x:hidden; }
+.pl-wall { padding-left:12px; padding-right:12px; }
 /* Safe zone: nothing in the Platform panels may bleed past the screen edge (links, share lines, buttons, borders) */
 #platformSpace, #platformSpace *, .pd-box, .pg-box { box-sizing:border-box; }
 .pl-wall, .pl-view, .pd-box, .pg-box { max-width:95vw; min-width:0; overflow-wrap:anywhere; word-break:break-word; }
@@ -12057,6 +12062,17 @@ async function skBuild() {
   // ---------- the Marketplace: a storefront for buyers, free and open code for everyone, a vetting portal for creators ----------
   PL.mk = { me: null, view: null, choice: null, tier: 'all', cat: '', q: '', sort: 'new', catalog: null, mine: [], sel: null, detail: null, queue: null, adminOpen: false, page: null, pageData: null, file: null, fileData: null, reply: null };
   const money = c => '$' + (c / 100).toFixed(c % 100 ? 2 : 0);
+  async function equipDialog(p) {
+    const d = await api('marketplace/free/' + p.id + '/equip', null, 'GET'); if (!d || d.status !== 'success') { alert((d && d.message) || 'Could not load the package.'); return; }
+    dialog(box => {
+      box.append(el('h3', '', 'Equip "' + d.title + '"?'), el('p', '', 'By ' + d.creator + '  ·  version ' + d.package_version + '  ·  ' + d.files + ' files'));
+      box.append(el('div', 'pd-warn', d.permission_text), el('pre', '', 'SHA-256: ' + d.sha256), el('p', 'pw-sub', d.notice));
+      const msg = el('div', 'pw-hint'), row = el('div'); row.style.cssText = 'display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap';
+      const go = el('button', 'pl-btn', d.equipped ? 'Confirm & Equip again' : 'Confirm & Equip'); go.type = 'button';
+      go.addEventListener('click', async () => { go.disabled = true; const r = await api('marketplace/free/' + p.id + '/equip', { confirm_sha: d.sha256 }, 'POST'); if (r && r.status === 'success') { msg.textContent = 'Recorded. Version ' + r.equipped.version + ' is equipped.'; msg.style.color = '#86efac'; } else { msg.textContent = (r && r.message) || 'Could not reach NEXXUS.'; msg.style.color = '#fda4af'; go.disabled = false; } });
+      row.append(closeBtn('Cancel'), go); box.append(row, msg);
+    });
+  }
   async function loadMarket() {
     const m = PL.mk, me = await api('marketplace/me', null, 'GET'); if (!me || me.status !== 'success') { $('plMarketView').replaceChildren(el('div', 'pl-empty', 'The Marketplace could not be loaded.')); return; }
     m.me = me; m.view = m.choice === 'creator' ? 'creator' : (m.choice === 'buyer' ? 'buyer' : (me.companies.length ? 'creator' : 'buyer'));
@@ -12137,7 +12153,7 @@ async function skBuild() {
     const hero = el('div', 'ac-hero'); hero.append(thumbBadges(p), el('h3', '', p.title), el('div', 'pw-sub', 'by ' + p.seller + '  ·  v' + (p.version || '?') + '  ·  ' + p.category + '  ·  ' + (p.license || ''))); host.append(hero);
     host.append(el('p', '', p.summary), vetLine(p.vetting, p.free));
     const acts = el('div', 'mk-acts'); acts.style.margin = '10px 0';
-    if (p.free) { const dl = el('a', 'pl-btn', 'Download the package'); dl.href = BASE + '/api/platform/marketplace/free/' + p.id + '/download'; dl.style.cssText = 'text-align:center;text-decoration:none'; dl.addEventListener('click', () => setTimeout(loadMarket, 800)); acts.append(dl); if (p.repo_url) { const gh = link(p.repo_url, 'Collaborate on the repository'); gh.className = 'pl-btn ghost'; gh.style.cssText = 'text-align:center;text-decoration:none'; acts.append(gh); } }
+    if (p.free) { const dl = el('a', 'pl-btn', 'Download the package'); dl.href = BASE + '/api/platform/marketplace/free/' + p.id + '/download'; dl.style.cssText = 'text-align:center;text-decoration:none'; dl.addEventListener('click', () => setTimeout(loadMarket, 800)); acts.append(dl); const eq = el('button', 'pl-btn ghost', 'Equip...'); eq.type = 'button'; eq.addEventListener('click', () => equipDialog(p)); acts.append(eq); if (p.repo_url) { const gh = link(p.repo_url, 'Collaborate on the repository'); gh.className = 'pl-btn ghost'; gh.style.cssText = 'text-align:center;text-decoration:none'; acts.append(gh); } }
     else { const buy = el('button', 'pl-btn', p.buy_url ? 'Buy ' + (p.final_cents ? money(p.final_cents) : '') : 'Checkout not set up yet'); buy.type = 'button'; buy.disabled = !p.buy_url; if (p.buy_url) buy.addEventListener('click', () => buyDialog(p)); acts.append(buy); }
     const rep = el('button', 'rep', 'Report'); rep.type = 'button'; rep.addEventListener('click', () => reportDialog(p)); acts.append(rep); host.append(acts);
     if (p.free) host.append(el('div', 'mk-note', 'SHA-256 of the vetted package: ' + p.sha256 + '. Compare it with the file you download. Automatic checks and an administrator\'s approval are not a guarantee: read the code before you run it.'));

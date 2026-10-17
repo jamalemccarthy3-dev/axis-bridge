@@ -639,6 +639,17 @@ teams.set_providers(tracks=lambda: academy.overview()["tracks"])
 teams.set_company_gate(academy.company_gate)
 
 
+def _publish_gate():
+    """Paid products need the $199 Lifetime Access Pass AND Track A. Open Beta does not include publishing paid products (free and open sharing stays open to everyone)."""
+    st = entitlements.status()
+    if not (st["unlocked"] and st["plan"] == "lifetime"):
+        return False, "Publishing paid products needs the $199 Lifetime Access Pass" + (" (Beta does not include it)" if st.get("beta") else "") + ". Free and open sharing is open to everyone."
+    return academy.company_gate()
+
+
+marketplace.set_publish_gate(_publish_gate)
+
+
 def set_system_provider(fn):
     """The server gives teams a read-only way to see this NEXXUS's engines and hub (real telemetry, never invented)."""
     teams.set_providers(system=fn)
@@ -1262,6 +1273,24 @@ def register_routes(app, is_viewer, respond, is_admin=None):
             return respond({"status": "success", **marketplace.free_read(sid, request.args.get("name", ""))})
         except marketplace.MarketError as e:
             return respond({"status": "error", "message": str(e)}, 404)
+
+    @app.route("/api/platform/marketplace/free/<sid>/equip", methods=["GET", "POST", "DELETE", "OPTIONS"], endpoint="platform_market_equip")
+    def market_equip_route(sid):
+        """GET shows what you would be confirming; POST {confirm_sha} records the confirmation; DELETE removes it."""
+        if request.method == "OPTIONS":
+            return respond({})
+        g = guard()
+        if g:
+            return g
+        try:
+            if request.method == "DELETE":
+                marketplace.unequip(sid)
+                return respond({"status": "success"})
+            if request.method == "POST":
+                return respond({"status": "success", "equipped": marketplace.equip(sid, str((request.get_json(silent=True) or {}).get("confirm_sha", "")))})
+            return respond({"status": "success", **marketplace.equip_preview(sid)})
+        except marketplace.MarketError as e:
+            return respond({"status": "error", "message": str(e)}, 400)
 
     @app.route("/api/platform/marketplace/free/<sid>/download", methods=["GET"], endpoint="platform_market_free_download")
     def market_free_download_route(sid):

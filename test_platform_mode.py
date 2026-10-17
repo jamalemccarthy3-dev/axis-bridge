@@ -62,6 +62,7 @@ class Base(unittest.TestCase):
         import teams as _teams
         import marketplace as _market
         _market.DATA_DIR = os.path.join(pm.DATA_DIR, "market")
+        _market.set_publish_gate(lambda: (True, ""))          # the $199 + Track A publishing gate has its own tests
         _market.SUBS_PATH, _market.BLOB_DIR = os.path.join(_market.DATA_DIR, "submissions.json"), os.path.join(_market.DATA_DIR, "quarantine")
         _market.AUDIT_PATH, _market.REPORTS_PATH = os.path.join(_market.DATA_DIR, "audit.jsonl"), os.path.join(_market.DATA_DIR, "reports.jsonl")
         import market_social as _social
